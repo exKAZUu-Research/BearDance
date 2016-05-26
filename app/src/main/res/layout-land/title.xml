@@ -3,7 +3,7 @@
   android:id="@+id/titleRoot"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:background="@drawable/back_ground1">
+  android:background="@drawable/bear_title">
 
   <android.support.v4.widget.Space
     android:id="@+id/center"
