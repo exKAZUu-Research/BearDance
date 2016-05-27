@@ -79,7 +79,7 @@ public class NotificationEditorFragment extends EditorFragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(inflater.getContext(), LinearLayoutManager.HORIZONTAL, false));
         initTab();
 
-        character = CharacterSprite.createCoccoLeft(characterView);
+        character = CharacterSprite.createKoguma(characterView);
         handler = new Handler();
 
         return root;

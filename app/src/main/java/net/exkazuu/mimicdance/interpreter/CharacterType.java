@@ -1,5 +1,5 @@
 package net.exkazuu.mimicdance.interpreter;
 
 public enum CharacterType {
-    Piyo, AltPiyo, Cocco, AltCocco,
+    Piyo, AltPiyo, Cocco, AltCocco, Koguma, Oyakuma,
 }

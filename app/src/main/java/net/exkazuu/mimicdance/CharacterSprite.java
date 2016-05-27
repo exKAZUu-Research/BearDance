@@ -83,10 +83,18 @@ public class CharacterSprite {
         return new CharacterSprite(CharacterType.AltCocco, view);
     }
 
+    public static CharacterSprite createKoguma(View view) {
+        return new CharacterSprite(CharacterType.Koguma, view);
+    }
+
+    public static CharacterSprite createOyakuma(View view) {
+        return new CharacterSprite(CharacterType.Oyakuma, view);
+    }
+
     public void renderInitialState() {
         renderCompleteState(Lists.newArrayList(ActionType.LeftFootDown, ActionType.Jump.LeftHandDown,
             ActionType.RightFootDown, ActionType.RightHandDown));
-        switch(charaType) {
+        switch (charaType) {
             case Piyo:
                 getBody().setImageResource(R.drawable.piyo_basic);
                 break;
@@ -98,6 +106,12 @@ public class CharacterSprite {
                 break;
             case AltCocco:
                 getBody().setImageResource(R.drawable.alt_cocco_basic);
+                break;
+            case Koguma:
+                getBody().setImageResource(R.drawable.koguma_basic);
+                break;
+            case Oyakuma:
+                getBody().setImageResource(R.drawable.oyakuma_basic);
                 break;
         }
     }
