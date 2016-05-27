@@ -15,7 +15,7 @@ public class RobotExecutor extends Thread {
     private boolean terminated;
 
     public RobotExecutor(List<Interpreter> interpreters, Handler handler) {
-        this(interpreters, handler, 500);
+        this(interpreters, handler, 600);
     }
 
     public RobotExecutor(List<Interpreter> interpreters, Handler handler, int sleepTime) {

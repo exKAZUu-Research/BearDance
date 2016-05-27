@@ -101,7 +101,7 @@ public class NotificationEditorFragment extends EditorFragment {
             robotExecutor.terminate();
         }
         robotExecutor = new RobotExecutor(Lists.newArrayList(
-            Interpreter.createForPiyo(program, character, null)), handler, 300);
+            Interpreter.createForPiyo(program, character, null)), handler);
         robotExecutor.start();
     }
 

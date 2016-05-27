@@ -65,8 +65,6 @@ public class NotificationListener extends NotificationListenerService {
 //                        Toast.makeText(getApplicationContext(), programList.get(0).getCommand(0), Toast.LENGTH_SHORT).show();
 //                        Log.v("command", programList.get(0).getCommand(0));
                     }
-                    System.out.println(msg);
-
                 }
             }
         });
