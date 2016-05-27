@@ -117,6 +117,9 @@ public class Interpreter implements Runnable {
     }
 
     private void highlightLine() {
+        if (textView == null) {
+            return;
+        }
         int currentLineIndex = program.getOriginalLineIndex(getLineIndex());
         String[] lines = textView.getText().toString().split("\n");
         textView.getEditableText().clear();

@@ -2,9 +2,6 @@ package net.exkazuu.mimicdance.activities;
 
 import android.util.Log;
 
-/**
- * Created by t-yokoi on 2015/12/18.
- */
 public class ArduinoBear implements Bear {
     private byte[] commands = new byte[2];
 
