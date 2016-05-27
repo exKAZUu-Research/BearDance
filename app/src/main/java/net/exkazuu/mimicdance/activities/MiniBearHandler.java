@@ -8,12 +8,6 @@ import java.util.List;
 import net.exkazuu.mimicdance.models.program.Command;
 import net.exkazuu.mimicdance.models.program.Program;
 
-
-/**
- * Created by t-yokoi on 2015/12/18.
- */
-
-
 public class MiniBearHandler {
 
     private List<Program> com;

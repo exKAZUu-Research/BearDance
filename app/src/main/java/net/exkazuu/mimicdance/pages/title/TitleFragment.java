@@ -19,6 +19,7 @@ import net.exkazuu.mimicdance.activities.notification.NotificationActivity;
 import net.exkazuu.mimicdance.models.lesson.LessonDAO;
 import net.exkazuu.mimicdance.pages.help.HelpFragment;
 import net.exkazuu.mimicdance.pages.lesson.list.LessonListFragment;
+import net.exkazuu.mimicdance.pages.notification.NotificationEditorFragment;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -68,34 +69,35 @@ public class TitleFragment extends Fragment {
 
     @OnClick(R.id.help_button)
     void helpClicked() {
-        lessonDAO.upload();
-        FragmentManager manager = getFragmentManager();
-        if (manager == null) { return; }
-
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.addToBackStack("");
-        transaction.replace(R.id.container, HelpFragment.newInstance());
-        transaction.commit();
+//        lessonDAO.upload();
+//        FragmentManager manager = getFragmentManager();
+//        if (manager == null) { return; }
+//
+//        FragmentTransaction transaction = manager.beginTransaction();
+//        transaction.addToBackStack("");
+//        transaction.replace(R.id.container, HelpFragment.newInstance());
+//        transaction.commit();
 
         /*
         Intent intent = new Intent(getActivity(), HelpActivity.class);
         startActivity(intent);
         */
+
+        FragmentUtils.toNextFragment(getFragmentManager(), R.id.container,
+            NotificationEditorFragment.newInstance(), true);
     }
 
 
     @OnClick(R.id.notification_button)
     void notificationClicked() {
-        //lessonDAO.upload();
-        Intent intent = new Intent(getActivity(), NotificationActivity.class);
-        startActivity(intent);
+//        Intent intent = new Intent(getActivity(), NotificationActivity.class);
+//        startActivity(intent);
     }
 
     @OnClick(R.id.start_button)
     void startClicked() {
-        //lessonDAO.upload();
-        FragmentUtils.toNextFragment(getFragmentManager(), R.id.container,
-            LessonListFragment.newInstance(), true);
+//        FragmentUtils.toNextFragment(getFragmentManager(), R.id.container,
+//            LessonListFragment.newInstance(), true);
     }
 
     // endregion

@@ -3,15 +3,11 @@ package net.exkazuu.mimicdance.models.program;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- * Created by t-yokoi on 2015/12/15.
- */
 public class Program implements Parcelable {
     private String[] commands = new String[2];
 
     public Program() {
-        commands[0] = "";
-        commands[1] = "";
+        this("", "");
     }
 
     public Program(String command0, String command1) {
@@ -19,22 +15,20 @@ public class Program implements Parcelable {
         commands[1] = command1;
     }
 
-    Program(Parcel source) {
-        commands[0] = source.readString();
-        commands[1] = source.readString();
-    }
-
     public void setCommands(int index, String value) {
         commands[index] = value;
     }
-    public String getCommand(int index) { return commands[index];}
+
+    public String getCommand(int index) {
+        return commands[index];
+    }
 
     // region Parcelable
 
     public static Creator<Program> CREATOR = new Creator<Program>() {
         @Override
         public Program createFromParcel(Parcel source) {
-            return new Program(source);
+            return new Program(source.readString(), source.readString());
         }
 
         @Override

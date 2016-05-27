@@ -28,7 +28,7 @@ import butterknife.OnClick;
 import jp.fkmsoft.android.framework.util.FragmentUtils;
 
 /**
- * Framgment for Lesson top page
+ * Fragment for Lesson top page
  */
 public class LessonTopFragment extends Fragment {
     private static final String ARGS_LESSON_NUMBER = "lessonNumber";
