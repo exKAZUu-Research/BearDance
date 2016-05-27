@@ -83,6 +83,24 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:layout_above="@+id/button_back"/>
+
+    <include
+      android:id="@+id/user_character_right"
+      layout="@layout/character_piyo"
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:layout_alignParentEnd="true"
+      app:layout_aspectRatio="78%"
+      />
+
+    <include
+      android:id="@+id/user_character_left"
+      layout="@layout/character_piyo"
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:layout_toStartOf="@+id/user_character_right"
+      app:layout_aspectRatio="78%"
+      />
   </RelativeLayout>
 
 

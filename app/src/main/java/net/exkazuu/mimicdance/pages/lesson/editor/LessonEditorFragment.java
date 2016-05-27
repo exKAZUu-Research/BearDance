@@ -57,11 +57,17 @@ public class LessonEditorFragment extends EditorFragment {
     View leftCharacterView;
     @Bind(R.id.character_right)
     View rightCharacterView;
+    @Bind(R.id.user_character_left)
+    View userLeftCharacterView;
+    @Bind(R.id.user_character_right)
+    View userRightCharacterView;
     private Handler handler;
     private RobotExecutor robotExecutor;
     private int lessonNumber;
     private CharacterSprite leftCharacterSprite;
     private CharacterSprite rightCharacterSprite;
+    private CharacterSprite userLeftCharacterSprite;
+    private CharacterSprite userRightCharacterSprite;
 
     public static LessonEditorFragment newInstance(int lessonNumber) {
         LessonEditorFragment fragment = new LessonEditorFragment();
@@ -113,8 +119,11 @@ public class LessonEditorFragment extends EditorFragment {
         initTab();
 
         rightCharacterView.setVisibility(Lessons.hasIf(lessonNumber) ? View.VISIBLE : View.INVISIBLE);
+        userRightCharacterView.setVisibility(Lessons.hasIf(lessonNumber) ? View.VISIBLE : View.INVISIBLE);
         leftCharacterSprite = CharacterSprite.createCoccoLeft(leftCharacterView);
         rightCharacterSprite = CharacterSprite.createCoccoRight(rightCharacterView);
+        userLeftCharacterSprite = CharacterSprite.createPiyoLeft(userLeftCharacterView);
+        userRightCharacterSprite = CharacterSprite.createPiyoRight(userRightCharacterView);
         this.handler = new Handler();
 
         return root;
@@ -144,9 +153,6 @@ public class LessonEditorFragment extends EditorFragment {
 
     @OnClick({R.id.character_left, R.id.character_right})
     void checkProgramClicked() {
-        // Get current program
-        List<Program> programList = mAdapter.getAsList();
-
         String answerCode = Lessons.getCoccoCode(lessonNumber);
         UnrolledProgram leftProgram = CodeParser.parse(answerCode).unroll(EventType.White);
         UnrolledProgram rightProgram = CodeParser.parse(answerCode).unroll(EventType.Yellow);
@@ -156,6 +162,21 @@ public class LessonEditorFragment extends EditorFragment {
         robotExecutor = new RobotExecutor(Lists.newArrayList(
             Interpreter.createForCocco(leftProgram, leftCharacterSprite),
             Interpreter.createForCocco(rightProgram, rightCharacterSprite)), handler, 300);
+        robotExecutor.start();
+    }
+
+    @OnClick({R.id.user_character_left, R.id.user_character_right})
+    void checkUserProgramClicked() {
+        // Get current program
+        List<Program> programList = mAdapter.getAsList();
+        UnrolledProgram leftProgram = CodeParser.parse(programList).unroll(EventType.White);
+        UnrolledProgram rightProgram = CodeParser.parse(programList).unroll(EventType.Yellow);
+        if (robotExecutor != null) {
+            robotExecutor.terminate();
+        }
+        robotExecutor = new RobotExecutor(Lists.newArrayList(
+            Interpreter.createForCocco(leftProgram, userLeftCharacterSprite),
+            Interpreter.createForCocco(rightProgram, userRightCharacterSprite)), handler, 300);
         robotExecutor.start();
     }
 }

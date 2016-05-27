@@ -1,6 +1,7 @@
 package net.exkazuu.mimicdance.program;
 
 import net.exkazuu.mimicdance.BuildConfig;
+import net.exkazuu.mimicdance.interpreter.EventType;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,7 +18,7 @@ public class CodeParserTest {
     public void parseSimpleProgram() {
         String code = "左腕を上げる右腕を上げる\n左腕を下げる\n右腕を下げる";
         Block block = CodeParser.parse(code);
-        assertThat(block.unroll(true).getCode(), is(code));
+        assertThat(block.unroll(EventType.White).getCode(), is(code));
     }
 
     @Test
@@ -26,7 +27,7 @@ public class CodeParserTest {
         String unrolledCode =
             "ジャンプする\n左腕を上げる右腕を上げる\n右腕を下げる\n左腕を上げる右腕を上げる\n右腕を下げる";
         Block block = CodeParser.parse(code);
-        assertThat(block.unroll(true).getCode(), is(unrolledCode));
+        assertThat(block.unroll(EventType.White).getCode(), is(unrolledCode));
     }
 
     @Test
@@ -35,8 +36,8 @@ public class CodeParserTest {
         String unrolledNormalCode = "右腕を上げる\n右腕を下げる";
         String unrolledAltCode = "右腕を上げる\n左腕を上げる";
         Block block = CodeParser.parse(code);
-        assertThat(block.unroll(true).getCode(), is(unrolledNormalCode));
-        assertThat(block.unroll(false).getCode(), is(unrolledAltCode));
+        assertThat(block.unroll(EventType.White).getCode(), is(unrolledNormalCode));
+        assertThat(block.unroll(EventType.Yellow).getCode(), is(unrolledAltCode));
     }
 
     @Test
@@ -45,8 +46,8 @@ public class CodeParserTest {
         String unrolledNormalCode = "";
         String unrolledAltCode = "";
         Block block = CodeParser.parse(code);
-        assertThat(block.unroll(true).getCode(), is(unrolledNormalCode));
-        assertThat(block.unroll(false).getCode(), is(unrolledAltCode));
+        assertThat(block.unroll(EventType.White).getCode(), is(unrolledNormalCode));
+        assertThat(block.unroll(EventType.Yellow).getCode(), is(unrolledAltCode));
     }
 
     @Test
@@ -55,8 +56,8 @@ public class CodeParserTest {
         String unrolledNormalCode = "";
         String unrolledAltCode = "";
         Block block = CodeParser.parse(code);
-        assertThat(block.unroll(true).getCode(), is(unrolledNormalCode));
-        assertThat(block.unroll(false).getCode(), is(unrolledAltCode));
+        assertThat(block.unroll(EventType.White).getCode(), is(unrolledNormalCode));
+        assertThat(block.unroll(EventType.Yellow).getCode(), is(unrolledAltCode));
     }
 
     @Test
@@ -65,7 +66,7 @@ public class CodeParserTest {
         String unrolledNormalCode = "右腕を上げる\n右腕を下げる\n右腕を上げる\n右腕を下げる";
         String unrolledAltCode = "左腕を上げる\n\n左腕を上げる\n";
         Block block = CodeParser.parse(code);
-        assertThat(block.unroll(true).getCode(), is(unrolledNormalCode));
-        assertThat(block.unroll(false).getCode(), is(unrolledAltCode));
+        assertThat(block.unroll(EventType.White).getCode(), is(unrolledNormalCode));
+        assertThat(block.unroll(EventType.Yellow).getCode(), is(unrolledAltCode));
     }
 }
