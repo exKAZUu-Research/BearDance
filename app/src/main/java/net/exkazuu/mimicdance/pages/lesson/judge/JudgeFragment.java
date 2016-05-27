@@ -17,6 +17,7 @@ import com.google.common.collect.Lists;
 import net.exkazuu.mimicdance.CharacterSprite;
 import net.exkazuu.mimicdance.Lessons;
 import net.exkazuu.mimicdance.R;
+import net.exkazuu.mimicdance.interpreter.EventType;
 import net.exkazuu.mimicdance.interpreter.Interpreter;
 import net.exkazuu.mimicdance.interpreter.RobotExecutor;
 import net.exkazuu.mimicdance.models.program.Program;
@@ -102,10 +103,10 @@ public class JudgeFragment extends Fragment {
         String answerCode = Lessons.getCoccoCode(lessonNumber);
         Block userProgram = CodeParser.parse(programList);
         Block answerProgram = CodeParser.parse(answerCode);
-        final UnrolledProgram userUnrolledProgram = userProgram.unroll(true);
-        final UnrolledProgram answerUnrolledProgram = answerProgram.unroll(true);
-        final UnrolledProgram altUserUnrolledProgram = userProgram.unroll(false);
-        final UnrolledProgram altAnswerUnrolledProgram = answerProgram.unroll(false);
+        final UnrolledProgram userUnrolledProgram = userProgram.unroll(EventType.White);
+        final UnrolledProgram answerUnrolledProgram = answerProgram.unroll(EventType.White);
+        final UnrolledProgram altUserUnrolledProgram = userProgram.unroll(EventType.Yellow);
+        final UnrolledProgram altAnswerUnrolledProgram = answerProgram.unroll(EventType.Yellow);
 
         if (robotExecutor != null) {
             robotExecutor.terminate();

@@ -65,28 +65,28 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="@string/back_to_model"/>
+        android:text="@string/test_gmail"/>
 
       <Button
         android:id="@+id/button_facebook"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="@string/check_answer"/>
+        android:text="@string/test_facebook"/>
 
       <Button
         android:id="@+id/button_twitter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="@string/check_answer"/>
+        android:text="@string/test_twitter"/>
 
       <Button
         android:id="@+id/button_calendar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="@string/check_answer"/>
+        android:text="@string/test_calendar"/>
     </LinearLayout>
 
 

@@ -33,14 +33,14 @@
     android:layout_marginBottom="16dp"
     android:text="@string/Title_start_button"
     android:textSize="24sp"
-    android:visibility="visible" />
+    android:visibility="gone" />
 
   <Button
     android:id="@+id/notification_button"
     android:layout_width="200dp"
     android:layout_height="75dp"
     android:layout_alignParentBottom="true"
-    android:layout_toStartOf="@+id/center"
+    android:layout_centerHorizontal="true"
     android:layout_marginBottom="16dp"
     android:layout_marginEnd="16dp"
     android:text="@string/notification"
@@ -58,7 +58,7 @@
     android:onClick="startHelpActivity"
     android:text="@string/Title_free_play"
     android:textSize="24sp"
-    android:visibility="visible" />
+    android:visibility="gone" />
 
   <Button
     android:id="@+id/post_ques_button"

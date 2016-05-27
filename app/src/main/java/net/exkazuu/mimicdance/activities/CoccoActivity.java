@@ -14,6 +14,7 @@ import net.exkazuu.mimicdance.CharacterSprite;
 import net.exkazuu.mimicdance.Lessons;
 import net.exkazuu.mimicdance.R;
 import net.exkazuu.mimicdance.Timer;
+import net.exkazuu.mimicdance.interpreter.EventType;
 import net.exkazuu.mimicdance.interpreter.Interpreter;
 import net.exkazuu.mimicdance.program.Block;
 import net.exkazuu.mimicdance.program.CodeParser;
@@ -46,8 +47,8 @@ public class CoccoActivity extends BaseActivity {
         piyoCode = intent.getStringExtra("piyoCode");
         String coccoCode = Lessons.getCoccoCode(lessonNumber);
         Block coccoBlock = CodeParser.parse(coccoCode);
-        coccoProgram = coccoBlock.unroll(true);
-        altCoccoProgram = coccoBlock.unroll(false);
+        coccoProgram = coccoBlock.unroll(EventType.White);
+        altCoccoProgram = coccoBlock.unroll(EventType.Yellow);
     }
 
     private void initializeScreen() {

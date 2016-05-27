@@ -20,6 +20,7 @@ import net.exkazuu.mimicdance.CharacterSprite;
 import net.exkazuu.mimicdance.Constants;
 import net.exkazuu.mimicdance.Lessons;
 import net.exkazuu.mimicdance.R;
+import net.exkazuu.mimicdance.interpreter.EventType;
 import net.exkazuu.mimicdance.interpreter.Interpreter;
 import net.exkazuu.mimicdance.interpreter.RobotExecutor;
 import net.exkazuu.mimicdance.models.program.Program;
@@ -146,8 +147,8 @@ public class LessonEditorFragment extends EditorFragment {
         List<Program> programList = mAdapter.getAsList();
 
         String answerCode = Lessons.getCoccoCode(lessonNumber);
-        UnrolledProgram leftProgram = CodeParser.parse(answerCode).unroll(true);
-        UnrolledProgram rightProgram = CodeParser.parse(answerCode).unroll(false);
+        UnrolledProgram leftProgram = CodeParser.parse(answerCode).unroll(EventType.White);
+        UnrolledProgram rightProgram = CodeParser.parse(answerCode).unroll(EventType.Yellow);
         if (robotExecutor != null) {
             robotExecutor.terminate();
         }

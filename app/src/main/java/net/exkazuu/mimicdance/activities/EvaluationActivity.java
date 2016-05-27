@@ -11,6 +11,7 @@ import android.widget.TextView;
 import net.exkazuu.mimicdance.CharacterSprite;
 import net.exkazuu.mimicdance.Lessons;
 import net.exkazuu.mimicdance.R;
+import net.exkazuu.mimicdance.interpreter.EventType;
 import net.exkazuu.mimicdance.interpreter.Interpreter;
 import net.exkazuu.mimicdance.program.Block;
 import net.exkazuu.mimicdance.program.CodeParser;
@@ -63,10 +64,10 @@ public class EvaluationActivity extends BaseActivity {
 
         Block piyoBlock = CodeParser.parse(piyoCode);
         Block coccoBlock = CodeParser.parse(coccoCode);
-        piyoProgram = piyoBlock.unroll(true);
-        altPiyoProgram = piyoBlock.unroll(false);
-        coccoProgram = coccoBlock.unroll(true);
-        altCoccoProgram = coccoBlock.unroll(false);
+        piyoProgram = piyoBlock.unroll(EventType.White);
+        altPiyoProgram = piyoBlock.unroll(EventType.Yellow);
+        coccoProgram = coccoBlock.unroll(EventType.White);
+        altCoccoProgram = coccoBlock.unroll(EventType.Yellow);
     }
 
     private void initializeScreen() {

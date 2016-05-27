@@ -68,14 +68,14 @@
   <string name="pre_questionnaire">事前アンケート</string>
   <string name="post_questionnaire">事後アンケート</string>
   <string name="tab_action">アクション</string>
-  <string name="tab_condition">場合分け</string>
+  <string name="tab_condition">ばあいわけ（もしも）</string>
   <string name="tab_event">イベント</string>
-  <string name="tab_repeat">繰り返し</string>
-  <string name="title_save">保存</string>
-  <string name="title_continue">続ける</string>
-  <string name="title_reset">やりなおし</string>
+  <string name="tab_repeat">くりかえし</string>
+  <string name="title_save">きろく</string>
+  <string name="title_continue">つづける</string>
+  <string name="title_reset">すべてけす</string>
   <string name="title_trash">ゴミ箱</string>
-  <string name="save_done">保存したよ！</string>
+  <string name="save_done">きろくしたよ！</string>
   <string name="select_program_first">まず、プログラムの枠をえらんでね</string>
   <string name="help_page">%1$d / %2$d</string>
   <string name="title_lesson_list">レッスンをえらぼう</string>
@@ -84,6 +84,10 @@
   <string name="back_to_model">おてほんにもどる</string>
   <string name="check_answer">こたえあわせ</string>
   <string name="check_program">かくにん</string>
+  <string name="test_gmail">Gmailでうごかしてみる</string>
+  <string name="test_facebook">Facebookでうごかしてみる</string>
+  <string name="test_twitter">Twitterでうごかしてみる</string>
+  <string name="test_calendar">Calendarでうごかしてみる</string>
 
 
 </resources>

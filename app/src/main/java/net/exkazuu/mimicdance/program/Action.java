@@ -1,6 +1,7 @@
 package net.exkazuu.mimicdance.program;
 
 import net.exkazuu.mimicdance.interpreter.ActionType;
+import net.exkazuu.mimicdance.interpreter.EventType;
 
 import java.util.Set;
 
@@ -14,7 +15,7 @@ public class Action extends Statement {
     }
 
     @Override
-    public void unroll(UnrolledProgram program, boolean isNormal) {
+    public void unroll(UnrolledProgram program, EventType eventType) {
         program.actionSets.add(actionSet);
         program.lineIndexes.add(lineIndex);
     }

@@ -25,7 +25,6 @@ import net.exkazuu.mimicdance.R;
 import net.exkazuu.mimicdance.models.program.Command;
 import net.exkazuu.mimicdance.models.program.Program;
 import net.exkazuu.mimicdance.models.program.ProgramDAO;
-import net.exkazuu.mimicdance.models.program.ProgramDAOImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,7 +88,7 @@ public abstract class EditorFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_main, container, false);
+        View root = inflater.inflate(R.layout.fragment_notification, container, false);
 
         ButterKnife.bind(this, root);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(inflater.getContext(), LinearLayoutManager.HORIZONTAL, false));
@@ -103,31 +102,6 @@ public abstract class EditorFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
         inflater.inflate(R.menu.menu_main, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_trash:
-                // ゴミ箱は、選択した枠を空にする処理
-                onCommandClicked("");
-                return true;
-            case R.id.action_save: // 保存
-                mProgramDAO.save(mAdapter.getAsList());
-                Snackbar.make(mRootView, R.string.save_done, Snackbar.LENGTH_LONG).show();
-                return true;
-            case R.id.action_reset: // やりなおし
-                mState = STATE_SELECT_PROGRAM;
-                mAdapter.clearProgram();
-                mAdapter.setSelected(-1, -1);
-                mAdapter.notifyDataSetChanged();
-                return true;
-            case R.id.action_quit:
-                getFragmentManager().beginTransaction().remove(this).commit();
-                getActivity().finish();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -199,6 +173,31 @@ public abstract class EditorFragment extends Fragment {
         super.onDestroyView();
 
         ButterKnife.unbind(this);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_trash:
+                // ゴミ箱は、選択した枠を空にする処理
+                onCommandClicked("");
+                return true;
+            case R.id.action_save: // 保存
+                mProgramDAO.save(mAdapter.getAsList());
+                Snackbar.make(mRootView, R.string.save_done, Snackbar.LENGTH_LONG).show();
+                return true;
+            case R.id.action_reset: // やりなおし
+                mState = STATE_SELECT_PROGRAM;
+                mAdapter.clearProgram();
+                mAdapter.setSelected(-1, -1);
+                mAdapter.notifyDataSetChanged();
+                return true;
+            case R.id.action_quit:
+                getFragmentManager().beginTransaction().remove(this).commit();
+                getActivity().finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     /**

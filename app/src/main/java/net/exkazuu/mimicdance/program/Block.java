@@ -1,5 +1,7 @@
 package net.exkazuu.mimicdance.program;
 
+import net.exkazuu.mimicdance.interpreter.EventType;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -16,9 +18,9 @@ public class Block extends Statement implements Iterable<Statement> {
     }
 
     @Override
-    public void unroll(UnrolledProgram program, boolean isNormal) {
+    public void unroll(UnrolledProgram program, EventType eventType) {
         for (Statement statement : statements) {
-            statement.unroll(program, isNormal);
+            statement.unroll(program, eventType);
         }
     }
 

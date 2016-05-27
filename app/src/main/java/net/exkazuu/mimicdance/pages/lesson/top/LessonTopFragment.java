@@ -14,6 +14,7 @@ import com.google.common.collect.Lists;
 import net.exkazuu.mimicdance.CharacterSprite;
 import net.exkazuu.mimicdance.Lessons;
 import net.exkazuu.mimicdance.R;
+import net.exkazuu.mimicdance.interpreter.EventType;
 import net.exkazuu.mimicdance.interpreter.Interpreter;
 import net.exkazuu.mimicdance.interpreter.RobotExecutor;
 import net.exkazuu.mimicdance.pages.lesson.editor.LessonEditorFragment;
@@ -108,8 +109,8 @@ public class LessonTopFragment extends Fragment {
     void moveClicked() {
         String coccoCode = Lessons.getCoccoCode(this.lessonNumber);
         Block program = CodeParser.parse(coccoCode);
-        UnrolledProgram leftUnrolledProgram = program.unroll(true);
-        UnrolledProgram rightUnrolledProgram = program.unroll(false);
+        UnrolledProgram leftUnrolledProgram = program.unroll(EventType.White);
+        UnrolledProgram rightUnrolledProgram = program.unroll(EventType.Yellow);
 
         if (robotExecutor != null) {
             robotExecutor.terminate();

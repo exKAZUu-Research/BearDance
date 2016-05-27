@@ -1,31 +1,31 @@
 package net.exkazuu.mimicdance.pages.notification;
 
-import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.common.collect.Lists;
+
+import net.exkazuu.mimicdance.CharacterSprite;
 import net.exkazuu.mimicdance.R;
+import net.exkazuu.mimicdance.interpreter.EventType;
+import net.exkazuu.mimicdance.interpreter.Interpreter;
+import net.exkazuu.mimicdance.interpreter.RobotExecutor;
 import net.exkazuu.mimicdance.models.program.Program;
 import net.exkazuu.mimicdance.models.program.ProgramDAO;
 import net.exkazuu.mimicdance.models.program.ProgramDAOImpl;
 import net.exkazuu.mimicdance.pages.editor.EditorFragment;
-import net.exkazuu.mimicdance.pages.editor.PreviewFragment;
+import net.exkazuu.mimicdance.program.CodeParser;
+import net.exkazuu.mimicdance.program.UnrolledProgram;
 
 import java.util.List;
 
@@ -37,8 +37,6 @@ import butterknife.OnClick;
  * Editor for Notification
  */
 public class NotificationEditorFragment extends EditorFragment {
-    private static final String TRANSITION_NAME_CHARACTER = "character";
-
     @Bind(R.id.root)
     View mRootView2;
     @Bind(R.id.toolbar)
@@ -49,6 +47,9 @@ public class NotificationEditorFragment extends EditorFragment {
     RecyclerView mRecyclerView2;
     @Bind(R.id.character)
     View characterView;
+    private CharacterSprite character;
+    private Handler handler;
+    private RobotExecutor robotExecutor;
 
     public static NotificationEditorFragment newInstance() {
         NotificationEditorFragment fragment = new NotificationEditorFragment();
@@ -67,7 +68,7 @@ public class NotificationEditorFragment extends EditorFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_lesson_editor, container, false);
+        View root = inflater.inflate(R.layout.fragment_notification, container, false);
 
         ButterKnife.bind(this, root);
         mRootView = mRootView2;
@@ -78,7 +79,8 @@ public class NotificationEditorFragment extends EditorFragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(inflater.getContext(), LinearLayoutManager.HORIZONTAL, false));
         initTab();
 
-        ViewCompat.setTransitionName(characterView, TRANSITION_NAME_CHARACTER);
+        character = CharacterSprite.createCoccoLeft(characterView);
+        handler = new Handler();
 
         return root;
     }
@@ -87,15 +89,39 @@ public class NotificationEditorFragment extends EditorFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
-        inflater.inflate(R.menu.menu_lesson_editor, menu);
+        inflater.inflate(R.menu.menu_main, menu);
     }
 
-    @OnClick(R.id.button_back)
-    void backClicked() {
-        FragmentManager manager = getFragmentManager();
-        if (manager == null) {
-            return;
+    void testEvent(EventType eventType) {
+        List<Program> programList = mAdapter.getAsList();
+
+        UnrolledProgram program = CodeParser.parse(programList).unroll(eventType);
+
+        if (robotExecutor != null) {
+            robotExecutor.terminate();
         }
-        manager.popBackStack();
+        robotExecutor = new RobotExecutor(Lists.newArrayList(
+            Interpreter.createForCocco(program, character)), handler, 300);
+        robotExecutor.start();
+    }
+
+    @OnClick(R.id.button_gmail)
+    void testGmailClicked() {
+        testEvent(EventType.Gmail);
+    }
+
+    @OnClick(R.id.button_facebook)
+    void testFacebookClicked() {
+        testEvent(EventType.Facebook);
+    }
+
+    @OnClick(R.id.button_twitter)
+    void testTwitterClicked() {
+        testEvent(EventType.Twitter);
+    }
+
+    @OnClick(R.id.button_calendar)
+    void testCalendarClicked() {
+        testEvent(EventType.Calendar);
     }
 }

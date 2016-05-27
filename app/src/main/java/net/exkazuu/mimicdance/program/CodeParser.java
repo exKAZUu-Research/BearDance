@@ -1,13 +1,6 @@
 package net.exkazuu.mimicdance.program;
 
-import com.google.common.base.Function;
-import com.google.common.base.Joiner;
-import com.google.common.base.Strings;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Iterators;
-import com.google.common.collect.Lists;
-
-import net.exkazuu.mimicdance.models.program.Command;
+import net.exkazuu.mimicdance.interpreter.EventType;
 import net.exkazuu.mimicdance.models.program.Program;
 
 import java.util.ArrayList;
@@ -65,7 +58,7 @@ public class CodeParser {
         } else {
             falseBlock = new Block();
         }
-        return new IfStatement(trueBlock, falseBlock, readCondition(firstLine));
+        return new IfStatement(trueBlock, falseBlock, readEventType(firstLine));
 
     }
 
@@ -86,8 +79,13 @@ public class CodeParser {
         }
     }
 
-    private static boolean readCondition(String conditionString) {
-        return !conditionString.contains("きいろ");
+    private static EventType readEventType(String conditionString) {
+        for (EventType eventType : EventType.values()) {
+            if (conditionString.contains(eventType.text)) {
+                return eventType;
+            }
+        }
+        return EventType.White;
     }
 
     private static boolean contains(String line, String[] endLineTokens) {

@@ -88,8 +88,8 @@ public class TitleFragment extends Fragment {
 
     @OnClick(R.id.notification_button)
     void notificationClicked() {
-        Intent intent = new Intent(getActivity(), NotificationActivity.class);
-        startActivity(intent);
+        FragmentUtils.toNextFragment(getFragmentManager(), R.id.container,
+            NotificationEditorFragment.newInstance(), true);
     }
 
     @OnClick(R.id.start_button)
