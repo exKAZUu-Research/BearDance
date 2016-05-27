@@ -26,6 +26,8 @@ public class Command {
     public static final String LOOP = "loop";
     public static final String END_LOOP = "end_loop";
 
+    public static final String WHITE = "white";
+    public static final String YELLOW = "yellow";
 
     public static final String GMAIL = "gmail";
     public static final String TWITTER = "twitter";
@@ -65,7 +67,7 @@ public class Command {
             IF, ELSE, END_IF
         });
         sCommandGroupMap.put(GROUP_EVENT, new String[]{
-            GMAIL, FACEBOOK, TWITTER, CALENDER
+            WHITE, YELLOW, GMAIL, FACEBOOK, TWITTER, CALENDER
         });
         sCommandGroupMap.put(GROUP_NUMBER, new String[]{
             LOOP, END_LOOP,
@@ -94,6 +96,8 @@ public class Command {
         sCommandImageMap.put(END_IF, R.drawable.icon_end_if);
         sCommandImageMap.put(LOOP, R.drawable.icon_loop);
         sCommandImageMap.put(END_LOOP, R.drawable.icon_end_loop);
+        sCommandImageMap.put(WHITE, R.drawable.icon_yellow);
+        sCommandImageMap.put(YELLOW, R.drawable.icon_brawn);
         sCommandImageMap.put(GMAIL, R.drawable.icon_gmail);
         sCommandImageMap.put(TWITTER, R.drawable.icon_twitter);
         sCommandImageMap.put(FACEBOOK, R.drawable.icon_fb);
@@ -120,6 +124,8 @@ public class Command {
         sCommandCode.put(END_IF, IconType.EndIf.code);
         sCommandCode.put(LOOP, IconType.Loop.code);
         sCommandCode.put(END_LOOP, IconType.EndLoop.code);
+        sCommandCode.put(WHITE, IconType.White.code);
+        sCommandCode.put(YELLOW, IconType.Yellow.code);
         sCommandCode.put(GMAIL, IconType.Gmail.code);
         sCommandCode.put(TWITTER, IconType.Twitter.code);
         sCommandCode.put(FACEBOOK, IconType.Facebook.code);

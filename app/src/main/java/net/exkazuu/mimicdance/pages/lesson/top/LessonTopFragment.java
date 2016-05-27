@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.google.common.collect.Lists;
 
@@ -35,9 +36,12 @@ public class LessonTopFragment extends Fragment {
     private int lessonNumber;
 
     @Bind(R.id.character_left)
-    View leftCharacter;
+    View leftCharacterView;
     @Bind(R.id.character_right)
-    View rightCharacter;
+    View rightCharacterView;
+    @Bind(R.id.image_lesson_logo)
+    ImageView lessonLogoImageView;
+
     private CharacterSprite leftCharacterSprite;
     private CharacterSprite rightCharacterSprite;
 
@@ -70,15 +74,19 @@ public class LessonTopFragment extends Fragment {
 
         ButterKnife.bind(this, root);
 
+        rightCharacterView.setVisibility(Lessons.hasIf(lessonNumber) ? View.VISIBLE : View.INVISIBLE);
+        leftCharacterSprite = CharacterSprite.createCoccoLeft(leftCharacterView);
+        rightCharacterSprite = CharacterSprite.createCoccoRight(rightCharacterView);
+
+        int drawableId = getResources().getIdentifier("lesson_message" + lessonNumber, "drawable", this.getContext().getPackageName());
+        lessonLogoImageView.setImageResource(drawableId);
+
         return root;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        this.leftCharacterSprite = CharacterSprite.createCoccoLeft(leftCharacter);
-        this.rightCharacterSprite = CharacterSprite.createCoccoRight(rightCharacter);
     }
 
     @Override

@@ -40,7 +40,6 @@ public class RobotExecutor extends Thread {
             for (int j = 0; j < 2; j++) {
                 for (Interpreter interpreter : interpreters) {
                     handler.post(interpreter);
-                    Log.e("", String.valueOf(interpreter.finished()));
                 }
                 try {
                     Thread.sleep(sleepTime);

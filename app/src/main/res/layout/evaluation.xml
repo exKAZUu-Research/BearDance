@@ -268,7 +268,7 @@
       android:layout_height="match_parent"
       android:layout_weight="1"
       android:onClick="startCodingActivity"
-      android:text="@string/player_screen" />
+      android:text="@string/try_again" />
   </LinearLayout>
 
 

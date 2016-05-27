@@ -4,33 +4,17 @@ import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
-
-import net.exkazuu.mimicdance.CharacterSprite;
-import net.exkazuu.mimicdance.Lessons;
 import net.exkazuu.mimicdance.R;
-import net.exkazuu.mimicdance.interpreter.Interpreter;
-import net.exkazuu.mimicdance.interpreter.RobotExecutor;
-import net.exkazuu.mimicdance.models.program.Program;
-import net.exkazuu.mimicdance.program.Block;
-import net.exkazuu.mimicdance.program.CodeParser;
-import net.exkazuu.mimicdance.program.UnrolledProgram;
-
-import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -113,7 +97,7 @@ public class WrongAnswerFragment extends Fragment {
 
     // region UI event
 
-    @OnClick(R.id.wrong_lesson_list)
+    @OnClick(R.id.lesson_list)
     void lessonTopClicked() {
         FragmentManager manager = getFragmentManager();
         if (manager == null) {

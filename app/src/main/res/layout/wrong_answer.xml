@@ -58,7 +58,7 @@
     android:orientation="horizontal">
 
     <Button
-      android:id="@+id/wrong_lesson_list"
+      android:id="@+id/lesson_list"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_weight="1"

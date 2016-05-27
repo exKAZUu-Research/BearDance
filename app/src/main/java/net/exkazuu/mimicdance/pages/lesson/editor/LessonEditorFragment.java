@@ -60,8 +60,8 @@ public class LessonEditorFragment extends EditorFragment {
     private Handler handler;
     private RobotExecutor robotExecutor;
     private int lessonNumber;
-    private CharacterSprite leftCharacter;
-    private CharacterSprite rightCharacter;
+    private CharacterSprite leftCharacterSprite;
+    private CharacterSprite rightCharacterSprite;
 
     public static LessonEditorFragment newInstance(int lessonNumber) {
         LessonEditorFragment fragment = new LessonEditorFragment();
@@ -112,8 +112,9 @@ public class LessonEditorFragment extends EditorFragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(inflater.getContext(), LinearLayoutManager.HORIZONTAL, false));
         initTab();
 
-        leftCharacter = CharacterSprite.createCoccoLeft(leftCharacterView);
-        rightCharacter = CharacterSprite.createCoccoRight(rightCharacterView);
+        rightCharacterView.setVisibility(Lessons.hasIf(lessonNumber) ? View.VISIBLE : View.INVISIBLE);
+        leftCharacterSprite = CharacterSprite.createCoccoLeft(leftCharacterView);
+        rightCharacterSprite = CharacterSprite.createCoccoRight(rightCharacterView);
         this.handler = new Handler();
 
         return root;
@@ -153,8 +154,8 @@ public class LessonEditorFragment extends EditorFragment {
             robotExecutor.terminate();
         }
         robotExecutor = new RobotExecutor(Lists.newArrayList(
-            Interpreter.createForCocco(leftProgram, leftCharacter),
-            Interpreter.createForCocco(rightProgram, rightCharacter)), handler, 300);
+            Interpreter.createForCocco(leftProgram, leftCharacterSprite),
+            Interpreter.createForCocco(rightProgram, rightCharacterSprite)), handler, 300);
         robotExecutor.start();
     }
 }

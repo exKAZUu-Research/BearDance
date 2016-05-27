@@ -21,7 +21,6 @@ import net.exkazuu.mimicdance.interpreter.EventType;
 import net.exkazuu.mimicdance.interpreter.Interpreter;
 import net.exkazuu.mimicdance.interpreter.RobotExecutor;
 import net.exkazuu.mimicdance.models.program.Program;
-import net.exkazuu.mimicdance.pages.lesson.editor.LessonEditorFragment;
 import net.exkazuu.mimicdance.program.Block;
 import net.exkazuu.mimicdance.program.CodeParser;
 import net.exkazuu.mimicdance.program.UnrolledProgram;
@@ -48,12 +47,14 @@ public class JudgeFragment extends Fragment {
     View answerCharacter;
     @Bind(R.id.user_code)
     TextView userCodeView;
+    @Bind(R.id.white_or_orange)
+    TextView whiteOrYellow;
 
-    private CharacterSprite userCharacterSprite;
-    private CharacterSprite answerCharacterSprite;
+    private CharacterSprite userCharacterSprite, altUserCharacterSprite;
+    private CharacterSprite answerCharacterSprite, altAnswerCharacterSprite;
 
     private Handler handler;
-    private RobotExecutor robotExecutor;
+    private RobotExecutor robotExecutor, robotExecutor2;
     private ArrayList<Program> programList;
 
     public static JudgeFragment newInstance(int lessonNumber, Program[] programList) {
@@ -89,16 +90,18 @@ public class JudgeFragment extends Fragment {
 
         ButterKnife.bind(this, root);
 
+        altUserCharacterSprite = CharacterSprite.createPiyoRight(userCharacter);
+        altAnswerCharacterSprite = CharacterSprite.createCoccoRight(answerCharacter);
+        userCharacterSprite = CharacterSprite.createPiyoLeft(userCharacter);
+        answerCharacterSprite = CharacterSprite.createCoccoLeft(answerCharacter);
+        userCodeView.setText(Joiner.on("\n").skipNulls().join(Program.getCodeLines(programList)));
+
         return root;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        userCharacterSprite = CharacterSprite.createPiyoLeft(userCharacter);
-        answerCharacterSprite = CharacterSprite.createCoccoLeft(answerCharacter);
-        userCodeView.setText(Joiner.on("\n").skipNulls().join(Program.getCodeLines(programList)));
 
         String answerCode = Lessons.getCoccoCode(lessonNumber);
         Block userProgram = CodeParser.parse(programList);
@@ -112,10 +115,9 @@ public class JudgeFragment extends Fragment {
             robotExecutor.terminate();
         }
 
-        robotExecutor = new RobotExecutor(Lists.newArrayList(Interpreter.createForPiyo(userUnrolledProgram, userCharacterSprite, userCodeView),
-            Interpreter.createForCocco(answerUnrolledProgram, answerCharacterSprite)), handler) {
+        final Runnable judge = new Runnable() {
             @Override
-            public void afterRun() {
+            public void run() {
                 int diffCount = userUnrolledProgram.countDifferences(answerUnrolledProgram);
                 int size = answerUnrolledProgram.size();
                 if (Lessons.hasIf(lessonNumber)) {
@@ -123,11 +125,38 @@ public class JudgeFragment extends Fragment {
                     size += altAnswerUnrolledProgram.size();
                 }
                 if (diffCount == 0) {
-                    //startCorrectAnswerActivity(lessonNumber, piyoCode, true);
+                    FragmentUtils.toNextFragment(getFragmentManager(), R.id.container,
+                        CorrectAnswerFragment.newInstance(lessonNumber), true);
                 } else {
                     boolean almostCorrect = diffCount <= size / 3;
                     FragmentUtils.toNextFragment(getFragmentManager(), R.id.container,
                         WrongAnswerFragment.newInstance(diffCount, almostCorrect), true);
+                }
+            }
+        };
+
+        if (Lessons.hasIf(lessonNumber)) {
+            whiteOrYellow.setText("しろいひよこのばあい");
+            whiteOrYellow.setTextColor(0xFF807700);
+        }
+
+        robotExecutor = new RobotExecutor(Lists.newArrayList(Interpreter.createForPiyo(userUnrolledProgram, userCharacterSprite, userCodeView),
+            Interpreter.createForCocco(answerUnrolledProgram, answerCharacterSprite)), handler) {
+            @Override
+            public void afterRun() {
+                if (Lessons.hasIf(lessonNumber)) {
+                    whiteOrYellow.setText("きいろいひよこのばあい");
+                    whiteOrYellow.setTextColor(0xFFFF3300);
+                    robotExecutor = new RobotExecutor(Lists.newArrayList(Interpreter.createForPiyo(altUserUnrolledProgram, altUserCharacterSprite, userCodeView),
+                        Interpreter.createForCocco(altAnswerUnrolledProgram, altAnswerCharacterSprite)), handler) {
+                        @Override
+                        public void afterRun() {
+                            judge.run();
+                        }
+                    };
+                    robotExecutor.start();
+                } else {
+                    judge.run();
                 }
             }
         };
@@ -144,16 +173,6 @@ public class JudgeFragment extends Fragment {
     }
 
     // region UI event
-
-    @OnClick(R.id.button_lesson_top)
-    void lessonTopClicked() {
-        FragmentManager manager = getFragmentManager();
-        if (manager == null) {
-            return;
-        }
-        manager.popBackStack();
-        manager.popBackStack();
-    }
 
     @OnClick(R.id.button_lesson_editor)
     void lessonEditorClicked() {
