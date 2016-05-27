@@ -54,6 +54,9 @@ public class RobotExecutor extends Thread {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
+                    for (Interpreter interpreter : interpreters) {
+                        interpreter.finish();
+                    }
                     afterRun();
                 }
             });

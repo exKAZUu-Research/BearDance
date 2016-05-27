@@ -87,13 +87,15 @@ public class Interpreter implements Runnable {
     }
 
     public void finish() {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+        }
+        characterSprite.renderInitialState();
+        pose.reset();
         if (isPiyo) {
-            pose.reset();
             handleDanbo();
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-            }
+            handleMiniBear();
             if (danboController != null) {
                 danboController.release();
             }
