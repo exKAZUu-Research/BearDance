@@ -1,73 +1,140 @@
-package net.exkazuu.mimicdance.activities;
+package net.exkazuu.mimicdance.pages.lesson.judge;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Parcelable;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
+
+import net.exkazuu.mimicdance.CharacterSprite;
+import net.exkazuu.mimicdance.Lessons;
 import net.exkazuu.mimicdance.R;
+import net.exkazuu.mimicdance.interpreter.Interpreter;
+import net.exkazuu.mimicdance.interpreter.RobotExecutor;
+import net.exkazuu.mimicdance.models.program.Program;
+import net.exkazuu.mimicdance.program.Block;
+import net.exkazuu.mimicdance.program.CodeParser;
+import net.exkazuu.mimicdance.program.UnrolledProgram;
 
-public class WrongAnswerActivity extends BaseActivity {
-    AnimationDrawable altPiyoAnimation = null;
-    AnimationDrawable piyoAnimation = null;
+import java.util.ArrayList;
 
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE); // タイトルバー非表示
-        setContentView(R.layout.wrong_answer);
-        final int lessonNumber = getIntent().getIntExtra("lessonNumber", 1);
-        final String piyoCode = getIntent().getStringExtra("piyoCode");
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-        int diffCount = getIntent().getIntExtra("diffCount", 0);
-        TextView diffCountView = (TextView) findViewById(R.id.differenceCount);
-        diffCountView.setText(diffCount + "コのまちがいがあるよ");
+/**
+ * Fragment for Lesson top page
+ */
+public class WrongAnswerFragment extends Fragment {
+    private static final String ARGS_DIFF_COUNT = "diffCount";
+    private static final String ARGS_ALMOST_CORRECT = "almostCorrect";
 
-        ImageView altPiyoView = (ImageView) findViewById(R.id.altPiyo);
-        ImageView piyoView = (ImageView) findViewById(R.id.piyo);
+    @Bind(R.id.altPiyo)
+    ImageView altPiyoView;
+    @Bind(R.id.piyo)
+    ImageView piyoView;
+    @Bind(R.id.differenceCount)
+    TextView diffCountView;
+    @Bind(R.id.wrong_background)
+    LinearLayout wrongBackground;
+    @Bind(R.id.wrong_title)
+    TextView wrongTitle;
 
-        if (getIntent().getBooleanExtra("almostCorrect", false)) {
-            showAltPiyoAnimationForAlmostCorrect(this, altPiyoView);
-            showPiyoAnimationForAlmostCorrect(this, piyoView);
-            LinearLayout wrongBackground = (LinearLayout) findViewById(R.id.wrong_background);
-            wrongBackground.setBackgroundColor(0xFF67E47E);
-            TextView wrongTitle = (TextView) findViewById(R.id.wrong_title);
-            wrongTitle.setText("おしい！！！");
-        } else {
-            showAltPiyoAnimationForWrongAnswer(this, altPiyoView);
-            showPiyoAnimationForWrongAnswer(this, piyoView);
-        }
+    private AnimationDrawable altPiyoAnimation;
+    private AnimationDrawable piyoAnimation;
+    private int diffCount;
+    private boolean almostCorrect;
 
-        Button list = (Button) findViewById(R.id.wrong_lesson_list);
-        Button again = (Button) findViewById(R.id.try_again);
+    public static WrongAnswerFragment newInstance(int diffCount, boolean almostCorrect) {
+        WrongAnswerFragment fragment = new WrongAnswerFragment();
 
-        list.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startLessonListActivity(true);
-            }
-        });
-        again.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //startCodingActivity(lessonNumber, piyoCode, true);
-            }
-        });
+        Bundle args = new Bundle();
+        args.putInt(ARGS_DIFF_COUNT, diffCount);
+        args.putBoolean(ARGS_ALMOST_CORRECT, almostCorrect);
+        fragment.setArguments(args);
+
+        return fragment;
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        altPiyoAnimation.stop();
-        piyoAnimation.stop();
-        finish();
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle args = getArguments();
+        diffCount = args.getInt(ARGS_DIFF_COUNT);
+        almostCorrect = args.getBoolean(ARGS_ALMOST_CORRECT);
     }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View root = inflater.inflate(R.layout.fragment_wrong_answer, container, false);
+
+        ButterKnife.bind(this, root);
+
+        diffCountView.setText(diffCount + "コのまちがいがあるよ");
+        if (almostCorrect) {
+            showAltPiyoAnimationForAlmostCorrect(this.getContext(), altPiyoView);
+            showPiyoAnimationForAlmostCorrect(this.getContext(), piyoView);
+            wrongBackground.setBackgroundColor(0xFF67E47E);
+            wrongTitle.setText("おしい！！！");
+        } else {
+            showAltPiyoAnimationForWrongAnswer(this.getContext(), altPiyoView);
+            showPiyoAnimationForWrongAnswer(this.getContext(), piyoView);
+        }
+
+        return root;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        ButterKnife.unbind(this);
+    }
+
+    // region UI event
+
+    @OnClick(R.id.wrong_lesson_list)
+    void lessonTopClicked() {
+        FragmentManager manager = getFragmentManager();
+        if (manager == null) {
+            return;
+        }
+        manager.popBackStack();
+        manager.popBackStack();
+        manager.popBackStack();
+    }
+
+    @OnClick(R.id.try_again)
+    void lessonEditorClicked() {
+        FragmentManager manager = getFragmentManager();
+        if (manager == null) {
+            return;
+        }
+        manager.popBackStack();
+        manager.popBackStack();
+    }
+
+    // endregion
 
     void showAltPiyoAnimationForWrongAnswer(Context con, View v) {
         altPiyoAnimation = new AnimationDrawable();

@@ -18,6 +18,7 @@ import net.exkazuu.mimicdance.activities.TitleActivity;
 import net.exkazuu.mimicdance.activities.notification.NotificationActivity;
 import net.exkazuu.mimicdance.models.lesson.LessonDAO;
 import net.exkazuu.mimicdance.pages.help.HelpFragment;
+import net.exkazuu.mimicdance.pages.lesson.editor.LessonEditorFragment;
 import net.exkazuu.mimicdance.pages.lesson.list.LessonListFragment;
 import net.exkazuu.mimicdance.pages.notification.NotificationEditorFragment;
 
@@ -82,22 +83,19 @@ public class TitleFragment extends Fragment {
         Intent intent = new Intent(getActivity(), HelpActivity.class);
         startActivity(intent);
         */
-
-        FragmentUtils.toNextFragment(getFragmentManager(), R.id.container,
-            NotificationEditorFragment.newInstance(), true);
     }
 
 
     @OnClick(R.id.notification_button)
     void notificationClicked() {
-//        Intent intent = new Intent(getActivity(), NotificationActivity.class);
-//        startActivity(intent);
+        Intent intent = new Intent(getActivity(), NotificationActivity.class);
+        startActivity(intent);
     }
 
     @OnClick(R.id.start_button)
     void startClicked() {
-//        FragmentUtils.toNextFragment(getFragmentManager(), R.id.container,
-//            LessonListFragment.newInstance(), true);
+        FragmentUtils.toNextFragment(getFragmentManager(), R.id.container,
+            LessonListFragment.newInstance(), true);
     }
 
     // endregion

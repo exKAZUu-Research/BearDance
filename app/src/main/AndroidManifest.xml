@@ -34,10 +34,6 @@
       android:label="@string/title_lesson_list_activity"
       android:screenOrientation="landscape"/>
     <activity
-      android:name=".activities.CodingActivity"
-      android:label="@string/title_coding_activity"
-      android:windowSoftInputMode="adjustResize"/>
-    <activity
       android:name=".activities.CoccoActivity"
       android:label="@string/title_cocco_activity"/>
     <activity

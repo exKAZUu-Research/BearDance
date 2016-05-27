@@ -1,5 +1,15 @@
 package net.exkazuu.mimicdance.program;
 
+import com.google.common.base.Function;
+import com.google.common.base.Joiner;
+import com.google.common.base.Strings;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Iterators;
+import com.google.common.collect.Lists;
+
+import net.exkazuu.mimicdance.models.program.Command;
+import net.exkazuu.mimicdance.models.program.Program;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -11,6 +21,11 @@ public class CodeParser {
     private int lineIndex;
 
     private CodeParser() {
+    }
+
+    public static Block parse(List<Program> programs) {
+        ArrayList<String> lines = Program.getCodeLines(programs);
+        return new CodeParser().parseBlock(lines, new String[]{});
     }
 
     public static Block parse(String commandsText) {

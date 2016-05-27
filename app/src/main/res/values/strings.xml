@@ -31,7 +31,6 @@
   <string name="Title_free_play">ロボットを\nダンスさせる</string>
   <string name="look_answer_button">①おてほんを見る</string>
   <string name="text_look">まずは、お手本をチェック！</string>
-  <string name="player_source_code">playerSourceCordArea</string>
   <string name="partner_source_cord">お手本のソースコードエリア</string>
   <string name="lesson_information">レッスン情報</string>
   <string name="image_area">image</string>
@@ -60,7 +59,7 @@
   <string name="challenge">②やってみよう！！</string>
   <string name="hantei">こたえあわせ！</string>
   <string name="player_screen">やりなおす！</string>
-  <string name="look_answer_button2">もう１かいおてほんをみる</string>
+  <string name="look_answer_button2">おてほんをみる</string>
   <string name="arrow_right">つぎへ</string>
   <string name="arrow_left">まえへ</string>
   <string name="close">とじる</string>

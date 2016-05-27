@@ -9,7 +9,7 @@
     android:layout_height="0dp"
     android:layout_centerInParent="true"/>
   <include
-    layout="@layout/character_piyo"
+    layout="@layout/character_cocco"
     android:id="@+id/character_left"
     android:layout_width="0dp"
     android:layout_height="0dp"

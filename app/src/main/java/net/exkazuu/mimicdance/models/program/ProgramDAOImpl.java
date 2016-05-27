@@ -44,6 +44,7 @@ public class ProgramDAOImpl implements ProgramDAO {
 
     /**
      * テーブルを作成すべき時に呼ばれます
+     *
      * @param db データベースオブジェクト
      */
     public static void create(SQLiteDatabase db) {
@@ -58,7 +59,7 @@ public class ProgramDAOImpl implements ProgramDAO {
             // 一旦全部消す
             db.delete(TABLE_NAME, null, null);
             // 1行ずついれていく
-            for (int i = 0 ; i < programList.size() ; ++i) {
+            for (int i = 0; i < programList.size(); ++i) {
                 Program program = programList.get(i);
 
                 ContentValues values = new ContentValues();
@@ -104,7 +105,7 @@ public class ProgramDAOImpl implements ProgramDAO {
         db.close();
 
         // 12個(Constants.NUM_PROGRAM_LINE個)なかったら空を追加する
-        while(list.size() < Constants.NUM_PROGRAM_LINE) {
+        while (list.size() < Constants.NUM_PROGRAM_LINE) {
             list.add(new Program());
         }
 
@@ -113,7 +114,7 @@ public class ProgramDAOImpl implements ProgramDAO {
 
     private List<Program> createEmptyList() {
         List<Program> list = new ArrayList<>(Constants.NUM_PROGRAM_LINE);
-        for (int i = 0 ; i < Constants.NUM_PROGRAM_LINE ; ++i) {
+        for (int i = 0; i < Constants.NUM_PROGRAM_LINE; ++i) {
             list.add(new Program());
         }
         return list;

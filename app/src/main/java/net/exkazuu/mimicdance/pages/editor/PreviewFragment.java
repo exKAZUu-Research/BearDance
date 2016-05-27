@@ -10,13 +10,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.common.collect.Lists;
+
+import net.exkazuu.mimicdance.CharacterSprite;
 import net.exkazuu.mimicdance.R;
-import net.exkazuu.mimicdance.models.computer.Computer;
-import net.exkazuu.mimicdance.models.computer.ComputerImpl;
+import net.exkazuu.mimicdance.interpreter.Interpreter;
+import net.exkazuu.mimicdance.interpreter.RobotExecutor;
 import net.exkazuu.mimicdance.models.program.Program;
-import net.exkazuu.mimicdance.models.robot.PiyoRobot;
-import net.exkazuu.mimicdance.models.robot.Robot;
-import net.exkazuu.mimicdance.pages.lesson.preview.ComputeRunnable;
+import net.exkazuu.mimicdance.program.CodeParser;
+import net.exkazuu.mimicdance.program.UnrolledProgram;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,11 +37,10 @@ public class PreviewFragment extends Fragment {
     private List<Program> programList;
     private String transitionName;
 
-    @Bind(R.id.character) View characterView;
+    @Bind(R.id.character)
+    View characterView;
 
     private Handler handler;
-    private Computer computer;
-    private Robot robot;
 
     public static PreviewFragment newInstance(List<Program> programList, String transitionName) {
         PreviewFragment fragment = new PreviewFragment();
@@ -60,7 +61,7 @@ public class PreviewFragment extends Fragment {
         if (array != null) {
             this.programList = new ArrayList<>(array.length);
             for (Parcelable p : array) {
-                this.programList.add((Program)p);
+                this.programList.add((Program) p);
             }
         } else {
             this.programList = Collections.emptyList();
@@ -76,7 +77,7 @@ public class PreviewFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_editor_preview, container, false);
 
         ButterKnife.bind(this, root);
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Bundle args = getArguments();
             this.characterView.setTransitionName(transitionName);
         }
@@ -88,10 +89,9 @@ public class PreviewFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        this.computer  = new ComputerImpl(this.programList);
-        this.robot = new PiyoRobot(characterView);
-
-        handler.post(new ComputeRunnable(this.computer, this.robot, handler));
+        UnrolledProgram program = CodeParser.parse(this.programList).unroll(true);
+        CharacterSprite piyoLeft = CharacterSprite.createPiyoLeft(characterView);
+        new RobotExecutor(Lists.newArrayList(Interpreter.createForCocco(program, piyoLeft)), handler, 300).start();
     }
 
     @Override

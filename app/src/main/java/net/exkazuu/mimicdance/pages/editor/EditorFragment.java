@@ -37,7 +37,7 @@ import jp.fkmsoft.android.framework.util.FragmentUtils;
 /**
  * プログラムを入力するためのFragment
  */
-public class EditorFragment extends Fragment {
+public abstract class EditorFragment extends Fragment {
     private static final int STATE_SELECT_PROGRAM = 0;
     private static final int STATE_SELECT_COMMAND = 1;
     // 中断用
@@ -47,13 +47,18 @@ public class EditorFragment extends Fragment {
     private static final String STATE_SELECTED_POSITION = "selectedPosition";
     private static final String STATE_SELECTED_INDEX = "selectedIndex";
 
-    @Bind(R.id.root) public View mRootView;
-    @Bind(R.id.toolbar) public Toolbar mToolbar;
-    @Bind(R.id.tablayout) public TabLayout mTabLayout;
-    @Bind(R.id.recycler) public RecyclerView mRecyclerView;
+    @Bind(R.id.root)
+    protected View mRootView;
+    @Bind(R.id.toolbar)
+    protected Toolbar mToolbar;
+    @Bind(R.id.tablayout)
+    protected TabLayout mTabLayout;
+    @Bind(R.id.recycler)
+    protected RecyclerView mRecyclerView;
+
+    protected ProgramDAO mProgramDAO;
 
     protected ProgramAdapter mAdapter;
-    private ProgramDAO mProgramDAO;
     /**
      * 選択の状態
      */
@@ -72,20 +77,13 @@ public class EditorFragment extends Fragment {
      */
     private int mSelectedIndex;
 
-    public static EditorFragment newInstance() {
-        EditorFragment fragment = new EditorFragment();
-
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-
-        return fragment;
-    }
+    abstract protected ProgramDAO createProgramDAO();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        mProgramDAO = new ProgramDAOImpl(getContext());
+        mProgramDAO = createProgramDAO();
     }
 
     @Nullable
@@ -105,6 +103,31 @@ public class EditorFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
         inflater.inflate(R.menu.menu_main, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_trash:
+                // ゴミ箱は、選択した枠を空にする処理
+                onCommandClicked("");
+                return true;
+            case R.id.action_save: // 保存
+                mProgramDAO.save(mAdapter.getAsList());
+                Snackbar.make(mRootView, R.string.save_done, Snackbar.LENGTH_LONG).show();
+                return true;
+            case R.id.action_reset: // やりなおし
+                mState = STATE_SELECT_PROGRAM;
+                mAdapter.clearProgram();
+                mAdapter.setSelected(-1, -1);
+                mAdapter.notifyDataSetChanged();
+                return true;
+            case R.id.action_quit:
+                getFragmentManager().beginTransaction().remove(this).commit();
+                getActivity().finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -149,7 +172,9 @@ public class EditorFragment extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
         mTouchHelper.attachToRecyclerView(mRecyclerView);
         TabLayout.Tab tab = mTabLayout.getTabAt(tabIndex);
-        if (tab != null) { tab.select(); }
+        if (tab != null) {
+            tab.select();
+        }
 
         if (savedInstanceState == null) {
             FragmentUtils.toNextFragment(getChildFragmentManager(), R.id.layout_toolbox,
@@ -160,11 +185,13 @@ public class EditorFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelableArray(STATE_PROGRAM_LIST, mAdapter.getAsArray());
-        outState.putInt(STATE_TAB_INDEX, mSavedTabIndex);
-        outState.putInt(STATE_PAGE_STATE, mState);
-        outState.putInt(STATE_SELECTED_POSITION, mSelectedPosition);
-        outState.putInt(STATE_SELECTED_INDEX, mSelectedIndex);
+        if (mAdapter != null) {
+            outState.putParcelableArray(STATE_PROGRAM_LIST, mAdapter.getAsArray());
+            outState.putInt(STATE_TAB_INDEX, mSavedTabIndex);
+            outState.putInt(STATE_PAGE_STATE, mState);
+            outState.putInt(STATE_SELECTED_POSITION, mSelectedPosition);
+            outState.putInt(STATE_SELECTED_INDEX, mSelectedIndex);
+        }
     }
 
     @Override
@@ -174,33 +201,9 @@ public class EditorFragment extends Fragment {
         ButterKnife.unbind(this);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-        case R.id.action_trash:
-            // ゴミ箱は、選択した枠を空にする処理
-            onCommandClicked("");
-            return true;
-        case R.id.action_save: // 保存
-            mProgramDAO.save(mAdapter.getAsList());
-            Snackbar.make(mRootView, R.string.save_done, Snackbar.LENGTH_LONG).show();
-            return true;
-        case R.id.action_reset: // やりなおし
-            mState = STATE_SELECT_PROGRAM;
-            mAdapter.clearProgram();
-            mAdapter.setSelected(-1, -1);
-            mAdapter.notifyDataSetChanged();
-            return true;
-        case R.id.action_quit:
-            getFragmentManager().beginTransaction().remove(this).commit();
-            getActivity().finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     /**
      * {@link ToolboxFragment} でコマンドが選択された時に呼ばれます
+     *
      * @param command 選択されたコマンド
      */
     public void onCommandClicked(String command) {
@@ -253,20 +256,20 @@ public class EditorFragment extends Fragment {
             int type;
             mSavedTabIndex = tab.getPosition();
             switch (tab.getPosition()) {
-            case 0: // アクション
-                type = Command.GROUP_ACTION;
-                break;
-            case 1: // 場合分け
-                type = Command.GROUP_CONDITION;
-                break;
-            case 2: // イベント
-                type = Command.GROUP_EVENT;
-                break;
-            case 3: // 繰り返し
-                type = Command.GROUP_NUMBER;
-                break;
-            default:
-                return;
+                case 0: // アクション
+                    type = Command.GROUP_ACTION;
+                    break;
+                case 1: // 場合分け
+                    type = Command.GROUP_CONDITION;
+                    break;
+                case 2: // イベント
+                    type = Command.GROUP_EVENT;
+                    break;
+                case 3: // 繰り返し
+                    type = Command.GROUP_NUMBER;
+                    break;
+                default:
+                    return;
             }
             FragmentManager manager = getChildFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();

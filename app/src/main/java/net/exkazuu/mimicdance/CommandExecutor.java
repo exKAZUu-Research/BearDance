@@ -16,7 +16,7 @@ public class CommandExecutor extends AsyncTask<Void, Void, Void> {
     private final Interpreter altCoccoExecutor;
 
     public CommandExecutor(UnrolledProgram coccoProgram, UnrolledProgram altCoccoProgram,
-                           CharacterImageViewSet coccoViewSet, CharacterImageViewSet altCoccoViewSet) {
+                           CharacterSprite coccoViewSet, CharacterSprite altCoccoViewSet) {
         this.coccoExecutor = Interpreter.createForCocco(coccoProgram, coccoViewSet);
         this.altCoccoExecutor = Interpreter.createForCocco(altCoccoProgram, altCoccoViewSet);
     }

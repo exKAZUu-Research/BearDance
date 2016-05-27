@@ -3,6 +3,7 @@ package net.exkazuu.mimicdance.models.program;
 import android.util.SparseArray;
 
 import net.exkazuu.mimicdance.R;
+import net.exkazuu.mimicdance.interpreter.IconType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,6 +52,8 @@ public class Command {
 
     private static final Map<String, Integer> sCommandImageMap;
 
+    private static final Map<String, String> sCommandCode;
+
 
     static {
         // コマンドのグループを作っておく
@@ -91,12 +94,36 @@ public class Command {
         sCommandImageMap.put(END_IF, R.drawable.icon_end_if);
         sCommandImageMap.put(LOOP, R.drawable.icon_loop);
         sCommandImageMap.put(END_LOOP, R.drawable.icon_end_loop);
-        sCommandImageMap.put(GMAIL,R.drawable.icon_gmail);
-        sCommandImageMap.put(TWITTER,R.drawable.icon_gmail);
-        sCommandImageMap.put(GMAIL,R.drawable.icon_gmail);
-        sCommandImageMap.put(TWITTER,R.drawable.icon_twitter);
-        sCommandImageMap.put(FACEBOOK,R.drawable.icon_fb);
-        sCommandImageMap.put(CALENDER,R.drawable.icon_calender);
+        sCommandImageMap.put(GMAIL, R.drawable.icon_gmail);
+        sCommandImageMap.put(TWITTER, R.drawable.icon_twitter);
+        sCommandImageMap.put(FACEBOOK, R.drawable.icon_fb);
+        sCommandImageMap.put(CALENDER, R.drawable.icon_calender);
+
+        // コマンドとまねっこダンスの日本語プログラムの対応表
+        sCommandCode = new HashMap<>();
+        sCommandCode.put(RIGHT_HAND_UP, IconType.RightHandUp.code);
+        sCommandCode.put(RIGHT_HAND_DOWN, IconType.RightHandDown.code);
+        sCommandCode.put(LEFT_HAND_UP, IconType.LeftHandUp.code);
+        sCommandCode.put(LEFT_HAND_DOWN, IconType.LeftHandDown.code);
+        sCommandCode.put(NUMBER_0, IconType.Number0.code);
+        sCommandCode.put(NUMBER_1, IconType.Number1.code);
+        sCommandCode.put(NUMBER_2, IconType.Number2.code);
+        sCommandCode.put(NUMBER_3, IconType.Number3.code);
+        sCommandCode.put(NUMBER_4, IconType.Number4.code);
+        sCommandCode.put(NUMBER_5, IconType.Number5.code);
+        sCommandCode.put(NUMBER_6, IconType.Number6.code);
+        sCommandCode.put(NUMBER_7, IconType.Number7.code);
+        sCommandCode.put(NUMBER_8, IconType.Number8.code);
+        sCommandCode.put(NUMBER_9, IconType.Number9.code);
+        sCommandCode.put(IF, IconType.If.code);
+        sCommandCode.put(ELSE, IconType.Else.code);
+        sCommandCode.put(END_IF, IconType.EndIf.code);
+        sCommandCode.put(LOOP, IconType.Loop.code);
+        sCommandCode.put(END_LOOP, IconType.EndLoop.code);
+        sCommandCode.put(GMAIL, IconType.Gmail.code);
+        sCommandCode.put(TWITTER, IconType.Twitter.code);
+        sCommandCode.put(FACEBOOK, IconType.Facebook.code);
+        sCommandCode.put(CALENDER, IconType.Calendar.code);
     }
 
     public static String[] getByGroup(int group) {
@@ -106,5 +133,9 @@ public class Command {
     public static int getImage(String command) {
         Integer value = sCommandImageMap.get(command);
         return value == null ? R.drawable.icon_writable : value;
+    }
+
+    public static String getCode(String command) {
+        return sCommandCode.get(command);
     }
 }

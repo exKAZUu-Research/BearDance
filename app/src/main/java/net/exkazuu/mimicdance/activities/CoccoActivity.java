@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import net.exkazuu.mimicdance.CharacterImageViewSet;
+import net.exkazuu.mimicdance.CharacterSprite;
 import net.exkazuu.mimicdance.Lessons;
 import net.exkazuu.mimicdance.R;
 import net.exkazuu.mimicdance.Timer;
@@ -27,8 +27,8 @@ public class CoccoActivity extends BaseActivity {
     private UnrolledProgram altCoccoProgram;
 
     private Thread thread;
-    private CharacterImageViewSet coccoViewSet;
-    private CharacterImageViewSet altCoccoViewSet;
+    private CharacterSprite coccoViewSet;
+    private CharacterSprite altCoccoViewSet;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,8 +64,8 @@ public class CoccoActivity extends BaseActivity {
     }
 
     private void initializeComponents() {
-        coccoViewSet = CharacterImageViewSet.createCoccoLeft(this);
-        altCoccoViewSet = CharacterImageViewSet.createCoccoRight(this);
+        //coccoViewSet = CharacterSprite.createCoccoLeft(this);
+        //altCoccoViewSet = CharacterSprite.createCoccoRight(this);
 
         Button btnShowCocco = (Button) this.findViewById(R.id.btnShowCocco);
         btnShowCocco.setOnClickListener(new View.OnClickListener() {
@@ -99,7 +99,7 @@ public class CoccoActivity extends BaseActivity {
     }
 
     public void startCodingActivity(View view) {
-        startCodingActivity(lessonNumber, piyoCode, true);
+        //startCodingActivity(lessonNumber, piyoCode, true);
     }
 
     private final class CommandExecutor implements Runnable {

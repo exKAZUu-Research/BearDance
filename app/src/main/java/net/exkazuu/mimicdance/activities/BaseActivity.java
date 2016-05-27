@@ -43,23 +43,6 @@ public abstract class BaseActivity extends Activity {
     }
 
     /**
-     * コーディング画面に遷移します。
-     *
-     * @param lessonNumber
-     * @param piyoCode
-     * @param clear
-     */
-    protected void startCodingActivity(int lessonNumber, String piyoCode, boolean clear) {
-        Intent intent = new Intent(this, CodingActivity.class);
-        intent.putExtra("lessonNumber", lessonNumber);
-        intent.putExtra("piyoCode", piyoCode);
-        if (clear) {
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        }
-        startActivity(intent);
-    }
-
-    /**
      * ヘルプ画面に遷移します。
      *
      * @param clear

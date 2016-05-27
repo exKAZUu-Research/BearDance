@@ -5,44 +5,44 @@
   >
 
   <ImageView
-    android:id="@+id/image_left_hand"
+    android:id="@+id/characterLeftHand"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:contentDescription="@string/image_area"
     android:fitsSystemWindows="true"
-    android:src="@drawable/cocco_left_hand_up1"
+    android:src="@drawable/piyo_left_hand_up1"
     android:visibility="visible" />
 
   <ImageView
-    android:id="@+id/image_right_hand"
+    android:id="@+id/characterRightHand"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:contentDescription="@string/image_area"
-    android:src="@drawable/cocco_right_hand_up1"
+    android:src="@drawable/piyo_right_hand_up1"
     android:visibility="visible" />
 
   <ImageView
-    android:id="@+id/coccoBody"
+    android:id="@+id/characterBody"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:contentDescription="@string/image_area"
-    android:src="@drawable/cocco_basic"
+    android:src="@drawable/piyo_basic"
     android:visibility="visible" />
 
   <ImageView
-    android:id="@+id/coccoLeftFoot"
+    android:id="@+id/characterLeftFoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:contentDescription="@string/image_area"
-    android:src="@drawable/cocco_left_foot_up1"
+    android:src="@drawable/piyo_left_foot_up1"
     android:visibility="visible" />
 
   <ImageView
-    android:id="@+id/coccoRightFoot"
+    android:id="@+id/characterRightFoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:contentDescription="@string/image_area"
-    android:src="@drawable/cocco_right_foot_up1"
+    android:src="@drawable/piyo_right_foot_up1"
     android:visibility="visible" />
 
 </FrameLayout>

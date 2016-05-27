@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import net.exkazuu.mimicdance.CharacterImageViewSet;
+import net.exkazuu.mimicdance.CharacterSprite;
 import net.exkazuu.mimicdance.Lessons;
 import net.exkazuu.mimicdance.R;
 import net.exkazuu.mimicdance.interpreter.Interpreter;
@@ -26,10 +26,10 @@ public class EvaluationActivity extends BaseActivity {
     private UnrolledProgram coccoProgram;
     private UnrolledProgram altCoccoProgram;
 
-    private CharacterImageViewSet piyoViewSet;
-    private CharacterImageViewSet altPiyoViewSet;
-    private CharacterImageViewSet coccoViewSet;
-    private CharacterImageViewSet altCoccoViewSet;
+    private CharacterSprite piyoViewSet;
+    private CharacterSprite altPiyoViewSet;
+    private CharacterSprite coccoViewSet;
+    private CharacterSprite altCoccoViewSet;
 
     private Thread thread;
     private CommandExecutor commandExecutor;
@@ -81,10 +81,10 @@ public class EvaluationActivity extends BaseActivity {
         TextView playerEditText = (TextView) findViewById(R.id.txtStringCode);
         playerEditText.setText(piyoCode);
 
-        piyoViewSet = CharacterImageViewSet.createPiyoLeft(this);
-        altPiyoViewSet = CharacterImageViewSet.createPiyoRight(this);
-        coccoViewSet = CharacterImageViewSet.createCoccoLeft(this);
-        altCoccoViewSet = CharacterImageViewSet.createCoccoRight(this);
+//        piyoViewSet = CharacterSprite.createPiyoLeft(this);
+//        altPiyoViewSet = CharacterSprite.createPiyoRight(this);
+//        coccoViewSet = CharacterSprite.createCoccoLeft(this);
+//        altCoccoViewSet = CharacterSprite.createCoccoRight(this);
 
         Button button = (Button) this.findViewById(R.id.button1);
         button.setOnClickListener(new View.OnClickListener() {
@@ -109,7 +109,7 @@ public class EvaluationActivity extends BaseActivity {
     }
 
     public void startCodingActivity(View view) {
-        startCodingActivity(lessonNumber, piyoCode, true);
+        //startCodingActivity(lessonNumber, piyoCode, true);
     }
 
     public final class CommandExecutor implements Runnable {
@@ -126,9 +126,9 @@ public class EvaluationActivity extends BaseActivity {
             TextView playerEditText = (TextView) findViewById(R.id.txtStringCode);
 
             Interpreter piyoExecutor = Interpreter.createForPiyo(
-                piyoProgram, piyoViewSet, playerEditText, getApplicationContext());
+                piyoProgram, piyoViewSet, playerEditText);
             Interpreter altPiyoExecutor = Interpreter.createForPiyo(
-                altPiyoProgram, altPiyoViewSet, playerEditText, getApplicationContext());
+                altPiyoProgram, altPiyoViewSet, playerEditText);
             Interpreter coccoExecutor = Interpreter.createForCocco(coccoProgram, coccoViewSet);
             Interpreter altCoccoExecutor = Interpreter.createForCocco(altCoccoProgram, altCoccoViewSet);
 

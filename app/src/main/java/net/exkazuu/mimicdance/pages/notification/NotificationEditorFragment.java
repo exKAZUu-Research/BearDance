@@ -3,6 +3,7 @@ package net.exkazuu.mimicdance.pages.notification;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -15,11 +16,14 @@ import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import net.exkazuu.mimicdance.R;
 import net.exkazuu.mimicdance.models.program.Program;
+import net.exkazuu.mimicdance.models.program.ProgramDAO;
+import net.exkazuu.mimicdance.models.program.ProgramDAOImpl;
 import net.exkazuu.mimicdance.pages.editor.EditorFragment;
 import net.exkazuu.mimicdance.pages.editor.PreviewFragment;
 
@@ -30,7 +34,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
- * Editor for Lesson
+ * Editor for Notification
  */
 public class NotificationEditorFragment extends EditorFragment {
     private static final String TRANSITION_NAME_CHARACTER = "character";
@@ -46,14 +50,18 @@ public class NotificationEditorFragment extends EditorFragment {
     @Bind(R.id.character)
     View characterView;
 
-    public static NotificationEditorFragment newInstance(Fragment target, int requestCode) {
+    public static NotificationEditorFragment newInstance() {
         NotificationEditorFragment fragment = new NotificationEditorFragment();
-        fragment.setTargetFragment(target, requestCode);
 
         Bundle args = new Bundle();
         fragment.setArguments(args);
 
         return fragment;
+    }
+
+    @Override
+    protected ProgramDAO createProgramDAO() {
+        return new ProgramDAOImpl(getContext());
     }
 
     @Nullable
@@ -89,36 +97,5 @@ public class NotificationEditorFragment extends EditorFragment {
             return;
         }
         manager.popBackStack();
-    }
-
-    @OnClick(R.id.button_check_program)
-    void checkProgramClicked() {
-        // Get current program
-        List<Program> programList = mAdapter.getAsList();
-
-        FragmentManager manager = getFragmentManager();
-        if (manager == null) {
-            return;
-        }
-
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.addToBackStack("");
-
-        String transitionName = ViewCompat.getTransitionName(characterView);
-        PreviewFragment next = PreviewFragment.newInstance(programList, transitionName);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            TransitionInflater inflater = TransitionInflater.from(getContext());
-            setSharedElementReturnTransition(inflater.inflateTransition(R.transition.change_image_trans));
-            setExitTransition(inflater.inflateTransition(android.R.transition.fade));
-
-            next.setSharedElementEnterTransition(inflater.inflateTransition(R.transition.change_image_trans));
-            next.setEnterTransition(inflater.inflateTransition(android.R.transition.fade));
-        }
-
-        transaction.replace(R.id.container, next);
-        transaction.addSharedElement(characterView, transitionName);
-
-        transaction.commit();
     }
 }

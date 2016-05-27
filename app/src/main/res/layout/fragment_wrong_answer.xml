@@ -39,14 +39,16 @@
       android:id="@+id/altPiyo"
       android:layout_width="150dp"
       android:layout_height="150dp"
-      android:layout_marginLeft="110dp"
+      android:layout_marginTop="80dp"
+      android:layout_marginLeft="240dp"
       android:layout_marginRight="30dp"/>
 
     <ImageView
       android:id="@+id/piyo"
       android:layout_width="150dp"
       android:layout_height="150dp"
-      android:layout_marginLeft="50dp"/>
+      android:layout_marginTop="80dp"
+      android:layout_marginLeft="180dp"/>
   </LinearLayout>
 
   <LinearLayout
