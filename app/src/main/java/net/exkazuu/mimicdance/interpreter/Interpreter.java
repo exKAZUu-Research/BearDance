@@ -88,7 +88,7 @@ public class Interpreter implements Runnable {
 
     public void finish() {
         try {
-            Thread.sleep(1000);
+            Thread.sleep(800);
         } catch (InterruptedException e) {
         }
         characterSprite.renderInitialState();

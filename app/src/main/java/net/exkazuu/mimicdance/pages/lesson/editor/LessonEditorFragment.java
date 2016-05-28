@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import com.google.common.collect.Lists;
 
 import net.exkazuu.mimicdance.CharacterSprite;
-import net.exkazuu.mimicdance.Constants;
 import net.exkazuu.mimicdance.Lessons;
 import net.exkazuu.mimicdance.R;
 import net.exkazuu.mimicdance.interpreter.EventType;
@@ -88,8 +87,8 @@ public class LessonEditorFragment extends EditorFragment {
 
             @Override
             public List<Program> load() {
-                List<Program> list = new ArrayList<>(Constants.NUM_PROGRAM_LINE);
-                for (int i = 0; i < Constants.NUM_PROGRAM_LINE; ++i) {
+                List<Program> list = new ArrayList<>();
+                for (int i = 0; i < Lessons.getMaxStep(lessonNumber); ++i) {
                     list.add(new Program());
                 }
                 return list;
@@ -125,6 +124,21 @@ public class LessonEditorFragment extends EditorFragment {
         userLeftCharacterSprite = CharacterSprite.createPiyoLeft(userLeftCharacterView);
         userRightCharacterSprite = CharacterSprite.createPiyoRight(userRightCharacterView);
         this.handler = new Handler();
+
+        if (mTabLayout.getTabCount() >= 4) {
+            position2Group = Lists.newArrayList(0, 1, 2, 3);
+            if (!Lessons.hasIf(lessonNumber)) {
+                mTabLayout.removeTabAt(3);
+                mTabLayout.removeTabAt(2);
+                position2Group.remove(3);
+                position2Group.remove(2);
+            }
+
+            if (!Lessons.hasLoop(lessonNumber)) {
+                mTabLayout.removeTabAt(1);
+                position2Group.remove(1);
+            }
+        }
 
         return root;
     }

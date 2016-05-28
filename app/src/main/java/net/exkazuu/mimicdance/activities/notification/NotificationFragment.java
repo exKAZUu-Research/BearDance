@@ -232,9 +232,9 @@ public class NotificationFragment extends Fragment {
 
     private void initTab() {
         mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.tab_action)));
+        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.tab_repeat)));
         mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.tab_condition)));
         mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.tab_event)));
-        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.tab_repeat)));
 
         mTabLayout.setOnTabSelectedListener(mTabSelectedListener);
     }

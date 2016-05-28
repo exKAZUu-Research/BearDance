@@ -5,4 +5,16 @@
     android:icon="@drawable/dustbox"
     android:title="@string/title_trash"
     app:showAsAction="ifRoom" />
+  <item
+    android:id="@+id/action_continue"
+    android:title="@string/title_continue"
+    app:showAsAction="never" />
+  <item
+    android:id="@+id/action_reset"
+    android:title="@string/title_reset"
+    app:showAsAction="never" />
+  <item
+    android:id="@+id/action_quit"
+    android:title="やめる"
+    app:showAsAction="never" />
 </menu>

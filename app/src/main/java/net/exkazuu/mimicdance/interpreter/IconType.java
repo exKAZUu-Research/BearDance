@@ -3,10 +3,10 @@ package net.exkazuu.mimicdance.interpreter;
 import net.exkazuu.mimicdance.R;
 
 public enum IconType {
-    RightHandUp("右腕を上げる", R.drawable.icon_right_hand_up, R.id.programIconView1),
-    RightHandDown("右腕を下げる", R.drawable.icon_right_hand_down, R.id.programIconView2),
-    LeftHandUp("左腕を上げる", R.drawable.icon_left_hand_up, R.id.programIconView3),
-    LeftHandDown("左腕を下げる", R.drawable.icon_left_hand_down, R.id.programIconView4),
+    RightHandUp("みぎてを上げる", R.drawable.icon_right_hand_up, R.id.programIconView1),
+    RightHandDown("みぎてを下げる", R.drawable.icon_right_hand_down, R.id.programIconView2),
+    LeftHandUp("ひだりてを上げる", R.drawable.icon_left_hand_up, R.id.programIconView3),
+    LeftHandDown("ひだりてを下げる", R.drawable.icon_left_hand_down, R.id.programIconView4),
     //    RightFootUp("右足を上げる", R.drawable.icon_right_foot_up),
     //    RightFootDown("右足を下げる", R.drawable.icon_right_foot_down),
     //    LeftFootUp("左足を上げる", R.drawable.icon_left_foot_up),

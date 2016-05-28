@@ -12,10 +12,10 @@
   <string name="hint_text">ここに入力</string>
   <string name="loop">繰り返し</string>
   <string name="koko">ここまで</string>
-  <string name="left_hand_up">左腕↑</string>
-  <string name="left_hand_down">左腕↓</string>
-  <string name="right_hand_up">右腕↑</string>
-  <string name="right_hand_down">右腕↓</string>
+  <string name="left_hand_up">ひだりて↑</string>
+  <string name="left_hand_down">ひだりて↓</string>
+  <string name="right_hand_up">みぎて↑</string>
+  <string name="right_hand_down">みぎて↓</string>
   <string name="right_foot_up">右足↑</string>
   <string name="right_foot_down">右足↓</string>
   <string name="left_foot_up">左足↑</string>

@@ -92,7 +92,10 @@ public class CharacterSprite {
     }
 
     public void renderInitialState() {
-        renderCompleteState(Lists.newArrayList(ActionType.LeftFootDown, ActionType.Jump.LeftHandDown,
+        for (int i = 0; i < bodyParts.length - 1; i++) {
+            bodyParts[i].setVisibility(View.VISIBLE);
+        }
+        renderCompleteState(Lists.newArrayList(ActionType.LeftFootDown, ActionType.LeftHandDown,
             ActionType.RightFootDown, ActionType.RightHandDown));
         switch (charaType) {
             case Piyo:
@@ -143,6 +146,8 @@ public class CharacterSprite {
     public void renderIntermediateErrorState() {
         if (charaType == CharacterType.Piyo) {
             getBody().setImageResource(R.drawable.korobu_1);
+        } else if (charaType == CharacterType.Koguma) {
+            getBody().setImageResource(R.drawable.koguma_korobu_1);
         } else {
             getBody().setImageResource(R.drawable.alt_korobu_1);
         }
@@ -154,6 +159,8 @@ public class CharacterSprite {
     public void renderCompleteErrorState() {
         if (charaType == CharacterType.Piyo) {
             getBody().setImageResource(R.drawable.korobu_3);
+        } else if (charaType == CharacterType.Koguma) {
+            getBody().setImageResource(R.drawable.koguma_korobu_3);
         } else {
             getBody().setImageResource(R.drawable.alt_korobu_3);
         }

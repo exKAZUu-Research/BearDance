@@ -48,9 +48,9 @@ public class Command {
     private static final SparseArray<String[]> sCommandGroupMap;
 
     public static final int GROUP_ACTION = 0;
-    public static final int GROUP_CONDITION = 1;
-    public static final int GROUP_EVENT = 2;
-    public static final int GROUP_NUMBER = 3;
+    public static final int GROUP_NUMBER = 1;
+    public static final int GROUP_CONDITION = 2;
+    public static final int GROUP_EVENT = 3;
 
     private static final Map<String, Integer> sCommandImageMap;
 
@@ -63,16 +63,16 @@ public class Command {
         sCommandGroupMap.put(GROUP_ACTION, new String[]{
             RIGHT_HAND_UP, RIGHT_HAND_DOWN, LEFT_HAND_UP, LEFT_HAND_DOWN
         });
+        sCommandGroupMap.put(GROUP_NUMBER, new String[]{
+            LOOP, END_LOOP,
+            NUMBER_1, NUMBER_2, NUMBER_3, NUMBER_4, NUMBER_5,
+            NUMBER_6, NUMBER_7, NUMBER_8, NUMBER_9
+        });
         sCommandGroupMap.put(GROUP_CONDITION, new String[]{
             IF, ELSE, END_IF
         });
         sCommandGroupMap.put(GROUP_EVENT, new String[]{
             WHITE, YELLOW, GMAIL, FACEBOOK, TWITTER, CALENDER
-        });
-        sCommandGroupMap.put(GROUP_NUMBER, new String[]{
-            LOOP, END_LOOP,
-            NUMBER_1, NUMBER_2, NUMBER_3, NUMBER_4, NUMBER_5,
-            NUMBER_6, NUMBER_7, NUMBER_8, NUMBER_9
         });
 
         // コマンドとアイコンの対応表

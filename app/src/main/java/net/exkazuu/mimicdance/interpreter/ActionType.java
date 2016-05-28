@@ -4,10 +4,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 public enum ActionType {
-    LeftHandUp("左腕を上げる"),
-    LeftHandDown("左腕を下げる"),
-    RightHandUp("右腕を上げる"),
-    RightHandDown("右腕を下げる"),
+    LeftHandUp("ひだりてを上げる"),
+    LeftHandDown("ひだりてを下げる"),
+    RightHandUp("みぎてを上げる"),
+    RightHandDown("みぎてを下げる"),
     LeftFootUp("左足を上げる"),
     LeftFootDown("左足を下げる"),
     RightFootUp("右足を上げる"),

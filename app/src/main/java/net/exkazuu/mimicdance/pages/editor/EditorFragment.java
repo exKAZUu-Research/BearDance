@@ -21,10 +21,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.common.collect.Lists;
+
 import net.exkazuu.mimicdance.R;
 import net.exkazuu.mimicdance.models.program.Command;
 import net.exkazuu.mimicdance.models.program.Program;
 import net.exkazuu.mimicdance.models.program.ProgramDAO;
+import net.exkazuu.mimicdance.pages.title.TitleFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +57,7 @@ public abstract class EditorFragment extends Fragment {
     protected TabLayout mTabLayout;
     @Bind(R.id.recycler)
     protected RecyclerView mRecyclerView;
+    protected List<Integer> position2Group;
 
     protected ProgramDAO mProgramDAO;
 
@@ -83,6 +87,7 @@ public abstract class EditorFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         mProgramDAO = createProgramDAO();
+        position2Group = Lists.newArrayList(0, 1, 2, 3);
     }
 
     @Nullable
@@ -193,8 +198,9 @@ public abstract class EditorFragment extends Fragment {
                 mAdapter.notifyDataSetChanged();
                 return true;
             case R.id.action_quit:
-                getFragmentManager().beginTransaction().remove(this).commit();
-                getActivity().finish();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.container, TitleFragment.newInstance());
+                transaction.commit();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -242,9 +248,9 @@ public abstract class EditorFragment extends Fragment {
 
     protected void initTab() {
         mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.tab_action)));
+        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.tab_repeat)));
         mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.tab_condition)));
         mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.tab_event)));
-        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.tab_repeat)));
 
         mTabLayout.setOnTabSelectedListener(mTabSelectedListener);
     }
@@ -252,24 +258,8 @@ public abstract class EditorFragment extends Fragment {
     private TabLayout.OnTabSelectedListener mTabSelectedListener = new TabLayout.OnTabSelectedListener() {
         @Override
         public void onTabSelected(TabLayout.Tab tab) {
-            int type;
             mSavedTabIndex = tab.getPosition();
-            switch (tab.getPosition()) {
-                case 0: // アクション
-                    type = Command.GROUP_ACTION;
-                    break;
-                case 1: // 場合分け
-                    type = Command.GROUP_CONDITION;
-                    break;
-                case 2: // イベント
-                    type = Command.GROUP_EVENT;
-                    break;
-                case 3: // 繰り返し
-                    type = Command.GROUP_NUMBER;
-                    break;
-                default:
-                    return;
-            }
+            int type = position2Group.get(mSavedTabIndex);
             FragmentManager manager = getChildFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
 

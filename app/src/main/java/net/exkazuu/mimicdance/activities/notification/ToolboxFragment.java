@@ -22,7 +22,8 @@ import butterknife.ButterKnife;
 public class ToolboxFragment extends Fragment {
     private static final String ARGS_TYPE = "type";
 
-    @Bind(R.id.recycler) RecyclerView mRecyclerView;
+    @Bind(R.id.recycler)
+    RecyclerView mRecyclerView;
 
     private int mGroup;
 

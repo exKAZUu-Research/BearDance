@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +15,8 @@ import android.widget.ImageView;
 
 import net.exkazuu.mimicdance.Lessons;
 import net.exkazuu.mimicdance.R;
-import net.exkazuu.mimicdance.pages.lesson.editor.LessonEditorFragment;
 import net.exkazuu.mimicdance.pages.lesson.top.LessonTopFragment;
+import net.exkazuu.mimicdance.pages.title.TitleFragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -98,11 +99,18 @@ public class CorrectAnswerFragment extends Fragment {
         if (manager == null) {
             return;
         }
-        manager.popBackStack();
-        manager.popBackStack();
-        manager.popBackStack();
-        FragmentUtils.toNextFragment(getFragmentManager(), R.id.container,
-            LessonTopFragment.newInstance(Math.min(lessonNumber + 1, Lessons.getLessonCount())), true);
+        if (lessonNumber + 1 > Lessons.getLessonCount()) {
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.container, TitleFragment.newInstance());
+            transaction.commit();
+        } else {
+            manager.popBackStack();
+            manager.popBackStack();
+            manager.popBackStack();
+            manager.popBackStack();
+            FragmentUtils.toNextFragment(getFragmentManager(), R.id.container,
+                LessonTopFragment.newInstance(Math.min(lessonNumber + 1, Lessons.getLessonCount())), true);
+        }
     }
 
     // endregion

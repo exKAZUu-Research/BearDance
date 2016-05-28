@@ -124,7 +124,7 @@ public class LessonTopFragment extends Fragment {
             robotExecutor.terminate();
         }
         robotExecutor = new RobotExecutor(Lists.newArrayList(Interpreter.createForCocco(leftUnrolledProgram, leftCharacterSprite),
-            Interpreter.createForCocco(rightUnrolledProgram, rightCharacterSprite)), handler);
+            Interpreter.createForCocco(rightUnrolledProgram, rightCharacterSprite)), handler, 400);
 
         robotExecutor.start();
     }
