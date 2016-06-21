@@ -28,6 +28,7 @@ public class NotificationActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.notification);
 
         //コードの初期化

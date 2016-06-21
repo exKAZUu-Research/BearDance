@@ -3,6 +3,7 @@ package net.exkazuu.mimicdance.activities;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
 import net.exkazuu.mimicdance.R;
 import net.exkazuu.mimicdance.models.lesson.LessonDAO;
@@ -17,6 +18,10 @@ public class TitleActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ArduinoManager.register(this);
+        View decorView = this.getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+        decorView.setSystemUiVisibility(uiOptions);
+
         setContentView(R.layout.activity_main);
 
         lessonDAO = new LessonDAOImpl(this);
@@ -34,9 +39,14 @@ public class TitleActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        View decorView = this.getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+        decorView.setSystemUiVisibility(uiOptions);
+
         PlugManager.register(this);
         ArduinoManager.resume();
     }
+
 
     @Override
     protected void onPause() {
