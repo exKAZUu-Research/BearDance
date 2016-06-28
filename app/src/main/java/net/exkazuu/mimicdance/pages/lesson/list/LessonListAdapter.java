@@ -21,6 +21,7 @@ public class LessonListAdapter extends RecyclerView.Adapter<TextViewHolder> {
     private final LayoutInflater inflater;
     private final View.OnClickListener listener;
     private final List<String> list = new ArrayList<>();
+    private int count=0;
 
     public LessonListAdapter(@NonNull Context context, View.OnClickListener listener) {
         this.inflater = LayoutInflater.from(context);
@@ -38,7 +39,12 @@ public class LessonListAdapter extends RecyclerView.Adapter<TextViewHolder> {
 
     @Override
     public TextViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new TextViewHolder(this.inflater.inflate(R.layout.item_lesson_list, parent, false), this.listener);
+        int rId=R.layout.item_lesson_list;
+        count++;
+        if(count%2 == 1) {
+            rId=R.layout.item_lesson_list2;
+        }
+        return new TextViewHolder(this.inflater.inflate(rId, parent, false), this.listener);
     }
 
     @Override

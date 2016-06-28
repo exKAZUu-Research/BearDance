@@ -5,6 +5,6 @@
   android:gravity="center_vertical|center"
   android:textSize="16sp"
   android:clickable="true"
-  android:background="#ffebcd"
+  android:background="#f0ffff"
   >
 </TextView>
