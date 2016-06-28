@@ -50,7 +50,9 @@ public class Command {
     public static final int GROUP_ACTION = 0;
     public static final int GROUP_NUMBER = 1;
     public static final int GROUP_CONDITION = 2;
-    public static final int GROUP_EVENT = 3;
+    public static final int GROUP_COLOR = 3;
+    public static final int GROUP_EVENT = 4;
+
 
     private static final Map<String, Integer> sCommandImageMap;
 
@@ -71,8 +73,11 @@ public class Command {
         sCommandGroupMap.put(GROUP_CONDITION, new String[]{
             IF, ELSE, END_IF
         });
+        sCommandGroupMap.put(GROUP_COLOR, new String[]{
+            WHITE, YELLOW
+        });
         sCommandGroupMap.put(GROUP_EVENT, new String[]{
-            WHITE, YELLOW, GMAIL, FACEBOOK, TWITTER, CALENDER
+            GMAIL, FACEBOOK, TWITTER, CALENDER
         });
 
         // コマンドとアイコンの対応表

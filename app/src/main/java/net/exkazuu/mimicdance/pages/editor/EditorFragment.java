@@ -87,7 +87,7 @@ public abstract class EditorFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         mProgramDAO = createProgramDAO();
-        position2Group = Lists.newArrayList(0, 1, 2, 3);
+        position2Group = Lists.newArrayList(0, 1, 2, 3, 4);
     }
 
     @Nullable
@@ -250,6 +250,7 @@ public abstract class EditorFragment extends Fragment {
         mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.tab_action)));
         mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.tab_repeat)));
         mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.tab_condition)));
+        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.tab_color)));
         mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.tab_event)));
 
         mTabLayout.setOnTabSelectedListener(mTabSelectedListener);

@@ -126,10 +126,12 @@ public class LessonEditorFragment extends EditorFragment {
         this.handler = new Handler();
 
         if (mTabLayout.getTabCount() >= 4) {
-            position2Group = Lists.newArrayList(0, 1, 2, 3);
+            position2Group = Lists.newArrayList(0, 1, 2, 3, 4);
             if (!Lessons.hasIf(lessonNumber)) {
+                mTabLayout.removeTabAt(4);
                 mTabLayout.removeTabAt(3);
                 mTabLayout.removeTabAt(2);
+                position2Group.remove(4);
                 position2Group.remove(3);
                 position2Group.remove(2);
             }

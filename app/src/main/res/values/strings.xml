@@ -71,6 +71,7 @@
   <string name="tab_condition">ばあいわけ（もしも）</string>
   <string name="tab_event">イベント</string>
   <string name="tab_repeat">くりかえし</string>
+  <string name="tab_color">色</string>
   <string name="title_save">きろく</string>
   <string name="title_continue">つづける</string>
   <string name="title_reset">すべてけす</string>
