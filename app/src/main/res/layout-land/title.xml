@@ -11,17 +11,6 @@
     android:layout_height="0dp"
     android:layout_centerHorizontal="true"
     />
-  <Button
-    android:id="@+id/kuma_test"
-    android:layout_width="150dp"
-    android:layout_height="60dp"
-    android:layout_alignParentBottom="true"
-    android:layout_centerHorizontal="false"
-    android:layout_marginBottom="48dp"
-    android:onClick="debugKuma"
-    android:text="クマ動作"
-    android:textSize="24sp"
-    android:visibility="invisible" />
 
 
   <Button
@@ -60,29 +49,6 @@
     android:textSize="24sp"
     android:visibility="gone" />
 
-  <Button
-    android:id="@+id/post_ques_button"
-    android:layout_width="wrap_content"
-    android:layout_height="60dp"
-    android:layout_above="@id/help_button"
-    android:layout_centerHorizontal="true"
-    android:layout_marginBottom="22dp"
-    android:onClick="startPostQuestionnaireActivity"
-    android:text="@string/post_questionnaire"
-    android:textSize="24sp"
-    android:visibility="gone" />
-
-  <Button
-    android:id="@+id/pre_ques_button"
-    android:layout_width="wrap_content"
-    android:layout_height="60dp"
-    android:layout_above="@id/post_ques_button"
-    android:layout_centerHorizontal="true"
-    android:layout_marginBottom="22dp"
-    android:onClick="startPreQuestionnaireActivity"
-    android:text="@string/pre_questionnaire"
-    android:textSize="24sp"
-    android:visibility="gone" />
 
   <Button
     android:id="@+id/free_button"

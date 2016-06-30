@@ -78,6 +78,9 @@ public class NotificationEditorFragment extends EditorFragment {
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(inflater.getContext(), LinearLayoutManager.HORIZONTAL, false));
         initTab();
+        mTabLayout.removeTabAt(3);
+        position2Group.remove(3);
+
 
         character = CharacterSprite.createKoguma(characterView);
         handler = new Handler();

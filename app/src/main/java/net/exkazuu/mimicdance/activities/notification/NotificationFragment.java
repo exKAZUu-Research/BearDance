@@ -27,6 +27,7 @@ import net.exkazuu.mimicdance.models.program.Command;
 import net.exkazuu.mimicdance.models.program.Program;
 import net.exkazuu.mimicdance.models.program.ProgramDAO;
 import net.exkazuu.mimicdance.models.program.ProgramDAOImpl;
+import net.exkazuu.mimicdance.pages.editor.EditorFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,6 +97,8 @@ public class NotificationFragment extends Fragment {
         ButterKnife.bind(this, root);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(inflater.getContext(), LinearLayoutManager.HORIZONTAL, false));
         initTab();
+        mTabLayout.removeTabAt(3);
+//        position2Group.remove(3);
 
         return root;
     }
@@ -244,7 +247,6 @@ public class NotificationFragment extends Fragment {
         mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.tab_action)));
         mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.tab_repeat)));
         mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.tab_condition)));
-        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.tab_color)));
         mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.tab_event)));
 
         mTabLayout.setOnTabSelectedListener(mTabSelectedListener);
