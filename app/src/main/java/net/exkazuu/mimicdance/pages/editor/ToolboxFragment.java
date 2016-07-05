@@ -52,7 +52,7 @@ public class ToolboxFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_toolbox, container, false);
 
         ButterKnife.bind(this, root);
-        mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(10, StaggeredGridLayoutManager.VERTICAL));
+        mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(6, StaggeredGridLayoutManager.VERTICAL));
 
         return root;
     }

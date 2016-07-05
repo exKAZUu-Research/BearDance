@@ -89,6 +89,7 @@
   <string name="test_facebook">Facebookでうごかしてみる</string>
   <string name="test_twitter">Twitterでうごかしてみる</string>
   <string name="test_calendar">Calendarでうごかしてみる</string>
+  <string name="tap_and_move">タッチして動きをかくにんしよう</string>
 
 
 </resources>
