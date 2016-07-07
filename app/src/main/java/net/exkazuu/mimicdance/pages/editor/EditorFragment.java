@@ -79,6 +79,10 @@ public abstract class EditorFragment extends Fragment {
      * 選択されたプログラムの0個目/1個目
      */
     private int mSelectedIndex;
+    /**
+     * 選択されたコマンドの種類
+     */
+    private String mSelectedCommand;
 
     abstract protected ProgramDAO createProgramDAO();
 
@@ -126,7 +130,7 @@ public abstract class EditorFragment extends Fragment {
         if (savedInstanceState == null) {
             programList = mProgramDAO.load();
             tabIndex = mSavedTabIndex;
-            mState = STATE_SELECT_PROGRAM;
+            mState = STATE_SELECT_COMMAND;
             mSelectedPosition = -1;
             mSelectedIndex = -1;
         } else {
@@ -185,7 +189,10 @@ public abstract class EditorFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.action_trash:
                 // ゴミ箱は、選択した枠を空にする処理
-                onCommandClicked("");
+                mAdapter.setCommand(mSelectedPosition,mSelectedIndex,"");
+                mAdapter.setSelected(-1,-1);
+                mAdapter.notifyDataSetChanged();
+//                onCommandClicked("");
                 return true;
             case R.id.action_save: // 保存
                 mProgramDAO.save(mAdapter.getAsList());
@@ -211,15 +218,23 @@ public abstract class EditorFragment extends Fragment {
      *
      * @param command 選択されたコマンド
      */
+    //// TODO: 2016/07/07 コマンドが選ばれたときに背景色を変える、ToolboxAdapterを持ってくる必要性？
     public void onCommandClicked(String command) {
         if (mState == STATE_SELECT_PROGRAM) {
-            // 先にプログラムの枠を選んでもらうので、何もしない
-            Snackbar.make(mRootView, R.string.select_program_first, Snackbar.LENGTH_SHORT).show();
+            mSelectedCommand = command;
+
+//            // 先にプログラムの枠を選んでもらうので、何もしない
+//            Snackbar.make(mRootView, R.string.select_program_first, Snackbar.LENGTH_SHORT).show();
         } else if (mState == STATE_SELECT_COMMAND) {
-            mAdapter.setCommand(mSelectedPosition, mSelectedIndex, command);
-            mAdapter.setSelected(-1, -1);
-            mAdapter.notifyDataSetChanged();
+            mAdapter.setSelected(-1,-1);
+            mSelectedCommand = command;
             mState = STATE_SELECT_PROGRAM;
+            mAdapter.notifyDataSetChanged();
+
+//            mAdapter.setCommand(mSelectedPosition, mSelectedIndex, command);
+//            mAdapter.setSelected(-1, -1);
+            mAdapter.notifyDataSetChanged();
+//            mState = STATE_SELECT_PROGRAM;
         }
     }
 
@@ -230,16 +245,31 @@ public abstract class EditorFragment extends Fragment {
         @Override
         public void onItemClick(int position, int index) {
             if (mState == STATE_SELECT_PROGRAM) {
-                mSelectedPosition = position;
-                mSelectedIndex = index;
-                mAdapter.setSelected(position, index);
-                mAdapter.notifyDataSetChanged();
+                mAdapter.setCommand(position,index,mSelectedCommand);
                 mState = STATE_SELECT_COMMAND;
-            } else if (mState == STATE_SELECT_COMMAND) {
-                mSelectedPosition = position;
-                mSelectedIndex = index;
-                mAdapter.setSelected(position, index);
+
+//                mSelectedPosition = position;
+//                mSelectedIndex = index;
+//                mAdapter.setSelected(position, index);
                 mAdapter.notifyDataSetChanged();
+//                mState = STATE_SELECT_COMMAND;
+            } else if (mState == STATE_SELECT_COMMAND) {
+                if(!mAdapter.checkNull(position,index)) {
+                    mSelectedPosition = position;
+                    mSelectedIndex = index;
+                    mAdapter.setSelected(mSelectedPosition, mSelectedIndex);
+                    mAdapter.notifyDataSetChanged();
+                } else {
+                    Snackbar.make(mRootView, R.string.select_command_first, Snackbar.LENGTH_SHORT).show();
+                }
+
+//                // 先にプログラムの枠を選んでもらうので、何もしない
+//                Snackbar.make(mRootView, R.string.select_command_first, Snackbar.LENGTH_SHORT).show();
+
+//                mSelectedPosition = position;
+//                mSelectedIndex = index;
+//                mAdapter.setSelected(position, index);
+//                mAdapter.notifyDataSetChanged();
             }
         }
     };

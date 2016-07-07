@@ -61,6 +61,11 @@ public class ProgramAdapter extends RecyclerView.Adapter<ProgramAdapter.ViewHold
         mSelectedIndex = index;
     }
 
+    public boolean checkNull(int position, int index) {
+        Program program = mProgramList.get(position);
+        return program.getCommand(index).equals("");
+    }
+
     /**
      * 全プログラムを空にします
      */
