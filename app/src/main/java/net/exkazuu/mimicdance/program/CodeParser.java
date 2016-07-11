@@ -1,5 +1,7 @@
 package net.exkazuu.mimicdance.program;
 
+import net.exkazuu.mimicdance.interpreter.IconType;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -7,6 +9,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CodeParser {
+
+    private static final String DO = IconType.Loop.text;
+    private static final String DONE = IconType.EndLoop.text;
+    private static final String IF = IconType.If.text;
+    private static final String ELSE = IconType.Else.text;
+    private static final String FI = IconType.EndIf.text;
+    private static final String YELLOW = IconType.Yellow.text;
 
     private int lineIndex;
 
@@ -32,9 +41,9 @@ public class CodeParser {
 
     private Statement parseStatement(List<String> lines) {
         String line = lines.get(lineIndex);
-        if (line.contains("くりかえし")) {
+        if (line.contains(DO)) {
             return parseLoop(lines);
-        } else if (line.contains("もしも")) {
+        } else if (line.contains(IF)) {
             return parseIf(lines);
         }
         return new Action(line, lineIndex);
@@ -42,11 +51,11 @@ public class CodeParser {
 
     private IfStatement parseIf(List<String> lines) {
         String firstLine = lines.get(lineIndex++);
-        assert firstLine.contains("もしも");
-        Block trueBlock = parseBlock(lines, new String[]{"もしくは", "もしおわり"});
+        assert firstLine.contains(IF);
+        Block trueBlock = parseBlock(lines, new String[]{ELSE, FI});
         Block falseBlock;
-        if (lineIndex < lines.size() && lines.get(lineIndex++).contains("もしくは")) {
-            falseBlock = parseBlock(lines, new String[]{"もしおわり"});
+        if (lineIndex < lines.size() && lines.get(lineIndex++).contains(ELSE)) {
+            falseBlock = parseBlock(lines, new String[]{FI});
         } else {
             falseBlock = new Block();
         }
@@ -56,8 +65,8 @@ public class CodeParser {
 
     private LoopStatement parseLoop(List<String> lines) {
         String firstLine = lines.get(lineIndex++);
-        assert firstLine.contains("くりかえし");
-        Block block = parseBlock(lines, new String[]{"ここまで"});
+        assert firstLine.contains(DO);
+        Block block = parseBlock(lines, new String[]{DONE});
         return new LoopStatement(block, readCount(firstLine));
     }
 
@@ -72,7 +81,7 @@ public class CodeParser {
     }
 
     private static boolean readCondition(String conditionString) {
-        return !conditionString.contains("きいろ");
+        return !conditionString.contains(YELLOW);
     }
 
     private static boolean contains(String line, String[] endLineTokens) {
