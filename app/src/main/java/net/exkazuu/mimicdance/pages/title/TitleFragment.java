@@ -66,7 +66,7 @@ public class TitleFragment extends Fragment {
 
     @OnClick(R.id.help_button)
     void helpClicked() {
-        lessonDAO.upload();
+//        lessonDAO.upload();
         FragmentManager manager = getFragmentManager();
         if (manager == null) { return; }
 
@@ -84,14 +84,14 @@ public class TitleFragment extends Fragment {
 
     @OnClick(R.id.notification_button)
     void notificationClicked() {
-        lessonDAO.upload();
+//        lessonDAO.upload();
         Intent intent = new Intent(getActivity(), NotificationActivity.class);
         startActivity(intent);
     }
 
     @OnClick(R.id.start_button)
     void startClicked() {
-        lessonDAO.upload();
+//        lessonDAO.upload();
         Intent intent = new Intent(getActivity(), LessonListActivity.class);
         startActivity(intent);
     }
