@@ -1,6 +1,8 @@
 package net.exkazuu.mimicdance.program;
 
 import net.exkazuu.mimicdance.interpreter.IconType;
+import net.exkazuu.mimicdance.interpreter.EventType;
+import net.exkazuu.mimicdance.models.program.Program;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,17 +11,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CodeParser {
-
-    private static final String DO = IconType.Loop.text;
-    private static final String DONE = IconType.EndLoop.text;
-    private static final String IF = IconType.If.text;
-    private static final String ELSE = IconType.Else.text;
-    private static final String FI = IconType.EndIf.text;
-    private static final String YELLOW = IconType.Yellow.text;
-
     private int lineIndex;
 
     private CodeParser() {
+    }
+
+    public static Block parse(List<Program> programs) {
+        ArrayList<String> lines = Program.getCodeLines(programs);
+        return new CodeParser().parseBlock(lines, new String[]{});
     }
 
     public static Block parse(String commandsText) {
@@ -41,9 +40,9 @@ public class CodeParser {
 
     private Statement parseStatement(List<String> lines) {
         String line = lines.get(lineIndex);
-        if (line.contains(DO)) {
+        if (line.contains(IconType.Loop.code)) {
             return parseLoop(lines);
-        } else if (line.contains(IF)) {
+        } else if (line.contains(IconType.If.code)) {
             return parseIf(lines);
         }
         return new Action(line, lineIndex);
@@ -51,22 +50,22 @@ public class CodeParser {
 
     private IfStatement parseIf(List<String> lines) {
         String firstLine = lines.get(lineIndex++);
-        assert firstLine.contains(IF);
-        Block trueBlock = parseBlock(lines, new String[]{ELSE, FI});
+        assert firstLine.contains(IconType.If.code);
+        Block trueBlock = parseBlock(lines, new String[]{IconType.Else.code, IconType.EndIf.code});
         Block falseBlock;
-        if (lineIndex < lines.size() && lines.get(lineIndex++).contains(ELSE)) {
-            falseBlock = parseBlock(lines, new String[]{FI});
+        if (lineIndex < lines.size() && lines.get(lineIndex++).contains(IconType.Else.code)) {
+            falseBlock = parseBlock(lines, new String[]{IconType.EndIf.code});
         } else {
             falseBlock = new Block();
         }
-        return new IfStatement(trueBlock, falseBlock, readCondition(firstLine));
+        return new IfStatement(trueBlock, falseBlock, readEventType(firstLine));
 
     }
 
     private LoopStatement parseLoop(List<String> lines) {
         String firstLine = lines.get(lineIndex++);
-        assert firstLine.contains(DO);
-        Block block = parseBlock(lines, new String[]{DONE});
+        assert firstLine.contains(IconType.Loop.code);
+        Block block = parseBlock(lines, new String[]{IconType.EndLoop.code});
         return new LoopStatement(block, readCount(firstLine));
     }
 
@@ -80,8 +79,13 @@ public class CodeParser {
         }
     }
 
-    private static boolean readCondition(String conditionString) {
-        return !conditionString.contains(YELLOW);
+    private static EventType readEventType(String conditionString) {
+        for (EventType eventType : EventType.values()) {
+            if (conditionString.contains(eventType.text)) {
+                return eventType;
+            }
+        }
+        return EventType.White;
     }
 
     private static boolean contains(String line, String[] endLineTokens) {

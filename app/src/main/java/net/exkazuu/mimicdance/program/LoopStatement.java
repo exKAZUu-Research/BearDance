@@ -1,5 +1,7 @@
 package net.exkazuu.mimicdance.program;
 
+import net.exkazuu.mimicdance.interpreter.EventType;
+
 public class LoopStatement extends Statement {
     private final Block block;
     private final int loopCount;
@@ -10,10 +12,10 @@ public class LoopStatement extends Statement {
     }
 
     @Override
-    public void unroll(UnrolledProgram program, boolean isNormal) {
+    public void unroll(UnrolledProgram program, EventType eventType) {
         for (int i = 0; i < loopCount; i++) {
             for (Statement statement : block) {
-                statement.unroll(program, isNormal);
+                statement.unroll(program, eventType);
             }
         }
     }

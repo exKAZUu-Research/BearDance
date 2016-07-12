@@ -18,9 +18,13 @@ import net.exkazuu.mimicdance.activities.TitleActivity;
 import net.exkazuu.mimicdance.activities.notification.NotificationActivity;
 import net.exkazuu.mimicdance.models.lesson.LessonDAO;
 import net.exkazuu.mimicdance.pages.help.HelpFragment;
+import net.exkazuu.mimicdance.pages.lesson.editor.LessonEditorFragment;
+import net.exkazuu.mimicdance.pages.lesson.list.LessonListFragment;
+import net.exkazuu.mimicdance.pages.notification.NotificationEditorFragment;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import jp.fkmsoft.android.framework.util.FragmentUtils;
 
 /**
  * タイトル画面
@@ -67,13 +71,13 @@ public class TitleFragment extends Fragment {
     @OnClick(R.id.help_button)
     void helpClicked() {
 //        lessonDAO.upload();
-        FragmentManager manager = getFragmentManager();
-        if (manager == null) { return; }
-
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.addToBackStack("");
-        transaction.replace(R.id.container, HelpFragment.newInstance());
-        transaction.commit();
+//        FragmentManager manager = getFragmentManager();
+//        if (manager == null) { return; }
+//
+//        FragmentTransaction transaction = manager.beginTransaction();
+//        transaction.addToBackStack("");
+//        transaction.replace(R.id.container, HelpFragment.newInstance());
+//        transaction.commit();
 
         /*
         Intent intent = new Intent(getActivity(), HelpActivity.class);
@@ -84,16 +88,14 @@ public class TitleFragment extends Fragment {
 
     @OnClick(R.id.notification_button)
     void notificationClicked() {
-//        lessonDAO.upload();
-        Intent intent = new Intent(getActivity(), NotificationActivity.class);
-        startActivity(intent);
+        FragmentUtils.toNextFragment(getFragmentManager(), R.id.container,
+            NotificationEditorFragment.newInstance(), true);
     }
 
     @OnClick(R.id.start_button)
     void startClicked() {
-//        lessonDAO.upload();
-        Intent intent = new Intent(getActivity(), LessonListActivity.class);
-        startActivity(intent);
+        FragmentUtils.toNextFragment(getFragmentManager(), R.id.container,
+            LessonListFragment.newInstance(), true);
     }
 
     // endregion

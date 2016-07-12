@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:id="@+id/root"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical"
+  >
+
+  <android.support.v7.widget.Toolbar
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#00000000">
+
+    <android.support.design.widget.TabLayout
+      android:id="@+id/tablayout"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:background="#adff2f"/>
+  </android.support.v7.widget.Toolbar>
+
+  <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="4">
+
+    <include
+      android:id="@+id/character"
+      layout="@layout/character_piyo"
+      android:layout_width="150dp"
+      android:layout_height="match_parent"
+      android:layout_alignParentEnd="true"
+      />
+
+    <FrameLayout
+      android:id="@+id/layout_toolbox"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_toStartOf="@+id/character"
+      />
+  </RelativeLayout>
+
+  <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="6">
+
+    <android.support.v4.widget.Space
+      android:id="@+id/point_center"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      android:layout_centerInParent="true"/>
+
+    <LinearLayout
+      android:id="@+id/button_layout"
+      android:layout_width="match_parent"
+      android:layout_height="50dp"
+      android:orientation="horizontal"
+      android:layout_alignParentBottom="true"
+      >
+
+      <Button
+        android:id="@+id/button_gmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/test_gmail"/>
+
+      <Button
+        android:id="@+id/button_facebook"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/test_facebook"/>
+
+      <Button
+        android:id="@+id/button_twitter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/test_twitter"/>
+
+      <Button
+        android:id="@+id/button_calendar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/test_calendar"/>
+    </LinearLayout>
+
+
+    <android.support.v7.widget.RecyclerView
+      android:id="@+id/recycler"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_above="@+id/button_layout"/>
+  </RelativeLayout>
+
+</LinearLayout>

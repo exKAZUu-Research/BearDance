@@ -13,11 +13,11 @@ android {
     buildToolsVersion "22.0.1"
 
     defaultConfig {
-        applicationId "net.exkazuu.mimicdance"
-        minSdkVersion 18
+        applicationId "net.exkazuu.oshirasebear"
+        minSdkVersion 19
         targetSdkVersion 21
         versionCode 4
-        versionName "1.3.1"
+        versionName "1.0.5"
     }
     buildTypes {
         release {
@@ -29,6 +29,9 @@ android {
         exclude 'META-INF/ASL2.0'
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/NOTICE'
+    }
+    lintOptions {
+        abortOnError false
     }
     testOptions.unitTests.all {
         // Configure includes / excludes
@@ -56,8 +59,9 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.android.support:design:23.1.1'
+    compile 'com.android.support:appcompat-v7:23.3.0'
+    compile 'com.android.support:design:23.3.0'
+    compile 'com.android.support:percent:23.3.0'
     compile 'jp.fkmsoft.libs:android-app-framework-v4:1.1.0.23.1.1'
     compile 'com.google.guava:guava:18.+'
     compile 'com.deploygate:sdk:3.+'

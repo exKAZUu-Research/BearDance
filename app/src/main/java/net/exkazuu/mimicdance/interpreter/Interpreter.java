@@ -1,11 +1,10 @@
 package net.exkazuu.mimicdance.interpreter;
 
-import android.content.Context;
 import android.text.Html;
 import android.util.Log;
 import android.widget.TextView;
 
-import net.exkazuu.mimicdance.CharacterImageViewSet;
+import net.exkazuu.mimicdance.CharacterSprite;
 import net.exkazuu.mimicdance.activities.ArduinoManager;
 import net.exkazuu.mimicdance.activities.PlugManager;
 import net.exkazuu.mimicdance.controller.PwmMotorController;
@@ -18,7 +17,7 @@ public class Interpreter implements Runnable {
 
     public static final int WAITING_COUNT = 2;
     private final UnrolledProgram program;
-    private final CharacterImageViewSet charaViewSet;
+    private final CharacterSprite characterSprite;
     private final TextView textView;
     private final boolean isPiyo;
     private final Pose pose;
@@ -30,17 +29,17 @@ public class Interpreter implements Runnable {
     private String bearCommand;
     private final byte[] command = new byte[2]; //右手、左手の2つ
 
-    public static Interpreter createForPiyo(UnrolledProgram program, CharacterImageViewSet charaViewSet, TextView textView, Context context) {
-        return new Interpreter(program, charaViewSet, textView, context, true);
+    public static Interpreter createForPiyo(UnrolledProgram program, CharacterSprite characterSprite, TextView textView) {
+        return new Interpreter(program, characterSprite, textView, true);
     }
 
-    public static Interpreter createForCocco(UnrolledProgram program, CharacterImageViewSet charaViewSet) {
-        return new Interpreter(program, charaViewSet, null, null, false);
+    public static Interpreter createForCocco(UnrolledProgram program, CharacterSprite characterSprite) {
+        return new Interpreter(program, characterSprite, null, false);
     }
 
-    private Interpreter(UnrolledProgram program, CharacterImageViewSet charaViewSet, TextView textView, Context context, boolean isPiyo) {
+    private Interpreter(UnrolledProgram program, CharacterSprite characterSprite, TextView textView, boolean isPiyo) {
         this.program = program;
-        this.charaViewSet = charaViewSet;
+        this.characterSprite = characterSprite;
         this.textView = textView;
         this.isPiyo = isPiyo;
         this.pose = new Pose();
@@ -50,7 +49,7 @@ public class Interpreter implements Runnable {
     @Override
     public void run() {
         if (executionCount < WAITING_COUNT) {
-            charaViewSet.changeToInitialImages();
+            characterSprite.renderInitialState();
         } else if (finished()) {
             return;
         } else if (isMoving()) {
@@ -61,7 +60,7 @@ public class Interpreter implements Runnable {
             actions = program.getActionSet(getLineIndex());
             if (!failed && ActionType.validate(actions) && pose.validate(actions)) {
                 pose.change(actions);
-                charaViewSet.changeToMovingImages(actions);
+                characterSprite.renderIntermediateState(actions);
                 if (isPiyo) {
                     handleDanbo();
                     handleBear(actions);
@@ -70,26 +69,33 @@ public class Interpreter implements Runnable {
             } else {
                 failed = true;
                 Log.v("tag", "failed");
-                charaViewSet.changeToMovingErrorImage();
+                characterSprite.renderIntermediateErrorState();
             }
         } else {
             if (!failed) {
-                charaViewSet.changeToMovedImages(actions);
+                characterSprite.renderCompleteState(actions);
             } else {
-                charaViewSet.changeToMovedErrorImage();
+                characterSprite.renderCompleteErrorState();
             }
         }
         executionCount++;
     }
 
+    public void reset() {
+        characterSprite.renderInitialState();
+        pose.reset();
+    }
+
     public void finish() {
+        try {
+            Thread.sleep(800);
+        } catch (InterruptedException e) {
+        }
+        characterSprite.renderInitialState();
+        pose.reset();
         if (isPiyo) {
-            pose.reset();
             handleDanbo();
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-            }
+            handleMiniBear();
             if (danboController != null) {
                 danboController.release();
             }
@@ -113,6 +119,9 @@ public class Interpreter implements Runnable {
     }
 
     private void highlightLine() {
+        if (textView == null) {
+            return;
+        }
         int currentLineIndex = program.getOriginalLineIndex(getLineIndex());
         String[] lines = textView.getText().toString().split("\n");
         textView.getEditableText().clear();

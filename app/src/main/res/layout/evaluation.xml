@@ -17,7 +17,6 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:background="#ffffff"
-      android:contentDescription="@string/player_source_code"
       android:ems="10"
       android:fitsSystemWindows="true"
       android:focusable="false"
@@ -269,7 +268,7 @@
       android:layout_height="match_parent"
       android:layout_weight="1"
       android:onClick="startCodingActivity"
-      android:text="@string/player_screen" />
+      android:text="@string/try_again" />
   </LinearLayout>
 
 

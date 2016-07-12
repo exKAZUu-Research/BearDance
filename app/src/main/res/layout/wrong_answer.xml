@@ -40,15 +40,13 @@
       android:layout_width="150dp"
       android:layout_height="150dp"
       android:layout_marginLeft="110dp"
-      android:layout_marginRight="30dp"
-      android:layout_marginTop="250dp" />
+      android:layout_marginRight="30dp"/>
 
     <ImageView
       android:id="@+id/piyo"
       android:layout_width="150dp"
       android:layout_height="150dp"
-      android:layout_marginLeft="50dp"
-      android:layout_marginTop="250dp" />
+      android:layout_marginLeft="50dp"/>
   </LinearLayout>
 
   <LinearLayout
@@ -60,7 +58,7 @@
     android:orientation="horizontal">
 
     <Button
-      android:id="@+id/wrong_lesson_list"
+      android:id="@+id/lesson_list"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_weight="1"

@@ -1,7 +1,6 @@
 package net.exkazuu.mimicdance.activities;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -44,7 +43,7 @@ public class WrongAnswerActivity extends BaseActivity {
             showPiyoAnimationForWrongAnswer(this, piyoView);
         }
 
-        Button list = (Button) findViewById(R.id.wrong_lesson_list);
+        Button list = (Button) findViewById(R.id.lesson_list);
         Button again = (Button) findViewById(R.id.try_again);
 
         list.setOnClickListener(new View.OnClickListener() {
@@ -56,7 +55,7 @@ public class WrongAnswerActivity extends BaseActivity {
         again.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startCodingActivity(lessonNumber, piyoCode, true);
+                //startCodingActivity(lessonNumber, piyoCode, true);
             }
         });
     }

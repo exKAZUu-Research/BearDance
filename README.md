@@ -7,3 +7,5 @@ OshiraseBear
 [<img src="https://dply.me/dr9iyb/button/large" alt="Try it on your device via DeployGate">](https://dply.me/dr9iyb#install)
 - 通常版  
 [<img src="https://dply.me/zbr6dl/button/large" alt="Try it on your device via DeployGate">](https://dply.me/zbr6dl#install)
+- おしらせベア
+[<img src="https://dply.me/77tr24/button/large" alt="Try it on your device via DeployGate">](https://dply.me/77tr24#install)

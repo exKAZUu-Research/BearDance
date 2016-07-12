@@ -1,6 +1,7 @@
 package net.exkazuu.mimicdance.program;
 
 import net.exkazuu.mimicdance.BuildConfig;
+import net.exkazuu.mimicdance.interpreter.EventType;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,28 +16,28 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class CodeParserTest {
     @Test
     public void parseSimpleProgram() {
-        String code = "左腕を上げる右腕を上げる\n左腕を下げる\n右腕を下げる";
+        String code = "ひだりてを上げるみぎてを上げる\nひだりてを下げる\nみぎてを下げる";
         Block block = CodeParser.parse(code);
-        assertThat(block.unroll(true).getCode(), is(code));
+        assertThat(block.unroll(EventType.White).getCode(), is(code));
     }
 
     @Test
     public void parseLoopProgram() {
-        String code = "ジャンプする\nくりかえし2\n左腕を上げる右腕を上げる\n右腕を下げる\nここまで";
+        String code = "ジャンプする\nくりかえし2\nひだりてを上げるみぎてを上げる\nみぎてを下げる\nここまで";
         String unrolledCode =
-            "ジャンプする\n左腕を上げる右腕を上げる\n右腕を下げる\n左腕を上げる右腕を上げる\n右腕を下げる";
+            "ジャンプする\nひだりてを上げるみぎてを上げる\nみぎてを下げる\nひだりてを上げるみぎてを上げる\nみぎてを下げる";
         Block block = CodeParser.parse(code);
-        assertThat(block.unroll(true).getCode(), is(unrolledCode));
+        assertThat(block.unroll(EventType.White).getCode(), is(unrolledCode));
     }
 
     @Test
     public void parseIfProgram() {
-        String code = "右腕を上げる\nもしもしろ\n右腕を下げる\nもしくは\n左腕を上げる\nもしおわり";
-        String unrolledNormalCode = "右腕を上げる\n右腕を下げる";
-        String unrolledAltCode = "右腕を上げる\n左腕を上げる";
+        String code = "みぎてを上げる\nもしもしろ\nみぎてを下げる\nもしくは\nひだりてを上げる\nもしおわり";
+        String unrolledNormalCode = "みぎてを上げる\nみぎてを下げる";
+        String unrolledAltCode = "みぎてを上げる\nひだりてを上げる";
         Block block = CodeParser.parse(code);
-        assertThat(block.unroll(true).getCode(), is(unrolledNormalCode));
-        assertThat(block.unroll(false).getCode(), is(unrolledAltCode));
+        assertThat(block.unroll(EventType.White).getCode(), is(unrolledNormalCode));
+        assertThat(block.unroll(EventType.Yellow).getCode(), is(unrolledAltCode));
     }
 
     @Test
@@ -45,8 +46,8 @@ public class CodeParserTest {
         String unrolledNormalCode = "";
         String unrolledAltCode = "";
         Block block = CodeParser.parse(code);
-        assertThat(block.unroll(true).getCode(), is(unrolledNormalCode));
-        assertThat(block.unroll(false).getCode(), is(unrolledAltCode));
+        assertThat(block.unroll(EventType.White).getCode(), is(unrolledNormalCode));
+        assertThat(block.unroll(EventType.Yellow).getCode(), is(unrolledAltCode));
     }
 
     @Test
@@ -55,17 +56,17 @@ public class CodeParserTest {
         String unrolledNormalCode = "";
         String unrolledAltCode = "";
         Block block = CodeParser.parse(code);
-        assertThat(block.unroll(true).getCode(), is(unrolledNormalCode));
-        assertThat(block.unroll(false).getCode(), is(unrolledAltCode));
+        assertThat(block.unroll(EventType.White).getCode(), is(unrolledNormalCode));
+        assertThat(block.unroll(EventType.Yellow).getCode(), is(unrolledAltCode));
     }
 
     @Test
     public void parseLoopIfProgram() {
-        String code = "くりかえし2\nもしもきいろ\n左腕を上げる\nもしくは\n右腕を上げる\n右腕を下げる\nもしおわり\nここまで";
-        String unrolledNormalCode = "右腕を上げる\n右腕を下げる\n右腕を上げる\n右腕を下げる";
-        String unrolledAltCode = "左腕を上げる\n\n左腕を上げる\n";
+        String code = "くりかえし2\nもしもきいろ\nひだりてを上げる\nもしくは\nみぎてを上げる\nみぎてを下げる\nもしおわり\nここまで";
+        String unrolledNormalCode = "みぎてを上げる\nみぎてを下げる\nみぎてを上げる\nみぎてを下げる";
+        String unrolledAltCode = "ひだりてを上げる\n\nひだりてを上げる\n";
         Block block = CodeParser.parse(code);
-        assertThat(block.unroll(true).getCode(), is(unrolledNormalCode));
-        assertThat(block.unroll(false).getCode(), is(unrolledAltCode));
+        assertThat(block.unroll(EventType.White).getCode(), is(unrolledNormalCode));
+        assertThat(block.unroll(EventType.Yellow).getCode(), is(unrolledAltCode));
     }
 }

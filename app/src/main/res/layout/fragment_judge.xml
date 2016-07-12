@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:id="@+id/root"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="#ffddff"
+  android:orientation="horizontal"
+  >
+
+  <FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_weight="1"
+    android:background="#aa0000"
+    >
+
+    <TextView
+      android:id="@+id/user_code"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="#ffffff"
+      android:ems="10"
+      android:fitsSystemWindows="true"
+      android:focusable="false"
+      android:gravity="center_vertical|top"
+      android:hint="@string/hint_player_source_cord"
+      android:inputType="textMultiLine"
+      android:textColor="#000000"
+      android:textSize="18sp"
+      android:visibility="visible">
+
+      <requestFocus/>
+    </TextView>
+  </FrameLayout>
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_weight="1"
+    android:background="#ffddff"
+    android:orientation="vertical"
+    >
+
+    <TextView
+      android:id="@+id/white_or_orange"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="center"
+      android:textSize="32sp"
+      android:visibility="visible"/>
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_weight="2"
+      android:orientation="horizontal">
+
+      <include
+        android:id="@+id/user_character"
+        layout="@layout/character_piyo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        />
+
+      <include
+        android:id="@+id/answer_character"
+        layout="@layout/character_cocco"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        />
+
+    </LinearLayout>
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="50dp"
+      android:background="#ff81ff">
+
+      <Button
+        android:id="@+id/button_lesson_editor"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:onClick="startCodingActivity"
+        android:text="@string/try_again"/>
+    </LinearLayout>
+  </LinearLayout>
+
+</LinearLayout>

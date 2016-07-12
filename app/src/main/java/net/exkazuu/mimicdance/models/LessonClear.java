@@ -6,7 +6,6 @@ import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
 
 import net.exkazuu.mimicdance.Timer;
-import net.exkazuu.mimicdance.activities.DragViewListener;
 
 import java.util.Date;
 import java.util.List;
@@ -40,8 +39,8 @@ public class LessonClear extends Model {
         }
         lessonClear.lessonNumber = lessonNumber;
         lessonClear.milliseconds = Timer.stop();
-        lessonClear.moveCount = DragViewListener.getMoveCount();
+        //lessonClear.moveCount = DragViewListener.getMoveCount();
         lessonClear.save();
-        DragViewListener.reset();
+        //DragViewListener.reset();
     }
 }

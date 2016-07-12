@@ -1,6 +1,6 @@
 <resources>
 
-  <string name="app_name">まねっこダンス</string>
+  <string name="app_name">おしらせベア</string>
   <string name="menu_settings">Settings</string>
   <string name="title_coding_activity">コーディング</string>
   <string name="title_cocco_activity">お手本確認</string>
@@ -12,10 +12,10 @@
   <string name="hint_text">ここに入力</string>
   <string name="loop">繰り返し</string>
   <string name="koko">ここまで</string>
-  <string name="left_hand_up">左腕↑</string>
-  <string name="left_hand_down">左腕↓</string>
-  <string name="right_hand_up">右腕↑</string>
-  <string name="right_hand_down">右腕↓</string>
+  <string name="left_hand_up">ひだりて↑</string>
+  <string name="left_hand_down">ひだりて↓</string>
+  <string name="right_hand_up">みぎて↑</string>
+  <string name="right_hand_down">みぎて↓</string>
   <string name="right_foot_up">右足↑</string>
   <string name="right_foot_down">右足↓</string>
   <string name="left_foot_up">左足↑</string>
@@ -26,12 +26,11 @@
   <string name="action">こたえあわせ</string>
   <string name="return_action">戻る</string>
   <string name="Title_how_to_play">あそびかた</string>
-  <string name="Title_start_button">まねっこ</string>
-  <string name="notification">通知</string>
-  <string name="Title_free_play">自由に踊る</string>
+  <string name="Title_start_button">プログラミング\nレッスン</string>
+  <string name="notification">おしらせの\nダンスをつくる</string>
+  <string name="Title_free_play">ロボットを\nダンスさせる</string>
   <string name="look_answer_button">①おてほんを見る</string>
   <string name="text_look">まずは、お手本をチェック！</string>
-  <string name="player_source_code">playerSourceCordArea</string>
   <string name="partner_source_cord">お手本のソースコードエリア</string>
   <string name="lesson_information">レッスン情報</string>
   <string name="image_area">image</string>
@@ -59,8 +58,8 @@
 
   <string name="challenge">②やってみよう！！</string>
   <string name="hantei">こたえあわせ！</string>
-  <string name="player_screen">やりなおす！</string>
-  <string name="look_answer_button2">もう１かいおてほんをみる</string>
+  <string name="try_again">やりなおす！</string>
+  <string name="look_answer_button2">おてほんをみる</string>
   <string name="arrow_right">つぎへ</string>
   <string name="arrow_left">まえへ</string>
   <string name="close">とじる</string>
@@ -69,17 +68,29 @@
   <string name="pre_questionnaire">事前アンケート</string>
   <string name="post_questionnaire">事後アンケート</string>
   <string name="tab_action">アクション</string>
-  <string name="tab_condition">場合分け</string>
+  <string name="tab_condition">ばあいわけ（もしも）</string>
   <string name="tab_event">イベント</string>
-  <string name="tab_repeat">繰り返し</string>
-  <string name="title_save">保存</string>
-  <string name="title_continue">続ける</string>
-  <string name="title_reset">やりなおし</string>
+  <string name="tab_repeat">くりかえし</string>
+  <string name="tab_color">色</string>
+  <string name="title_save">きろく</string>
+  <string name="title_continue">つづける</string>
+  <string name="title_reset">すべてけす</string>
   <string name="title_trash">ゴミ箱</string>
-  <string name="save_done">保存したよ！</string>
-  <string name="select_program_first">まず、プログラムの枠をえらんでね</string>
+  <string name="save_done">きろくしたよ！</string>
+  <string name="select_program_first">まずは、したから、アイコンをおくばしょをえらんでね</string>
   <string name="help_page">%1$d / %2$d</string>
-
+  <string name="title_lesson_list">レッスンをえらぼう</string>
+  <string name="move">動かす</string>
+  <string name="logo">ロゴ</string>
+  <string name="back_to_model">おてほんにもどる</string>
+  <string name="check_answer">こたえあわせ</string>
+  <string name="check_program">かくにん</string>
+  <string name="test_gmail">Gmailでうごかしてみる</string>
+  <string name="test_facebook">Facebookでうごかしてみる</string>
+  <string name="test_twitter">Twitterでうごかしてみる</string>
+  <string name="test_calendar">Calendarでうごかしてみる</string>
+  <string name="tap_and_move">タッチして動きをかくにんしよう</string>
+  <string name="select_command_first">アイコンか、プログラムが入っているところをえらんでね</string>
 
 
 </resources>

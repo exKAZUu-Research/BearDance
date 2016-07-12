@@ -3,15 +3,22 @@ package net.exkazuu.mimicdance.models.program;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- * Created by t-yokoi on 2015/12/15.
- */
+import com.google.common.base.Function;
+import com.google.common.base.Joiner;
+import com.google.common.base.Strings;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Iterators;
+import com.google.common.collect.Lists;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class Program implements Parcelable {
     private String[] commands = new String[2];
 
     public Program() {
-        commands[0] = "";
-        commands[1] = "";
+        this("", "");
     }
 
     public Program(String command0, String command1) {
@@ -19,22 +26,43 @@ public class Program implements Parcelable {
         commands[1] = command1;
     }
 
-    Program(Parcel source) {
-        commands[0] = source.readString();
-        commands[1] = source.readString();
-    }
-
     public void setCommands(int index, String value) {
         commands[index] = value;
     }
-    public String getCommand(int index) { return commands[index];}
+
+    public String getCommand(int index) {
+        return commands[index];
+    }
+
+    public String getCode() {
+        List<String> codes = Lists.transform(Arrays.asList(commands), new Function<String, String>() {
+            @Override
+            public String apply(String command) {
+                return Command.getCode(command);
+            }
+        });
+        return Joiner.on(" ").skipNulls().join(codes);
+    }
+
+    public static ArrayList<String> getCodeLines(List<Program> programs) {
+        ArrayList<String> lines = Lists.newArrayList(Lists.transform(programs, new Function<Program, String>() {
+            @Override
+            public String apply(Program program) {
+                return program.getCode();
+            }
+        }));
+        for (int i = lines.size() - 1; i >= 0 && Strings.isNullOrEmpty(lines.get(i)); i--) {
+            lines.remove(i);
+        }
+        return lines;
+    }
 
     // region Parcelable
 
     public static Creator<Program> CREATOR = new Creator<Program>() {
         @Override
         public Program createFromParcel(Parcel source) {
-            return new Program(source);
+            return new Program(source.readString(), source.readString());
         }
 
         @Override

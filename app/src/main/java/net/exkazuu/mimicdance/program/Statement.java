@@ -1,11 +1,13 @@
 package net.exkazuu.mimicdance.program;
 
-public abstract class Statement {
-    protected abstract void unroll(UnrolledProgram program, boolean isNormal);
+import net.exkazuu.mimicdance.interpreter.EventType;
 
-    public UnrolledProgram unroll(boolean isNormal) {
+public abstract class Statement {
+    protected abstract void unroll(UnrolledProgram program, EventType eventType);
+
+    public UnrolledProgram unroll(EventType eventType) {
         UnrolledProgram program = new UnrolledProgram();
-        unroll(program, isNormal);
+        unroll(program, eventType);
         return program;
     }
 }
