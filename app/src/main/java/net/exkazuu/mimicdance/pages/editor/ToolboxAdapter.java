@@ -57,7 +57,9 @@ public class ToolboxAdapter extends RecyclerView.Adapter<ToolboxAdapter.ViewHold
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         String command = mCommandList.get(position);
-        holder.bind(command,position,mSelectedPosition);
+        holder.mCommand=command;
+        holder.mIcon.setImageResource(Command.getImage(command));
+//        holder.bind(command,position,mSelectedPosition);
 
     }
 
