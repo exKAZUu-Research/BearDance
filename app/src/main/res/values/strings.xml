@@ -41,6 +41,10 @@
   <string name="back_space">1字戻る</string>
   <string name="correct_answer">正解画面</string>
   <string name="wrong_answer">間違い画面</string>
+  <string name="settings">設定</string>
+  <string name="deviceId">端末ID</string>
+  <string name="save">保存</string>
+  <string name="saved">保存しました</string>
 
 
   <string-array name="move">
@@ -92,6 +96,5 @@
   <string name="tap_and_move">タッチして動きをかくにんしよう</string>
   <string name="select_command_first">アイコンか、プログラムが入っているところをえらんでね</string>
   <string name="Title_duo_button">ふたりでおどる</string>
-
 
 </resources>
