@@ -1,5 +1,9 @@
 package net.exkazuu.mimicdance.models;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
+
 import org.apache.http.client.HttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,17 +23,48 @@ import okhttp3.Response;
 
 public class APIClient {
 
-    private static final String SERVER_URL = "http://localhost:3000";
+    private static final String CLIENT_PREFERENCE = "CLIENT_PREFERENCE";
+    private static final String CLIENT_ID = "CLIENT_ID";
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     private static final SimpleDateFormat ISO8601 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 
+    private static final String SERVER_URL = "http://localhost:3000";
+
+    public static boolean isValidClientId(@NonNull String clientId) {
+        return clientId.endsWith("A") || clientId.endsWith("B");
+    }
+
+    @NonNull
+    public static String getClientId(Context context) {
+        SharedPreferences pref = context.getSharedPreferences(CLIENT_PREFERENCE, Context.MODE_PRIVATE);
+        return pref.getString(CLIENT_ID, "");
+    }
+
+    public static boolean setClientId(Context context, String clientId) {
+        SharedPreferences pref = context.getSharedPreferences(CLIENT_PREFERENCE, Context.MODE_PRIVATE);
+        if (clientId == null || clientId.length() == 0) {
+            pref.edit()
+                .remove(CLIENT_ID)
+                .apply();
+            return true;
+        }
+        if (isValidClientId(clientId)) {
+            pref.edit()
+                .putString(CLIENT_ID, clientId)
+                .apply();
+            return true;
+        }
+        return false;
+    }
+
     /**
      *
-     * @param id 端末ID
+     * @param context
      * @param lesson プレイ中のレッスン
      * @return パートナーも同じレッスンをプレイ中かどうか
      */
-    public static boolean connect(String id, String lesson) {
+    public static boolean connect(Context context, String lesson) {
+        String id = getClientId(context);
         try {
             String json = post(id, "connected", lesson);
             JSONObject obj = new JSONObject(json);
@@ -45,11 +80,12 @@ public class APIClient {
 
     /**
      *
-     * @param id 端末ID
+     * @param context
      * @param lesson プレイ中のレッスン
      * @return パートナーがreadyなら再生の開始時刻を返します。
      */
-    public static Date ready(String id, String lesson) {
+    public static Date ready(Context context, String lesson) {
+        String id = getClientId(context);
         try {
             String json = post(id, "ready", lesson);
             JSONObject obj = new JSONObject(json);

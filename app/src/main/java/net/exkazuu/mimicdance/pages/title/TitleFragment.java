@@ -21,6 +21,7 @@ import net.exkazuu.mimicdance.pages.help.HelpFragment;
 import net.exkazuu.mimicdance.pages.lesson.editor.LessonEditorFragment;
 import net.exkazuu.mimicdance.pages.lesson.list.LessonListFragment;
 import net.exkazuu.mimicdance.pages.notification.NotificationEditorFragment;
+import net.exkazuu.mimicdance.pages.settings.SettingFragment;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -102,6 +103,12 @@ public class TitleFragment extends Fragment {
     void duoClicked() {
         FragmentUtils.toNextFragment(getFragmentManager(), R.id.container,
             LessonListFragment.newInstance(false), true);
+    }
+
+    @OnClick(R.id.setting_button)
+    void settingsClicked() {
+        FragmentUtils.toNextFragment(getFragmentManager(), R.id.container,
+            SettingFragment.newInstance(), true);
     }
 
     // endregion
