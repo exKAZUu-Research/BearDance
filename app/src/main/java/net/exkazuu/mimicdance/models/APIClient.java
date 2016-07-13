@@ -3,6 +3,8 @@ package net.exkazuu.mimicdance.models;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.util.Log;
 
 import org.apache.http.client.HttpClient;
 import org.json.JSONException;
@@ -23,6 +25,10 @@ import okhttp3.Response;
 
 public class APIClient {
 
+    public static enum ClientType {
+        None, A, B;
+    }
+
     private static final String CLIENT_PREFERENCE = "CLIENT_PREFERENCE";
     private static final String CLIENT_ID = "CLIENT_ID";
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
@@ -30,11 +36,24 @@ public class APIClient {
 
     private static final String SERVER_URL = "http://localhost:3000";
 
-    public static boolean isValidClientId(@NonNull String clientId) {
-        return clientId.endsWith("A") || clientId.endsWith("B");
+    public static ClientType getClientType(Context context) {
+        return getClientType(getClientId((context)));
     }
 
-    @NonNull
+    @Nullable
+    public static ClientType getClientType(String clientId) {
+        if (clientId == null || clientId.length() == 0) {
+            return ClientType.None;
+        }
+        if (clientId.endsWith("A")) {
+            return ClientType.A;
+        }
+        if (clientId.endsWith("B")) {
+            return ClientType.B;
+        }
+        return null;
+    }
+
     public static String getClientId(Context context) {
         SharedPreferences pref = context.getSharedPreferences(CLIENT_PREFERENCE, Context.MODE_PRIVATE);
         return pref.getString(CLIENT_ID, "");
@@ -42,25 +61,29 @@ public class APIClient {
 
     public static boolean setClientId(Context context, String clientId) {
         SharedPreferences pref = context.getSharedPreferences(CLIENT_PREFERENCE, Context.MODE_PRIVATE);
-        if (clientId == null || clientId.length() == 0) {
-            pref.edit()
-                .remove(CLIENT_ID)
-                .apply();
-            return true;
+        ClientType type = getClientType(clientId);
+        if (type == null) {
+            return false;
         }
-        if (isValidClientId(clientId)) {
-            pref.edit()
-                .putString(CLIENT_ID, clientId)
-                .apply();
-            return true;
+        switch (type) {
+            case A:
+            case B:
+                pref.edit()
+                    .putString(CLIENT_ID, clientId)
+                    .apply();
+                break;
+            case None:
+                pref.edit()
+                    .remove(CLIENT_ID)
+                    .apply();
+                break;
         }
-        return false;
+        return true;
     }
 
     /**
-     *
      * @param context
-     * @param lesson プレイ中のレッスン
+     * @param lesson  プレイ中のレッスン
      * @return パートナーも同じレッスンをプレイ中かどうか
      */
     public static boolean connect(Context context, String lesson) {
@@ -79,9 +102,8 @@ public class APIClient {
     }
 
     /**
-     *
      * @param context
-     * @param lesson プレイ中のレッスン
+     * @param lesson  プレイ中のレッスン
      * @return パートナーがreadyなら再生の開始時刻を返します。
      */
     public static Date ready(Context context, String lesson) {

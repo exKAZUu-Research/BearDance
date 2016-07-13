@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
@@ -79,7 +78,7 @@ public class SettingFragment extends Fragment {
     @OnTextChanged(R.id.editText)
     void textChange() {
         String clientId = editText.getText().toString();
-        saveButton.setEnabled(enableToSave(clientId));
+        saveButton.setEnabled(APIClient.getClientType(clientId) != null);
     }
 
     @OnClick(R.id.save_button)
@@ -91,7 +90,4 @@ public class SettingFragment extends Fragment {
         }
     }
 
-    private boolean enableToSave(String clientId) {
-        return clientId == null || clientId.length() == 0 || APIClient.isValidClientId(clientId);
-    }
 }
