@@ -37,9 +37,11 @@ import jp.fkmsoft.android.framework.util.FragmentUtils;
  */
 public class JudgeFragment extends Fragment {
     private static final String ARGS_LESSON_NUMBER = "lessonNumber";
+    private static final String ARGS_CHARACTER_NUMBER = "characterNumber";
     private static final String ARGS_USER_PROGRAM_LIST = "userProgramList";
 
     private int lessonNumber;
+    private int characterNumber;
 
     @Bind(R.id.user_character)
     View userCharacter;
@@ -54,14 +56,15 @@ public class JudgeFragment extends Fragment {
     private CharacterSprite answerCharacterSprite, altAnswerCharacterSprite;
 
     private Handler handler;
-    private RobotExecutor robotExecutor, robotExecutor2;
+    private RobotExecutor robotExecutor;
     private ArrayList<Program> programList;
 
-    public static JudgeFragment newInstance(int lessonNumber, Program[] programList) {
+    public static JudgeFragment newInstance(int lessonNumber, int characterNumber, Program[] programList) {
         JudgeFragment fragment = new JudgeFragment();
 
         Bundle args = new Bundle();
         args.putInt(ARGS_LESSON_NUMBER, lessonNumber);
+        args.putInt(ARGS_CHARACTER_NUMBER, characterNumber);
         args.putParcelableArray(ARGS_USER_PROGRAM_LIST, programList);
         fragment.setArguments(args);
 
@@ -73,6 +76,7 @@ public class JudgeFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         this.lessonNumber = args.getInt(ARGS_LESSON_NUMBER);
+        this.characterNumber = args.getInt(ARGS_CHARACTER_NUMBER);
         this.programList = new ArrayList<>();
         Parcelable[] list = args.getParcelableArray(ARGS_USER_PROGRAM_LIST);
         if (list != null) {
@@ -103,7 +107,7 @@ public class JudgeFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        String answerCode = Lessons.getCoccoCode(lessonNumber);
+        String answerCode = Lessons.getCoccoCode(lessonNumber, characterNumber);
         Block userProgram = CodeParser.parse(programList);
         Block answerProgram = CodeParser.parse(answerCode);
         final UnrolledProgram userUnrolledProgram = userProgram.unroll(EventType.White);
@@ -120,13 +124,13 @@ public class JudgeFragment extends Fragment {
             public void run() {
                 int diffCount = userUnrolledProgram.countDifferences(answerUnrolledProgram);
                 int size = answerUnrolledProgram.size();
-                if (Lessons.hasIf(lessonNumber)) {
+                if (Lessons.hasIf(lessonNumber, characterNumber)) {
                     diffCount += altUserUnrolledProgram.countDifferences(altAnswerUnrolledProgram);
                     size += altAnswerUnrolledProgram.size();
                 }
                 if (diffCount == 0) {
                     FragmentUtils.toNextFragment(getFragmentManager(), R.id.container,
-                        CorrectAnswerFragment.newInstance(lessonNumber), true);
+                        CorrectAnswerFragment.newInstance(lessonNumber, characterNumber), true);
                 } else {
                     boolean almostCorrect = diffCount <= size / 3;
                     FragmentUtils.toNextFragment(getFragmentManager(), R.id.container,
@@ -135,7 +139,7 @@ public class JudgeFragment extends Fragment {
             }
         };
 
-        if (Lessons.hasIf(lessonNumber)) {
+        if (Lessons.hasIf(lessonNumber, characterNumber)) {
             whiteOrYellow.setText("しろいひよこのばあい");
             whiteOrYellow.setTextColor(0xFF807700);
         }
@@ -144,7 +148,7 @@ public class JudgeFragment extends Fragment {
             Interpreter.createForCocco(answerUnrolledProgram, answerCharacterSprite)), handler) {
             @Override
             public void afterRun() {
-                if (Lessons.hasIf(lessonNumber)) {
+                if (Lessons.hasIf(lessonNumber, characterNumber)) {
                     whiteOrYellow.setText("きいろいひよこのばあい");
                     whiteOrYellow.setTextColor(0xFFFF3300);
                     robotExecutor = new RobotExecutor(Lists.newArrayList(Interpreter.createForPiyo(altUserUnrolledProgram, altUserCharacterSprite, userCodeView),

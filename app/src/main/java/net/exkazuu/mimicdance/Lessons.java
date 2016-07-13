@@ -1,5 +1,7 @@
 package net.exkazuu.mimicdance;
 
+import android.support.annotation.Nullable;
+
 import net.exkazuu.mimicdance.interpreter.IconType;
 
 public class Lessons {
@@ -16,7 +18,7 @@ public class Lessons {
     private static final String WHITE = IconType.White.code;
     private static final String _3 = IconType.Number3.code;
 
-    private static String[] coccoCodes = {
+    private static String[] normalCoccoCodes = {
         commands(RU, LU, RD, LD),
         commands(LU, LD, RU, RD, LU, LD, RU, RD),
         commands(DO + _3, LU, LD, RU, RD, DONE),
@@ -26,13 +28,18 @@ public class Lessons {
         commands(DO + _3, IF + WHITE, RU, RD, ELSE, LU, LD, FI, DONE),
     };
 
-    private static int[] maxSteps = {6, 8, 8, 8, 7, 10, 10};
+    private static String[][] duoCoccoCodes = {
+        {commands(RU, LU, RD, LD), commands(RU, LU, RD, LD)},
+        {commands(LU, LD, RU, RD, LU, LD, RU, RD), commands(LU, LD, RU, RD, LU, LD, RU, RD)},
+    };
+
+    private static int[] maxSteps = {6, 8, 8, 8, 7, 10, 10, 6, 8};
 
     private static String commands(String... args) {
         StringBuilder sb = new StringBuilder();
         boolean first = true;
         for (String str : args) {
-            if(first) {
+            if (first) {
                 first = false;
             } else {
                 sb.append('\n');
@@ -42,23 +49,36 @@ public class Lessons {
         return sb.toString();
     }
 
-    public static String getCoccoCode(int lessonNumber) {
-        return coccoCodes[lessonNumber - 1];
+    public static boolean isNormalLesson(int lessonNumber) {
+        return lessonNumber < normalCoccoCodes.length;
+    }
+
+    public static String getCoccoCode(int lessonNumber, int characterNumber) {
+        if (isNormalLesson(lessonNumber)) {
+            return normalCoccoCodes[lessonNumber - 1];
+        } else {
+            int index=lessonNumber - getLessonCount(true) - 1;
+            return duoCoccoCodes[lessonNumber - getLessonCount(true) - 1][characterNumber];
+        }
     }
 
     public static int getMaxStep(int lessonNumber) {
         return maxSteps[lessonNumber - 1];
     }
 
-    public static int getLessonCount() {
-        return coccoCodes.length;
+    public static int getLessonCount(boolean normal) {
+        return normal ? normalCoccoCodes.length : duoCoccoCodes.length;
     }
 
-    public static boolean hasLoop(int lessonNumber) {
-        return coccoCodes[lessonNumber - 1].contains(DO);
+    public static int getLessonStart(boolean normal) {
+        return normal ? 1 : getLessonCount(true) + 1;
     }
 
-    public static boolean hasIf(int lessonNumber) {
-        return coccoCodes[lessonNumber - 1].contains(IF);
+    public static boolean hasLoop(int lessonNumber, int characterNumber) {
+        return getCoccoCode(lessonNumber, characterNumber).contains(DO);
+    }
+
+    public static boolean hasIf(int lessonNumber, int characterNumber) {
+        return getCoccoCode(lessonNumber, characterNumber).contains(IF);
     }
 }

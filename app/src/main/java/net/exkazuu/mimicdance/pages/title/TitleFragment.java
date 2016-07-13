@@ -95,7 +95,13 @@ public class TitleFragment extends Fragment {
     @OnClick(R.id.start_button)
     void startClicked() {
         FragmentUtils.toNextFragment(getFragmentManager(), R.id.container,
-            LessonListFragment.newInstance(), true);
+            LessonListFragment.newInstance(true), true);
+    }
+
+    @OnClick(R.id.duo_button)
+    void duoClicked() {
+        FragmentUtils.toNextFragment(getFragmentManager(), R.id.container,
+            LessonListFragment.newInstance(false), true);
     }
 
     // endregion

@@ -29,30 +29,30 @@ import butterknife.OnClick;
 import jp.fkmsoft.android.framework.util.FragmentUtils;
 
 /**
- * Fragment for Lesson top page
+ * Base class of a fragment for Lesson top page
  */
-public class LessonTopFragment extends Fragment {
+public abstract class BaseLessonTopFragment extends Fragment {
     private static final String ARGS_LESSON_NUMBER = "lessonNumber";
-    private int lessonNumber;
-
+    private static final String ARGS_CHARACTER_NUMBER = "characterNumber";
     @Bind(R.id.character_left)
     View leftCharacterView;
     @Bind(R.id.character_right)
     View rightCharacterView;
     @Bind(R.id.image_lesson_logo)
     ImageView lessonLogoImageView;
-
-    private CharacterSprite leftCharacterSprite;
-    private CharacterSprite rightCharacterSprite;
-
+    protected int lessonNumber;
+    protected int characterNumber;
+    protected CharacterSprite leftCharacterSprite;
+    protected CharacterSprite rightCharacterSprite;
     private Handler handler;
     private RobotExecutor robotExecutor;
 
-    public static LessonTopFragment newInstance(int lessonNumber) {
-        LessonTopFragment fragment = new LessonTopFragment();
+    public static BaseLessonTopFragment newInstance(int lessonNumber, int characterNumber) {
+        BaseLessonTopFragment fragment = Lessons.isNormalLesson(lessonNumber) ? new NormalLessonTopFragment() : new DuoLessonTopFragment();
 
         Bundle args = new Bundle();
         args.putInt(ARGS_LESSON_NUMBER, lessonNumber);
+        args.putInt(ARGS_CHARACTER_NUMBER, characterNumber);
         fragment.setArguments(args);
 
         return fragment;
@@ -62,9 +62,10 @@ public class LessonTopFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
-        this.lessonNumber = args.getInt(ARGS_LESSON_NUMBER);
+        lessonNumber = args.getInt(ARGS_LESSON_NUMBER);
+        characterNumber = args.getInt(ARGS_CHARACTER_NUMBER);
 
-        this.handler = new Handler();
+        handler = new Handler();
     }
 
     @Nullable
@@ -73,12 +74,8 @@ public class LessonTopFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_lesson_top, container, false);
 
         ButterKnife.bind(this, root);
-
-        rightCharacterView.setVisibility(Lessons.hasIf(lessonNumber) ? View.VISIBLE : View.INVISIBLE);
-        leftCharacterSprite = CharacterSprite.createCoccoLeft(leftCharacterView);
-        rightCharacterSprite = CharacterSprite.createCoccoRight(rightCharacterView);
-
-        int drawableId = getResources().getIdentifier("lesson_message" + lessonNumber, "drawable", this.getContext().getPackageName());
+        createCharacters();
+        int drawableId = getResources().getIdentifier("lesson_message" + lessonNumber, "drawable", getContext().getPackageName());
         lessonLogoImageView.setImageResource(drawableId);
 
         return root;
@@ -96,8 +93,6 @@ public class LessonTopFragment extends Fragment {
         ButterKnife.unbind(this);
     }
 
-    // region UI event
-
     @OnClick(R.id.button_back)
     void backClicked() {
         FragmentManager manager = getFragmentManager();
@@ -110,15 +105,15 @@ public class LessonTopFragment extends Fragment {
     @OnClick(R.id.button_write)
     void writeClicked() {
         FragmentUtils.toNextFragment(getFragmentManager(), R.id.container,
-            LessonEditorFragment.newInstance(lessonNumber), true);
+            LessonEditorFragment.newInstance(lessonNumber, characterNumber), true);
     }
 
     @OnClick(R.id.button_move)
     void moveClicked() {
-        String coccoCode = Lessons.getCoccoCode(this.lessonNumber);
+        String coccoCode = Lessons.getCoccoCode(lessonNumber, characterNumber);
         Block program = CodeParser.parse(coccoCode);
-        UnrolledProgram leftUnrolledProgram = program.unroll(EventType.White);
-        UnrolledProgram rightUnrolledProgram = program.unroll(EventType.Yellow);
+        UnrolledProgram leftUnrolledProgram = getLeftUnrolledProgram(program);
+        UnrolledProgram rightUnrolledProgram = getRightUnrolledProgram(program);
 
         if (robotExecutor != null) {
             robotExecutor.terminate();
@@ -129,5 +124,9 @@ public class LessonTopFragment extends Fragment {
         robotExecutor.start();
     }
 
-    // endregion
+    protected abstract void createCharacters();
+
+    protected abstract UnrolledProgram getLeftUnrolledProgram(Block program);
+
+    protected abstract UnrolledProgram getRightUnrolledProgram(Block program);
 }

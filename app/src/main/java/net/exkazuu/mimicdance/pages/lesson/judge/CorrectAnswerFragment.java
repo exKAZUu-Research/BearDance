@@ -15,7 +15,8 @@ import android.widget.ImageView;
 
 import net.exkazuu.mimicdance.Lessons;
 import net.exkazuu.mimicdance.R;
-import net.exkazuu.mimicdance.pages.lesson.top.LessonTopFragment;
+import net.exkazuu.mimicdance.pages.lesson.top.BaseLessonTopFragment;
+import net.exkazuu.mimicdance.pages.lesson.top.NormalLessonTopFragment;
 import net.exkazuu.mimicdance.pages.title.TitleFragment;
 
 import butterknife.Bind;
@@ -28,6 +29,7 @@ import jp.fkmsoft.android.framework.util.FragmentUtils;
  */
 public class CorrectAnswerFragment extends Fragment {
     private static final String ARGS_LESSON_NUMBER = "lessonNumber";
+    private static final String ARGS_CHARACTER_NUMBER = "characterNumber";
 
     @Bind(R.id.cocco)
     ImageView coccoView;
@@ -37,12 +39,14 @@ public class CorrectAnswerFragment extends Fragment {
     private AnimationDrawable coccoAnimation;
     private AnimationDrawable piyoAnimation;
     private int lessonNumber;
+    private int characterNumber;
 
-    public static CorrectAnswerFragment newInstance(int lessonNumber) {
+    public static CorrectAnswerFragment newInstance(int lessonNumber, int characterNumber) {
         CorrectAnswerFragment fragment = new CorrectAnswerFragment();
 
         Bundle args = new Bundle();
         args.putInt(ARGS_LESSON_NUMBER, lessonNumber);
+        args.putInt(ARGS_CHARACTER_NUMBER, characterNumber);
         fragment.setArguments(args);
 
         return fragment;
@@ -53,6 +57,7 @@ public class CorrectAnswerFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         lessonNumber = args.getInt(ARGS_LESSON_NUMBER);
+        characterNumber = args.getInt(ARGS_CHARACTER_NUMBER);
     }
 
     @Nullable
@@ -99,7 +104,7 @@ public class CorrectAnswerFragment extends Fragment {
         if (manager == null) {
             return;
         }
-        if (lessonNumber + 1 > Lessons.getLessonCount()) {
+        if (lessonNumber + 1 > Lessons.getLessonCount(true)) {
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace(R.id.container, TitleFragment.newInstance());
             transaction.commit();
@@ -109,7 +114,7 @@ public class CorrectAnswerFragment extends Fragment {
             manager.popBackStack();
             manager.popBackStack();
             FragmentUtils.toNextFragment(getFragmentManager(), R.id.container,
-                LessonTopFragment.newInstance(Math.min(lessonNumber + 1, Lessons.getLessonCount())), true);
+                BaseLessonTopFragment.newInstance(lessonNumber + 1, characterNumber), true);
         }
     }
 
