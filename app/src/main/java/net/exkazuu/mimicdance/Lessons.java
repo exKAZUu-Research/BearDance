@@ -57,7 +57,6 @@ public class Lessons {
         if (isNormalLesson(lessonNumber)) {
             return normalCoccoCodes[lessonNumber - 1];
         } else {
-            int index=lessonNumber - getLessonCount(true) - 1;
             return duoCoccoCodes[lessonNumber - getLessonCount(true) - 1][characterNumber];
         }
     }

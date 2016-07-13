@@ -1,11 +1,7 @@
 package net.exkazuu.mimicdance.pages.lesson.judge;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,80 +21,42 @@ import net.exkazuu.mimicdance.program.Block;
 import net.exkazuu.mimicdance.program.CodeParser;
 import net.exkazuu.mimicdance.program.UnrolledProgram;
 
-import java.util.ArrayList;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import jp.fkmsoft.android.framework.util.FragmentUtils;
 
-/**
- * Fragment for Lesson top page
- */
-public class JudgeFragment extends Fragment {
-    private static final String ARGS_LESSON_NUMBER = "lessonNumber";
-    private static final String ARGS_CHARACTER_NUMBER = "characterNumber";
-    private static final String ARGS_USER_PROGRAM_LIST = "userProgramList";
+public class DuoJudgeFragment extends BaseJudgeFragment {
 
-    private int lessonNumber;
-    private int characterNumber;
-
-    @Bind(R.id.user_character)
-    View userCharacter;
-    @Bind(R.id.answer_character)
-    View answerCharacter;
-    @Bind(R.id.user_code)
-    TextView userCodeView;
+    @Bind(R.id.left_user_character)
+    View leftUserCharacter;
+    @Bind(R.id.left_answer_character)
+    View leftAnswerCharacter;
+    @Bind(R.id.right_user_character)
+    View rightUserCharacter;
+    @Bind(R.id.right_answer_character)
+    View rightAnswerCharacter;
+    @Bind(R.id.left_user_code)
+    TextView leftUserCodeView;
+    @Bind(R.id.right_user_code)
+    TextView rightUserCodeView;
     @Bind(R.id.white_or_orange)
     TextView whiteOrYellow;
 
     private CharacterSprite userCharacterSprite, altUserCharacterSprite;
     private CharacterSprite answerCharacterSprite, altAnswerCharacterSprite;
 
-    private Handler handler;
-    private RobotExecutor robotExecutor;
-    private ArrayList<Program> programList;
-
-    public static JudgeFragment newInstance(int lessonNumber, int characterNumber, Program[] programList) {
-        JudgeFragment fragment = new JudgeFragment();
-
-        Bundle args = new Bundle();
-        args.putInt(ARGS_LESSON_NUMBER, lessonNumber);
-        args.putInt(ARGS_CHARACTER_NUMBER, characterNumber);
-        args.putParcelableArray(ARGS_USER_PROGRAM_LIST, programList);
-        fragment.setArguments(args);
-
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Bundle args = getArguments();
-        this.lessonNumber = args.getInt(ARGS_LESSON_NUMBER);
-        this.characterNumber = args.getInt(ARGS_CHARACTER_NUMBER);
-        this.programList = new ArrayList<>();
-        Parcelable[] list = args.getParcelableArray(ARGS_USER_PROGRAM_LIST);
-        if (list != null) {
-            for (Parcelable p : list) {
-                this.programList.add((Program) p);
-            }
-        }
-        this.handler = new Handler();
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_judge, container, false);
+        View root = inflater.inflate(R.layout.fragment_judge_duo, container, false);
 
         ButterKnife.bind(this, root);
 
-        altUserCharacterSprite = CharacterSprite.createPiyoRight(userCharacter);
-        altAnswerCharacterSprite = CharacterSprite.createCoccoRight(answerCharacter);
-        userCharacterSprite = CharacterSprite.createPiyoLeft(userCharacter);
-        answerCharacterSprite = CharacterSprite.createCoccoLeft(answerCharacter);
-        userCodeView.setText(Joiner.on("\n").skipNulls().join(Program.getCodeLines(programList)));
+        altUserCharacterSprite = CharacterSprite.createPiyoRight(leftUserCharacter);
+        altAnswerCharacterSprite = CharacterSprite.createCoccoRight(leftAnswerCharacter);
+        userCharacterSprite = CharacterSprite.createPiyoLeft(leftUserCharacter);
+        answerCharacterSprite = CharacterSprite.createCoccoLeft(leftAnswerCharacter);
+        leftUserCodeView.setText(Joiner.on("\n").skipNulls().join(Program.getCodeLines(programList)));
 
         return root;
     }
@@ -144,14 +102,14 @@ public class JudgeFragment extends Fragment {
             whiteOrYellow.setTextColor(0xFF807700);
         }
 
-        robotExecutor = new RobotExecutor(Lists.newArrayList(Interpreter.createForPiyo(userUnrolledProgram, userCharacterSprite, userCodeView),
+        robotExecutor = new RobotExecutor(Lists.newArrayList(Interpreter.createForPiyo(userUnrolledProgram, userCharacterSprite, leftUserCodeView),
             Interpreter.createForCocco(answerUnrolledProgram, answerCharacterSprite)), handler) {
             @Override
             public void afterRun() {
                 if (Lessons.hasIf(lessonNumber, characterNumber)) {
                     whiteOrYellow.setText("きいろいひよこのばあい");
                     whiteOrYellow.setTextColor(0xFFFF3300);
-                    robotExecutor = new RobotExecutor(Lists.newArrayList(Interpreter.createForPiyo(altUserUnrolledProgram, altUserCharacterSprite, userCodeView),
+                    robotExecutor = new RobotExecutor(Lists.newArrayList(Interpreter.createForPiyo(altUserUnrolledProgram, altUserCharacterSprite, leftUserCodeView),
                         Interpreter.createForCocco(altAnswerUnrolledProgram, altAnswerCharacterSprite)), handler) {
                         @Override
                         public void afterRun() {
@@ -167,25 +125,4 @@ public class JudgeFragment extends Fragment {
 
         robotExecutor.start();
     }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-
-        ButterKnife.unbind(this);
-        robotExecutor.terminate();
-    }
-
-    // region UI event
-
-    @OnClick(R.id.button_lesson_editor)
-    void lessonEditorClicked() {
-        FragmentManager manager = getFragmentManager();
-        if (manager == null) {
-            return;
-        }
-        manager.popBackStack();
-    }
-
-    // endregion
 }
