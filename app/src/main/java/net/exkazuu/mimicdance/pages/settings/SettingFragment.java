@@ -85,8 +85,8 @@ public class SettingFragment extends Fragment {
     @OnClick(R.id.save_button)
     void saveClientId() {
         String clientId = editText.getText().toString();
-        if (enableToSave(clientId)) {
-            APIClient.setClientId(getContext(), clientId);
+        boolean saved = APIClient.setClientId(getContext(), clientId);
+        if (saved) {
             Toast.makeText(getContext(), R.string.saved, Toast.LENGTH_SHORT).show();
         }
     }
