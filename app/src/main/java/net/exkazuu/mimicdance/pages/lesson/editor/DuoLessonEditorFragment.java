@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
+import net.exkazuu.mimicdance.BuildConfig;
 import net.exkazuu.mimicdance.R;
 import net.exkazuu.mimicdance.models.APIClient;
 
@@ -51,7 +52,7 @@ public class DuoLessonEditorFragment extends BaseLessonEditorFragment {
     }
 
     private void changeJudgeButtonState(boolean isPartnerOnline) {
-        if (isPartnerOnline) {
+        if (BuildConfig.OFFLINE_MODE || isPartnerOnline) {
             judgeButton.setText(R.string.check_answer);
             judgeButton.setEnabled(true);
         } else {

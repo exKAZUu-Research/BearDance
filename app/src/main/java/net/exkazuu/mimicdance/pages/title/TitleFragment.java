@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import net.exkazuu.mimicdance.BuildConfig;
 import net.exkazuu.mimicdance.R;
 import net.exkazuu.mimicdance.activities.TitleActivity;
 import net.exkazuu.mimicdance.models.APIClient;
@@ -63,7 +64,7 @@ public class TitleFragment extends Fragment {
 
         APIClient.ClientType type = APIClient.getClientType(getContext());
         boolean enableDuoMode = type == APIClient.ClientType.A || type == APIClient.ClientType.B;
-        duoButton.setEnabled(enableDuoMode);
+        duoButton.setEnabled(BuildConfig.OFFLINE_MODE || enableDuoMode);
     }
 
     @Override
