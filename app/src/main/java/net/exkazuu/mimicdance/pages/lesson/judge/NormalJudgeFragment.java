@@ -21,11 +21,16 @@ import net.exkazuu.mimicdance.program.Block;
 import net.exkazuu.mimicdance.program.CodeParser;
 import net.exkazuu.mimicdance.program.UnrolledProgram;
 
+import java.util.ArrayList;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import jp.fkmsoft.android.framework.util.FragmentUtils;
 
 public class NormalJudgeFragment extends BaseJudgeFragment {
+    private static final String ARGS_LESSON_NUMBER = "lessonNumber";
+    private static final String ARGS_CHARACTER_NUMBER = "characterNumber";
+    private static final String ARGS_USER_PROGRAM_LIST = "userProgramList";
 
     @Bind(R.id.user_character)
     View userCharacter;
@@ -36,14 +41,35 @@ public class NormalJudgeFragment extends BaseJudgeFragment {
     @Bind(R.id.white_or_orange)
     TextView whiteOrYellow;
 
+    protected ArrayList<Program> programList;
     private CharacterSprite userCharacterSprite, altUserCharacterSprite;
     private CharacterSprite answerCharacterSprite, altAnswerCharacterSprite;
+
+    public static NormalJudgeFragment newInstance(int lessonNumber, int characterNumber, Program[] programList) {
+        NormalJudgeFragment fragment = new NormalJudgeFragment();
+
+        Bundle args = new Bundle();
+        args.putInt(ARGS_LESSON_NUMBER, lessonNumber);
+        args.putInt(ARGS_CHARACTER_NUMBER, characterNumber);
+        args.putParcelableArray(ARGS_USER_PROGRAM_LIST, programList);
+        fragment.setArguments(args);
+
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle args = getArguments();
+        lessonNumber = args.getInt(ARGS_LESSON_NUMBER);
+        characterNumber = args.getInt(ARGS_CHARACTER_NUMBER);
+        programList = convertParcelableArrayToProgramList(args.getParcelableArray(ARGS_USER_PROGRAM_LIST));
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_judge, container, false);
-
         ButterKnife.bind(this, root);
 
         altUserCharacterSprite = CharacterSprite.createPiyoRight(userCharacter);

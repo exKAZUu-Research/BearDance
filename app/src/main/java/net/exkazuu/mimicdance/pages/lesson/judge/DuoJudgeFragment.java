@@ -21,11 +21,18 @@ import net.exkazuu.mimicdance.program.Block;
 import net.exkazuu.mimicdance.program.CodeParser;
 import net.exkazuu.mimicdance.program.UnrolledProgram;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import jp.fkmsoft.android.framework.util.FragmentUtils;
 
 public class DuoJudgeFragment extends BaseJudgeFragment {
+    private static final String ARGS_LESSON_NUMBER = "lessonNumber";
+    private static final String ARGS_CHARACTER_NUMBER = "characterNumber";
+    private static final String ARGS_LEFT_USER_PROGRAM_LIST = "leftUserProgramList";
+    private static final String ARGS_RIGHT_USER_PROGRAM_LIST = "rightUserProgramList";
 
     @Bind(R.id.left_user_character)
     View leftUserCharacter;
@@ -39,24 +46,45 @@ public class DuoJudgeFragment extends BaseJudgeFragment {
     TextView leftUserCodeView;
     @Bind(R.id.right_user_code)
     TextView rightUserCodeView;
-    @Bind(R.id.white_or_orange)
-    TextView whiteOrYellow;
 
-    private CharacterSprite userCharacterSprite, altUserCharacterSprite;
-    private CharacterSprite answerCharacterSprite, altAnswerCharacterSprite;
+    private CharacterSprite userCharacterSprite;
+    private CharacterSprite answerCharacterSprite;
+    protected ArrayList<Program> leftProgramList;
+    protected ArrayList<Program> rightProgramList;
+
+    public static DuoJudgeFragment newInstance(int lessonNumber, int characterNumber, Program[] leftProgramList, Program[] rightProgramList) {
+        DuoJudgeFragment fragment = new DuoJudgeFragment();
+
+        Bundle args = new Bundle();
+        args.putInt(ARGS_LESSON_NUMBER, lessonNumber);
+        args.putInt(ARGS_CHARACTER_NUMBER, characterNumber);
+        args.putParcelableArray(ARGS_LEFT_USER_PROGRAM_LIST, leftProgramList);
+        args.putParcelableArray(ARGS_RIGHT_USER_PROGRAM_LIST, rightProgramList);
+        fragment.setArguments(args);
+
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle args = getArguments();
+        lessonNumber = args.getInt(ARGS_LESSON_NUMBER);
+        characterNumber = args.getInt(ARGS_CHARACTER_NUMBER);
+        leftProgramList = convertParcelableArrayToProgramList(args.getParcelableArray(ARGS_LEFT_USER_PROGRAM_LIST));
+        rightProgramList = convertParcelableArrayToProgramList(args.getParcelableArray(ARGS_RIGHT_USER_PROGRAM_LIST));
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_judge_duo, container, false);
-
         ButterKnife.bind(this, root);
 
-        altUserCharacterSprite = CharacterSprite.createPiyoRight(leftUserCharacter);
-        altAnswerCharacterSprite = CharacterSprite.createCoccoRight(leftAnswerCharacter);
         userCharacterSprite = CharacterSprite.createPiyoLeft(leftUserCharacter);
         answerCharacterSprite = CharacterSprite.createCoccoLeft(leftAnswerCharacter);
-        leftUserCodeView.setText(Joiner.on("\n").skipNulls().join(Program.getCodeLines(programList)));
+        leftUserCodeView.setText(Joiner.on("\n").skipNulls().join(Program.getCodeLines(leftProgramList)));
+        rightUserCodeView.setText(Joiner.on("\n").skipNulls().join(Program.getCodeLines(rightProgramList)));
 
         return root;
     }
@@ -65,13 +93,12 @@ public class DuoJudgeFragment extends BaseJudgeFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        String answerCode = Lessons.getCoccoCode(lessonNumber, characterNumber);
-        Block userProgram = CodeParser.parse(programList);
-        Block answerProgram = CodeParser.parse(answerCode);
-        final UnrolledProgram userUnrolledProgram = userProgram.unroll(EventType.White);
-        final UnrolledProgram answerUnrolledProgram = answerProgram.unroll(EventType.White);
-        final UnrolledProgram altUserUnrolledProgram = userProgram.unroll(EventType.Yellow);
-        final UnrolledProgram altAnswerUnrolledProgram = answerProgram.unroll(EventType.Yellow);
+        final UnrolledProgram leftUserUnrolledProgram = UnrolledProgram.convertFromCode(leftProgramList, EventType.White);
+        final UnrolledProgram rightUserUnrolledProgram = UnrolledProgram.convertFromCode(rightProgramList, EventType.White);
+        String leftAnswerCode = Lessons.getCoccoCode(lessonNumber, 0);
+        String rightAnswerCode = Lessons.getCoccoCode(lessonNumber, 1);
+        final UnrolledProgram leftAnswerUnrolledProgram = UnrolledProgram.convertFromCode(leftAnswerCode, EventType.White);
+        final UnrolledProgram rightAnswerUnrolledProgram = UnrolledProgram.convertFromCode(rightAnswerCode, EventType.White);
 
         if (robotExecutor != null) {
             robotExecutor.terminate();
@@ -80,12 +107,10 @@ public class DuoJudgeFragment extends BaseJudgeFragment {
         final Runnable judge = new Runnable() {
             @Override
             public void run() {
-                int diffCount = userUnrolledProgram.countDifferences(answerUnrolledProgram);
-                int size = answerUnrolledProgram.size();
-                if (Lessons.hasIf(lessonNumber, characterNumber)) {
-                    diffCount += altUserUnrolledProgram.countDifferences(altAnswerUnrolledProgram);
-                    size += altAnswerUnrolledProgram.size();
-                }
+                int leftDiffCount = leftUserUnrolledProgram.countDifferences(leftAnswerUnrolledProgram);
+                int rightDiffCount = rightUserUnrolledProgram.countDifferences(rightAnswerUnrolledProgram);
+                int diffCount = leftDiffCount + rightDiffCount;
+                int size = leftAnswerUnrolledProgram.size() + rightAnswerUnrolledProgram.size();
                 if (diffCount == 0) {
                     FragmentUtils.toNextFragment(getFragmentManager(), R.id.container,
                         CorrectAnswerFragment.newInstance(lessonNumber, characterNumber), true);
@@ -97,29 +122,16 @@ public class DuoJudgeFragment extends BaseJudgeFragment {
             }
         };
 
-        if (Lessons.hasIf(lessonNumber, characterNumber)) {
-            whiteOrYellow.setText("しろいひよこのばあい");
-            whiteOrYellow.setTextColor(0xFF807700);
-        }
-
-        robotExecutor = new RobotExecutor(Lists.newArrayList(Interpreter.createForPiyo(userUnrolledProgram, userCharacterSprite, leftUserCodeView),
-            Interpreter.createForCocco(answerUnrolledProgram, answerCharacterSprite)), handler) {
+        List<Interpreter> interpreters = Lists.newArrayList(
+            Interpreter.createForPiyo(leftUserUnrolledProgram, userCharacterSprite, leftUserCodeView),
+            Interpreter.createForPiyo(rightUserUnrolledProgram, userCharacterSprite, rightUserCodeView),
+            Interpreter.createForCocco(leftAnswerUnrolledProgram, answerCharacterSprite),
+            Interpreter.createForCocco(rightAnswerUnrolledProgram, answerCharacterSprite)
+        );
+        robotExecutor = new RobotExecutor(interpreters, handler) {
             @Override
             public void afterRun() {
-                if (Lessons.hasIf(lessonNumber, characterNumber)) {
-                    whiteOrYellow.setText("きいろいひよこのばあい");
-                    whiteOrYellow.setTextColor(0xFFFF3300);
-                    robotExecutor = new RobotExecutor(Lists.newArrayList(Interpreter.createForPiyo(altUserUnrolledProgram, altUserCharacterSprite, leftUserCodeView),
-                        Interpreter.createForCocco(altAnswerUnrolledProgram, altAnswerCharacterSprite)), handler) {
-                        @Override
-                        public void afterRun() {
-                            judge.run();
-                        }
-                    };
-                    robotExecutor.start();
-                } else {
-                    judge.run();
-                }
+                judge.run();
             }
         };
 

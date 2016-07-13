@@ -19,41 +19,25 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public abstract class BaseJudgeFragment extends Fragment {
-    private static final String ARGS_LESSON_NUMBER = "lessonNumber";
-    private static final String ARGS_CHARACTER_NUMBER = "characterNumber";
-    private static final String ARGS_USER_PROGRAM_LIST = "userProgramList";
-    protected ArrayList<Program> programList;
     protected int lessonNumber;
     protected int characterNumber;
     protected Handler handler;
     protected RobotExecutor robotExecutor;
 
-    public static BaseJudgeFragment newInstance(int lessonNumber, int characterNumber, Program[] programList) {
-        BaseJudgeFragment fragment = Lessons.isNormalLesson(lessonNumber) ? new NormalJudgeFragment() : new DuoJudgeFragment();
-
-        Bundle args = new Bundle();
-        args.putInt(ARGS_LESSON_NUMBER, lessonNumber);
-        args.putInt(ARGS_CHARACTER_NUMBER, characterNumber);
-        args.putParcelableArray(ARGS_USER_PROGRAM_LIST, programList);
-        fragment.setArguments(args);
-
-        return fragment;
-    }
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle args = getArguments();
-        this.lessonNumber = args.getInt(ARGS_LESSON_NUMBER);
-        this.characterNumber = args.getInt(ARGS_CHARACTER_NUMBER);
-        this.programList = new ArrayList<>();
-        Parcelable[] list = args.getParcelableArray(ARGS_USER_PROGRAM_LIST);
-        if (list != null) {
-            for (Parcelable p : list) {
-                this.programList.add((Program) p);
+        this.handler = new Handler();
+    }
+
+    protected static ArrayList<Program> convertParcelableArrayToProgramList(Parcelable[] parcelableArray) {
+        ArrayList<Program> programList = new ArrayList<>();
+        if (parcelableArray != null) {
+            for (Parcelable p : parcelableArray) {
+                programList.add((Program) p);
             }
         }
-        this.handler = new Handler();
+        return programList;
     }
 
     @Override

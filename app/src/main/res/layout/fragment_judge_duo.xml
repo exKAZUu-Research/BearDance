@@ -59,14 +59,6 @@
     android:orientation="vertical"
     >
 
-    <TextView
-      android:id="@+id/white_or_orange"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:gravity="center"
-      android:textSize="32sp"
-      android:visibility="visible"/>
-
     <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="0dp"
@@ -75,7 +67,7 @@
 
       <include
         android:id="@+id/left_answer_character"
-        layout="@layout/character_piyo"
+        layout="@layout/character_cocco"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -105,7 +97,7 @@
         android:layout_weight="1"/>
 
       <include
-        layout="@layout/character_cocco"
+        layout="@layout/character_piyo"
         android:id="@+id/right_user_character"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

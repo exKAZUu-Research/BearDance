@@ -26,6 +26,8 @@ import net.exkazuu.mimicdance.models.program.Program;
 import net.exkazuu.mimicdance.models.program.ProgramDAO;
 import net.exkazuu.mimicdance.pages.editor.EditorFragment;
 import net.exkazuu.mimicdance.pages.lesson.judge.BaseJudgeFragment;
+import net.exkazuu.mimicdance.pages.lesson.judge.DuoJudgeFragment;
+import net.exkazuu.mimicdance.pages.lesson.judge.NormalJudgeFragment;
 import net.exkazuu.mimicdance.program.CodeParser;
 import net.exkazuu.mimicdance.program.UnrolledProgram;
 
@@ -167,8 +169,13 @@ public class LessonEditorFragment extends EditorFragment {
 
     @OnClick(R.id.button_judge)
     void judgeClicked() {
-        FragmentUtils.toNextFragment(getFragmentManager(), R.id.container,
-            BaseJudgeFragment.newInstance(lessonNumber, characterNumber, mAdapter.getAsArray()), true, STACK_TAG);
+        BaseJudgeFragment judgeFragment;
+        if (Lessons.isNormalLesson(lessonNumber)) {
+            judgeFragment = NormalJudgeFragment.newInstance(lessonNumber, characterNumber, mAdapter.getAsArray());
+        } else {
+            judgeFragment = DuoJudgeFragment.newInstance(lessonNumber, characterNumber, mAdapter.getAsArray(), mAdapter.getAsArray());
+        }
+        FragmentUtils.toNextFragment(getFragmentManager(), R.id.container, judgeFragment, true, STACK_TAG);
     }
 
     @OnClick({R.id.character_left, R.id.character_right})

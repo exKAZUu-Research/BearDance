@@ -3,6 +3,8 @@ package net.exkazuu.mimicdance.program;
 import com.google.common.base.Joiner;
 
 import net.exkazuu.mimicdance.interpreter.ActionType;
+import net.exkazuu.mimicdance.interpreter.EventType;
+import net.exkazuu.mimicdance.models.program.Program;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,5 +52,15 @@ public class UnrolledProgram {
 
     public int size() {
         return actionSets.size();
+    }
+
+    public static UnrolledProgram convertFromCode(ArrayList<Program> code, EventType eventType) {
+        Block program = CodeParser.parse(code);
+        return program.unroll(eventType);
+    }
+
+    public static UnrolledProgram convertFromCode(String code, EventType eventType) {
+        Block program = CodeParser.parse(code);
+        return program.unroll(eventType);
     }
 }
