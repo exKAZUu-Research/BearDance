@@ -45,7 +45,7 @@ public class CoccoActivity extends BaseActivity {
         Intent intent = getIntent();
         lessonNumber = intent.getIntExtra("lessonNumber", 1);
         piyoCode = intent.getStringExtra("piyoCode");
-        String coccoCode = Lessons.getCoccoCode(lessonNumber);
+        String coccoCode = Lessons.getCoccoCode(lessonNumber, 0);
         Block coccoBlock = CodeParser.parse(coccoCode);
         coccoProgram = coccoBlock.unroll(EventType.White);
         altCoccoProgram = coccoBlock.unroll(EventType.Yellow);

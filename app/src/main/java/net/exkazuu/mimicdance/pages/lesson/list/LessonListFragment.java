@@ -1,7 +1,7 @@
 package net.exkazuu.mimicdance.pages.lesson.list;
 
 import android.content.Context;
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,8 +15,7 @@ import android.view.ViewGroup;
 
 import net.exkazuu.mimicdance.Lessons;
 import net.exkazuu.mimicdance.R;
-import net.exkazuu.mimicdance.activities.CoccoActivity;
-import net.exkazuu.mimicdance.pages.lesson.top.LessonTopFragment;
+import net.exkazuu.mimicdance.pages.lesson.top.BaseLessonTopFragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -26,17 +25,30 @@ import jp.fkmsoft.android.framework.util.FragmentUtils;
  * Fragment for lesson list
  */
 public class LessonListFragment extends Fragment {
+    private static final String ARGS_NORMAL_MODE = "normalMode";
 
-    @Bind(R.id.toolbar) Toolbar toolbar;
-    @Bind(R.id.recycler) RecyclerView recyclerView;
+    boolean normalMode;
 
-    public static LessonListFragment newInstance() {
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
+    @Bind(R.id.recycler)
+    RecyclerView recyclerView;
+
+    public static LessonListFragment newInstance(boolean normalMode) {
         LessonListFragment fragment = new LessonListFragment();
 
         Bundle args = new Bundle();
+        args.putBoolean(ARGS_NORMAL_MODE, normalMode);
         fragment.setArguments(args);
 
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle args = getArguments();
+        normalMode = args.getBoolean(ARGS_NORMAL_MODE);
     }
 
     @Nullable
@@ -54,8 +66,9 @@ public class LessonListFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
 
         LessonListAdapter adapter = new LessonListAdapter(context, this.clickListener);
-        int lessonCount = Lessons.getLessonCount();
-        for (int i = 1; i <= lessonCount; ++i) {
+        int lessonCount = Lessons.getLessonCount(normalMode);
+        int lessonStart = Lessons.getLessonStart(normalMode);
+        for (int i = lessonStart; i < lessonStart + lessonCount; ++i) {
             adapter.addItem("レッスン" + i);
         }
         recyclerView.setAdapter(adapter);
@@ -74,7 +87,9 @@ public class LessonListFragment extends Fragment {
         @Override
         public void onClick(View v) {
             FragmentManager manager = getFragmentManager();
-            if (manager == null) { return; }
+            if (manager == null) {
+                return;
+            }
             manager.popBackStack();
         }
     };
@@ -83,8 +98,10 @@ public class LessonListFragment extends Fragment {
         @Override
         public void onClick(View v) {
             int position = (int) v.getTag();
+            int lessonStart = Lessons.getLessonStart(normalMode);
+
             FragmentUtils.toNextFragment(getFragmentManager(), R.id.container,
-                LessonTopFragment.newInstance(position + 1), true);
+                BaseLessonTopFragment.newInstance(lessonStart + position, 0), true); // TODO: read character number from the settings
 /*
             Intent intent = new Intent(getActivity(), CoccoActivity.class);
             intent.putExtra("lessonNumber", position + 1);

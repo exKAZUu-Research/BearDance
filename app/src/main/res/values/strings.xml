@@ -91,6 +91,7 @@
   <string name="test_calendar">Calendarでうごかしてみる</string>
   <string name="tap_and_move">タッチして動きをかくにんしよう</string>
   <string name="select_command_first">アイコンか、プログラムが入っているところをえらんでね</string>
+  <string name="Title_duo_button">ふたりでおどる</string>
 
 
 </resources>

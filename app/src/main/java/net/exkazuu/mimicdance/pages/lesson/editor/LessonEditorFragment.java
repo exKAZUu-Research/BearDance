@@ -42,6 +42,7 @@ import jp.fkmsoft.android.framework.util.FragmentUtils;
  */
 public class LessonEditorFragment extends EditorFragment {
     private static final String ARGS_LESSON_NUMBER = "lessonNumber";
+    private static final String ARGS_CHARACTER_NUMBER = "characterNumber";
     public static final String STACK_TAG = "lessonEdit";
 
     @Bind(R.id.root)
@@ -63,16 +64,18 @@ public class LessonEditorFragment extends EditorFragment {
     private Handler handler;
     private RobotExecutor robotExecutor;
     private int lessonNumber;
+    private int characterNumber;
     private CharacterSprite leftCharacterSprite;
     private CharacterSprite rightCharacterSprite;
     private CharacterSprite userLeftCharacterSprite;
     private CharacterSprite userRightCharacterSprite;
 
-    public static LessonEditorFragment newInstance(int lessonNumber) {
+    public static LessonEditorFragment newInstance(int lessonNumber, int characterNumber) {
         LessonEditorFragment fragment = new LessonEditorFragment();
 
         Bundle args = new Bundle();
         args.putInt(ARGS_LESSON_NUMBER, lessonNumber);
+        args.putInt(ARGS_CHARACTER_NUMBER, characterNumber);
         fragment.setArguments(args);
 
         return fragment;
@@ -100,7 +103,8 @@ public class LessonEditorFragment extends EditorFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
-        this.lessonNumber = args.getInt(ARGS_LESSON_NUMBER);
+        lessonNumber = args.getInt(ARGS_LESSON_NUMBER);
+        characterNumber = args.getInt(ARGS_CHARACTER_NUMBER);
     }
 
     @Nullable
@@ -117,8 +121,8 @@ public class LessonEditorFragment extends EditorFragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(inflater.getContext(), LinearLayoutManager.HORIZONTAL, false));
         initTab();
 
-        rightCharacterView.setVisibility(Lessons.hasIf(lessonNumber) ? View.VISIBLE : View.INVISIBLE);
-        userRightCharacterView.setVisibility(Lessons.hasIf(lessonNumber) ? View.VISIBLE : View.INVISIBLE);
+        rightCharacterView.setVisibility(Lessons.hasIf(lessonNumber, characterNumber) ? View.VISIBLE : View.INVISIBLE);
+        userRightCharacterView.setVisibility(Lessons.hasIf(lessonNumber, characterNumber) ? View.VISIBLE : View.INVISIBLE);
         leftCharacterSprite = CharacterSprite.createCoccoLeft(leftCharacterView);
         rightCharacterSprite = CharacterSprite.createCoccoRight(rightCharacterView);
         userLeftCharacterSprite = CharacterSprite.createPiyoLeft(userLeftCharacterView);
@@ -129,14 +133,14 @@ public class LessonEditorFragment extends EditorFragment {
             position2Group = Lists.newArrayList(0, 1, 2, 3, 4);
             mTabLayout.removeTabAt(4);
             position2Group.remove(4);
-            if (!Lessons.hasIf(lessonNumber)) {
+            if (!Lessons.hasIf(lessonNumber, characterNumber)) {
                 mTabLayout.removeTabAt(3);
                 mTabLayout.removeTabAt(2);
                 position2Group.remove(3);
                 position2Group.remove(2);
             }
 
-            if (!Lessons.hasLoop(lessonNumber)) {
+            if (!Lessons.hasLoop(lessonNumber, characterNumber)) {
                 mTabLayout.removeTabAt(1);
                 position2Group.remove(1);
             }
@@ -164,12 +168,12 @@ public class LessonEditorFragment extends EditorFragment {
     @OnClick(R.id.button_judge)
     void judgeClicked() {
         FragmentUtils.toNextFragment(getFragmentManager(), R.id.container,
-            JudgeFragment.newInstance(lessonNumber, mAdapter.getAsArray()), true, STACK_TAG);
+            JudgeFragment.newInstance(lessonNumber, characterNumber, mAdapter.getAsArray()), true, STACK_TAG);
     }
 
     @OnClick({R.id.character_left, R.id.character_right})
     void checkProgramClicked() {
-        String answerCode = Lessons.getCoccoCode(lessonNumber);
+        String answerCode = Lessons.getCoccoCode(lessonNumber, characterNumber);
         UnrolledProgram leftProgram = CodeParser.parse(answerCode).unroll(EventType.White);
         UnrolledProgram rightProgram = CodeParser.parse(answerCode).unroll(EventType.Yellow);
         if (robotExecutor != null) {
