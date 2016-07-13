@@ -1,26 +1,17 @@
 package net.exkazuu.mimicdance.pages.title;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
 import net.exkazuu.mimicdance.R;
-import net.exkazuu.mimicdance.activities.HelpActivity;
-import net.exkazuu.mimicdance.activities.LessonListActivity;
 import net.exkazuu.mimicdance.activities.TitleActivity;
-import net.exkazuu.mimicdance.activities.notification.NotificationActivity;
 import net.exkazuu.mimicdance.models.APIClient;
 import net.exkazuu.mimicdance.models.lesson.LessonDAO;
-import net.exkazuu.mimicdance.pages.help.HelpFragment;
-import net.exkazuu.mimicdance.pages.lesson.editor.LessonEditorFragment;
 import net.exkazuu.mimicdance.pages.lesson.list.LessonListFragment;
 import net.exkazuu.mimicdance.pages.notification.NotificationEditorFragment;
 import net.exkazuu.mimicdance.pages.settings.SettingFragment;

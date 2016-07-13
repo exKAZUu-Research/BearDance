@@ -5,6 +5,8 @@ import android.view.View;
 import net.exkazuu.mimicdance.CharacterSprite;
 import net.exkazuu.mimicdance.Lessons;
 import net.exkazuu.mimicdance.interpreter.EventType;
+import net.exkazuu.mimicdance.pages.lesson.editor.BaseLessonEditorFragment;
+import net.exkazuu.mimicdance.pages.lesson.editor.NormalLessonEditorFragment;
 import net.exkazuu.mimicdance.program.Block;
 import net.exkazuu.mimicdance.program.UnrolledProgram;
 
@@ -12,6 +14,7 @@ import net.exkazuu.mimicdance.program.UnrolledProgram;
  * Fragment for Normal lesson top page
  */
 public class NormalLessonTopFragment extends BaseLessonTopFragment {
+
     @Override
     protected void createCharacters() {
         rightCharacterView.setVisibility(Lessons.hasIf(lessonNumber, characterNumber) ? View.VISIBLE : View.INVISIBLE);

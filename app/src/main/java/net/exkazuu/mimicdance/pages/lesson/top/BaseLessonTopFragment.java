@@ -15,10 +15,9 @@ import com.google.common.collect.Lists;
 import net.exkazuu.mimicdance.CharacterSprite;
 import net.exkazuu.mimicdance.Lessons;
 import net.exkazuu.mimicdance.R;
-import net.exkazuu.mimicdance.interpreter.EventType;
 import net.exkazuu.mimicdance.interpreter.Interpreter;
 import net.exkazuu.mimicdance.interpreter.RobotExecutor;
-import net.exkazuu.mimicdance.pages.lesson.editor.LessonEditorFragment;
+import net.exkazuu.mimicdance.pages.lesson.editor.BaseLessonEditorFragment;
 import net.exkazuu.mimicdance.program.Block;
 import net.exkazuu.mimicdance.program.CodeParser;
 import net.exkazuu.mimicdance.program.UnrolledProgram;
@@ -105,7 +104,7 @@ public abstract class BaseLessonTopFragment extends Fragment {
     @OnClick(R.id.button_write)
     void writeClicked() {
         FragmentUtils.toNextFragment(getFragmentManager(), R.id.container,
-            LessonEditorFragment.newInstance(lessonNumber, characterNumber), true);
+        BaseLessonEditorFragment.newInstance(lessonNumber, characterNumber), true);
     }
 
     @OnClick(R.id.button_move)

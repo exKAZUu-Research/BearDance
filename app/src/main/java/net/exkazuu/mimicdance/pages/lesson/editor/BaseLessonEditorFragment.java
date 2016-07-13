@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.google.common.collect.Lists;
 
@@ -42,9 +43,9 @@ import jp.fkmsoft.android.framework.util.FragmentUtils;
 /**
  * Editor for Lesson
  */
-public class LessonEditorFragment extends EditorFragment {
-    private static final String ARGS_LESSON_NUMBER = "lessonNumber";
-    private static final String ARGS_CHARACTER_NUMBER = "characterNumber";
+public abstract class BaseLessonEditorFragment extends EditorFragment {
+    public static final String ARGS_LESSON_NUMBER = "lessonNumber";
+    public static final String ARGS_CHARACTER_NUMBER = "characterNumber";
     public static final String STACK_TAG = "lessonEdit";
 
     @Bind(R.id.root)
@@ -63,17 +64,24 @@ public class LessonEditorFragment extends EditorFragment {
     View userLeftCharacterView;
     @Bind(R.id.user_character_right)
     View userRightCharacterView;
+    @Bind(R.id.button_judge)
+    Button judgeButton;
+
+
     private Handler handler;
     private RobotExecutor robotExecutor;
-    private int lessonNumber;
+    protected int lessonNumber;
     private int characterNumber;
     private CharacterSprite leftCharacterSprite;
     private CharacterSprite rightCharacterSprite;
     private CharacterSprite userLeftCharacterSprite;
     private CharacterSprite userRightCharacterSprite;
 
-    public static LessonEditorFragment newInstance(int lessonNumber, int characterNumber) {
-        LessonEditorFragment fragment = new LessonEditorFragment();
+
+    public static BaseLessonEditorFragment newInstance(int lessonNumber, int characterNumber) {
+        BaseLessonEditorFragment fragment = Lessons.isNormalLesson(lessonNumber)
+            ? new NormalLessonEditorFragment()
+            : new DuoLessonEditorFragment();
 
         Bundle args = new Bundle();
         args.putInt(ARGS_LESSON_NUMBER, lessonNumber);

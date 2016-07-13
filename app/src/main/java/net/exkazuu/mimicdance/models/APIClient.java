@@ -24,6 +24,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class APIClient {
+    private static String TAG = "APIClient";
 
     public static enum ClientType {
         None, A, B;
@@ -94,9 +95,9 @@ public class APIClient {
             String lesson2 = obj.getString("lesson");
             return lesson.equals(lesson2);
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.w(TAG, e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.w(TAG, e.getMessage());
         }
         return false;
     }
@@ -116,11 +117,11 @@ public class APIClient {
                 return ISO8601.parse(playAt);
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.w(TAG, e.getMessage());
         } catch (ParseException e) {
-            e.printStackTrace();
+            Log.w(TAG, e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.w(TAG, e.getMessage());
         }
         return null;
     }
