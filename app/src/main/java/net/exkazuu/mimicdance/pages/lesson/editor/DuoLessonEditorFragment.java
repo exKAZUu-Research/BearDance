@@ -5,11 +5,14 @@ import android.os.Handler;
 import android.util.Log;
 
 import net.exkazuu.mimicdance.BuildConfig;
+import net.exkazuu.mimicdance.Lessons;
 import net.exkazuu.mimicdance.R;
 import net.exkazuu.mimicdance.models.APIClient;
+import net.exkazuu.mimicdance.models.program.Program;
 import net.exkazuu.mimicdance.pages.lesson.judge.BaseJudgeFragment;
 import net.exkazuu.mimicdance.pages.lesson.judge.DuoJudgeFragment;
 
+import java.util.Arrays;
 import java.util.Date;
 
 import jp.fkmsoft.android.framework.util.FragmentUtils;
@@ -38,7 +41,8 @@ public class DuoLessonEditorFragment extends BaseLessonEditorFragment {
     @Override
     void judgeClicked() {
         if (BuildConfig.OFFLINE_MODE) {
-            startJudge();
+            String partnerCode = Lessons.getCoccoCode(lessonNumber, characterNumber ^ 1);
+            startJudge(partnerCode);
             return;
         }
 
@@ -49,9 +53,11 @@ public class DuoLessonEditorFragment extends BaseLessonEditorFragment {
         judgeButton.setEnabled(false); // 2回押しを防ぐ
     }
 
-    private void startJudge() {
+    private void startJudge(String partnerCodes) {
         isReady = false;
-        BaseJudgeFragment judgeFragment = DuoJudgeFragment.newInstance(lessonNumber, characterNumber, mAdapter.getAsArray(), mAdapter.getAsArray());
+
+        Program[] partnerPrograms = Program.fromMultilineCode(partnerCodes);
+        BaseJudgeFragment judgeFragment = DuoJudgeFragment.newInstance(lessonNumber, characterNumber, mAdapter.getAsArray(), partnerPrograms);
         FragmentUtils.toNextFragment(getFragmentManager(), R.id.container, judgeFragment, true, STACK_TAG);
     }
 
@@ -66,7 +72,7 @@ public class DuoLessonEditorFragment extends BaseLessonEditorFragment {
     }
 
     private String getProgram() {
-        return null;
+        return Program.getMultilineCode(Arrays.asList(mAdapter.getAsArray()));
     }
 
     class ConnectionTask implements Runnable {
@@ -83,7 +89,7 @@ public class DuoLessonEditorFragment extends BaseLessonEditorFragment {
                     }
 
                     @Override
-                    protected void onPostExecute(APIClient.PartnerState partnerState) {
+                    protected void onPostExecute(final APIClient.PartnerState partnerState) {
                         Log.v("Mimic", String.format("partnerState:%s, now:%s", partnerState, new Date()));
                         if (partnerState.isReady()) {
                             long rest = Math.max(0, partnerState.playAt.getTime() - System.currentTimeMillis());
@@ -91,7 +97,7 @@ public class DuoLessonEditorFragment extends BaseLessonEditorFragment {
                                 @Override
                                 public void run() {
                                     Log.v("Mimic", "startJudge");
-                                    startJudge();
+                                    startJudge(partnerState.program);
                                 }
                             }, rest);
                             Log.v("Mimic", "restTime: " + rest);
