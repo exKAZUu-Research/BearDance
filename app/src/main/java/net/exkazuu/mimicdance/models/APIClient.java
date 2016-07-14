@@ -24,8 +24,17 @@ import okhttp3.Response;
 
 public class APIClient {
 
-    private static String TAG = "APIClient";
+    private static final String TAG = "APIClient";
+    private static final String CLIENT_PREFERENCE = "CLIENT_PREFERENCE";
+    private static final String CLIENT_ID = "CLIENT_ID";
+    private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+    private static final SimpleDateFormat ISO8601 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+
+    private static final String SERVER_URL = "https://mimic-dance.herokuapp.com";
+
     private static final boolean USE_MOCK = true;
+
+    // region 内部クラス
 
     public enum ClientType {
         NONE, A, B;
@@ -77,12 +86,7 @@ public class APIClient {
         }
     }
 
-    private static final String CLIENT_PREFERENCE = "CLIENT_PREFERENCE";
-    private static final String CLIENT_ID = "CLIENT_ID";
-    private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-    private static final SimpleDateFormat ISO8601 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-
-    private static final String SERVER_URL = "http://localhost:3000";
+    // endregion
 
     public static ClientType getClientType(Context context) {
         return getClientType(getClientId((context)));
