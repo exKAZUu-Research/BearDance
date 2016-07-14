@@ -32,7 +32,7 @@ public class APIClient {
 
     private static final String SERVER_URL = "https://mimic-dance.herokuapp.com";
 
-    private static final boolean USE_MOCK = true;
+    private static final boolean USE_MOCK = false;
 
     // region 内部クラス
 
@@ -204,6 +204,8 @@ public class APIClient {
         obj.put("program", program);
         String json = obj.toString();
 
+        Log.v(TAG, "JSON: " + json);
+
         OkHttpClient client = new OkHttpClient();
         RequestBody body = RequestBody.create(JSON, json);
         Request request = new Request.Builder()
@@ -211,6 +213,8 @@ public class APIClient {
             .post(body)
             .build();
         Response response = client.newCall(request).execute();
-        return response.body().string();
+        String resBody = response.body().string();
+        Log.v(TAG, "response body: " + resBody);
+        return resBody;
     }
 }
