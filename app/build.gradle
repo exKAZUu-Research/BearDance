@@ -21,13 +21,19 @@ android {
     }
     buildTypes {
         debug {
-            buildConfigField "boolean", "OFFLINE_MODE", "true"
-//            buildConfigField "boolean", "OFFLINE_MODE", "false"
+            applicationIdSuffix ".debug"
         }
         release {
-            buildConfigField "boolean", "OFFLINE_MODE", "false"
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    productFlavors {
+        offline {
+            buildConfigField "boolean", "OFFLINE_MODE", "true"
+        }
+        production {
+            buildConfigField "boolean", "OFFLINE_MODE", "false"
         }
     }
     packagingOptions {
