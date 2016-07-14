@@ -12,7 +12,8 @@ public enum ActionType {
     LeftFootDown("左足を下げる"),
     RightFootUp("右足を上げる"),
     RightFootDown("右足を下げる"),
-    Jump("ジャンプする"),;
+    Jump("ジャンプする"),
+    Touch("タッチ！"),;
 
     public final String text;
 
@@ -30,7 +31,7 @@ public enum ActionType {
     }
 
     public boolean isUp() {
-        return (ordinal() & 1) == 0;
+        return (ordinal() & 1) == 0 && ordinal() <= RightFootDown.ordinal();
     }
 
     public static Set<ActionType> parse(String line) {

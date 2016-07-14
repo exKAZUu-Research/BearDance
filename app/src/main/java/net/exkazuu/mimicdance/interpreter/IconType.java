@@ -12,6 +12,7 @@ public enum IconType {
     //    LeftFootUp("左足を上げる", R.drawable.icon_left_foot_up),
     //    LeftFootDown("左足を下げる", R.drawable.icon_left_foot_down),
     //    Jump("ジャンプする", R.drawable.icon_jump),
+    Touch("タッチ！", R.drawable.icon_touch, 0),
     Loop("くりかえし", R.drawable.icon_loop, R.id.programIconView5),
     EndLoop("ここまで", R.drawable.icon_end_loop, R.id.programIconView6),
     White("しろ", R.drawable.icon_yellow, R.id.programIconView7),

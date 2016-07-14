@@ -21,6 +21,7 @@ public class Interpreter implements Runnable {
     private final TextView textView;
     private final boolean isPiyo;
     private final Pose pose;
+    private final int characterNumber;
 
     private Set<ActionType> actions;
     private int executionCount;
@@ -30,20 +31,29 @@ public class Interpreter implements Runnable {
     private final byte[] command = new byte[2]; //右手、左手の2つ
 
     public static Interpreter createForPiyo(UnrolledProgram program, CharacterSprite characterSprite, TextView textView) {
-        return new Interpreter(program, characterSprite, textView, true);
+        return createForPiyo(program, characterSprite, textView, 0);
+    }
+
+    public static Interpreter createForPiyo(UnrolledProgram program, CharacterSprite characterSprite, TextView textView, int characterNumber) {
+        return new Interpreter(program, characterSprite, textView, true, characterNumber);
     }
 
     public static Interpreter createForCocco(UnrolledProgram program, CharacterSprite characterSprite) {
-        return new Interpreter(program, characterSprite, null, false);
+        return createForCocco(program, characterSprite, 0);
     }
 
-    private Interpreter(UnrolledProgram program, CharacterSprite characterSprite, TextView textView, boolean isPiyo) {
+    public static Interpreter createForCocco(UnrolledProgram program, CharacterSprite characterSprite, int characterNumber) {
+        return new Interpreter(program, characterSprite, null, false, characterNumber);
+    }
+
+    private Interpreter(UnrolledProgram program, CharacterSprite characterSprite, TextView textView, boolean isPiyo, int characterNumber) {
         this.program = program;
         this.characterSprite = characterSprite;
         this.textView = textView;
         this.isPiyo = isPiyo;
         this.pose = new Pose();
         this.bearCommand = "";
+        this.characterNumber = characterNumber;
     }
 
     @Override
@@ -58,7 +68,7 @@ public class Interpreter implements Runnable {
             }
 
             actions = program.getActionSet(getLineIndex());
-            if (!failed && ActionType.validate(actions) && pose.validate(actions)) {
+            if (!failed && ActionType.validate(actions) && pose.validate(actions, characterNumber)) {
                 pose.change(actions);
                 characterSprite.renderIntermediateState(actions);
                 if (isPiyo) {

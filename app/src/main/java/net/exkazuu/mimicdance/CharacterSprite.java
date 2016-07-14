@@ -44,7 +44,7 @@ public class CharacterSprite {
                 String prefix = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, characters[j].name()) + "_";
                 String actionName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, action.name());
                 String firstName = prefix + actionName.replace("down", "up") + "2";
-                String secondName = prefix + actionName.replace("up", "up3").replace("down", "up1").replace("jump", "basic");
+                String secondName = prefix + actionName.replace("up", "up3").replace("down", "up1").replace("jump", "basic").replace("touch", "basic");
                 firstImageIds[i][j] = view.getResources().getIdentifier(firstName, "drawable", packageName);
                 secondImageIds[i][j] = view.getResources().getIdentifier(secondName, "drawable", packageName);
             }
@@ -120,25 +120,23 @@ public class CharacterSprite {
     }
 
     public void renderIntermediateState(Collection<ActionType> actions) {
-        for (ActionType action : actions) {
-            bodyParts[action.toBodyPart().ordinal()]
-                .setImageResource(firstImageIds[action.ordinal()][charaType.ordinal()]);
-        }
-        if (actions.contains(ActionType.Jump)) {
-            for (int i = 0; i < bodyParts.length - 1; i++) {
-                bodyParts[i].setVisibility(View.INVISIBLE);
-            }
-        }
+        renderBodyParts(actions, firstImageIds, View.INVISIBLE);
     }
 
     public void renderCompleteState(Collection<ActionType> actions) {
-        for (ActionType actionType : actions) {
-            bodyParts[actionType.toBodyPart().ordinal()]
-                .setImageResource(secondImageIds[actionType.ordinal()][charaType.ordinal()]);
+        renderBodyParts(actions, secondImageIds, View.VISIBLE);
+    }
+
+    private void renderBodyParts(Collection<ActionType> actions, int[][] imageIds, int subPartsVisibility) {
+        boolean usesAllBodyParts = false;
+        for (ActionType action : actions) {
+            bodyParts[action.toBodyPart().ordinal()]
+                .setImageResource(imageIds[action.ordinal()][charaType.ordinal()]);
+            usesAllBodyParts |= action.toBodyPart().equals(BodyPartType.Body);
         }
-        if (actions.contains(ActionType.Jump)) {
+        if (usesAllBodyParts) {
             for (int i = 0; i < bodyParts.length - 1; i++) {
-                bodyParts[i].setVisibility(View.VISIBLE);
+                bodyParts[i].setVisibility(subPartsVisibility);
             }
         }
     }

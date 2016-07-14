@@ -123,10 +123,10 @@ public class DuoJudgeFragment extends BaseJudgeFragment {
         };
 
         List<Interpreter> interpreters = Lists.newArrayList(
-            Interpreter.createForPiyo(leftUserUnrolledProgram, userCharacterSprite, leftUserCodeView),
-            Interpreter.createForPiyo(rightUserUnrolledProgram, userCharacterSprite, rightUserCodeView),
-            Interpreter.createForCocco(leftAnswerUnrolledProgram, answerCharacterSprite),
-            Interpreter.createForCocco(rightAnswerUnrolledProgram, answerCharacterSprite)
+            Interpreter.createForPiyo(leftUserUnrolledProgram, userCharacterSprite, leftUserCodeView, 0),
+            Interpreter.createForPiyo(rightUserUnrolledProgram, userCharacterSprite, rightUserCodeView, 1),
+            Interpreter.createForCocco(leftAnswerUnrolledProgram, answerCharacterSprite, 0),
+            Interpreter.createForCocco(rightAnswerUnrolledProgram, answerCharacterSprite, 1)
         );
         robotExecutor = new RobotExecutor(interpreters, handler) {
             @Override

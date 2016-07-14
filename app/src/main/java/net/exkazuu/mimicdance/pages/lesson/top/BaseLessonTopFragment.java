@@ -110,16 +110,18 @@ public abstract class BaseLessonTopFragment extends Fragment {
 
     @OnClick(R.id.button_move)
     void moveClicked() {
-        String coccoCode = Lessons.getCoccoCode(lessonNumber, characterNumber);
-        Block program = CodeParser.parse(coccoCode);
-        UnrolledProgram leftUnrolledProgram = getLeftUnrolledProgram(program);
-        UnrolledProgram rightUnrolledProgram = getRightUnrolledProgram(program);
+        String leftCoccoCode = Lessons.getCoccoCode(lessonNumber, 0);
+        String rightCoccoCode = Lessons.getCoccoCode(lessonNumber, 1);
+        Block leftProgram = CodeParser.parse(leftCoccoCode);
+        Block rightProgram = CodeParser.parse(rightCoccoCode);
+        UnrolledProgram leftUnrolledProgram = getLeftUnrolledProgram(leftProgram);
+        UnrolledProgram rightUnrolledProgram = getRightUnrolledProgram(rightProgram);
 
         if (robotExecutor != null) {
             robotExecutor.terminate();
         }
-        robotExecutor = new RobotExecutor(Lists.newArrayList(Interpreter.createForCocco(leftUnrolledProgram, leftCharacterSprite),
-            Interpreter.createForCocco(rightUnrolledProgram, rightCharacterSprite)), handler, 400);
+        robotExecutor = new RobotExecutor(Lists.newArrayList(Interpreter.createForCocco(leftUnrolledProgram, leftCharacterSprite, 0),
+            Interpreter.createForCocco(rightUnrolledProgram, rightCharacterSprite, 1)), handler, 400);
 
         robotExecutor.start();
     }

@@ -9,6 +9,7 @@ public class Lessons {
     private static final String LD = IconType.LeftHandDown.code;
     private static final String RU = IconType.RightHandUp.code;
     private static final String RD = IconType.RightHandDown.code;
+    private static final String TOUCH = IconType.Touch.code;
 
     private static final String DO = IconType.Loop.code;
     private static final String DONE = IconType.EndLoop.code;
@@ -29,7 +30,7 @@ public class Lessons {
     };
 
     private static String[][] duoCoccoCodes = {
-        {commands(RU, LU, RD, LD), commands(RU, LU, RD, LD)},
+        {commands(LU, TOUCH), commands(RU, TOUCH)},
         {commands(LU, LD, RU, RD, LU, LD, RU, RD), commands(LU, LD, RU, RD, LU, LD, RU, RD)},
     };
 
