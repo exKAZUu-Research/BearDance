@@ -148,6 +148,9 @@ public class APIClient {
         try {
             String json = post(id, "connected", lesson, null);
             JSONObject obj = new JSONObject(json);
+            if (!obj.has("lesson")) {
+                return PartnerState.NONE;
+            }
             String lesson2 = obj.getString("lesson");
             return lesson.equals(lesson2)
                 ? PartnerState.CONNECTED
@@ -175,17 +178,21 @@ public class APIClient {
         try {
             String json = post(id, "ready", lesson, myProgram);
             JSONObject obj = new JSONObject(json);
+            if (!obj.has("lesson")) {
+                return PartnerState.NONE;
+            }
             String lesson2 = obj.getString("lesson");
             if (!lesson.equals(lesson2)) {
                 return PartnerState.NONE;
             }
-            String program = obj.getString("program");
-            String strPlayAt = obj.getString("play_at");
-            if (strPlayAt == null) {
+            if (obj.has("program") && obj.has("play_at")) {
+                String program = obj.getString("program");
+                String strPlayAt = obj.getString("play_at");
+                Date playAt = ISO8601.parse(strPlayAt);
+                return PartnerState.createReady(playAt, program);
+            } else {
                 return PartnerState.CONNECTED;
             }
-            Date playAt = ISO8601.parse(strPlayAt);
-            return PartnerState.createReady(playAt, program);
         } catch (JSONException e) {
             Log.w(TAG, e.getMessage());
         } catch (ParseException e) {
