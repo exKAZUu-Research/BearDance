@@ -71,7 +71,7 @@ public abstract class BaseLessonEditorFragment extends EditorFragment {
     private Handler handler;
     private RobotExecutor robotExecutor;
     protected int lessonNumber;
-    private int characterNumber;
+    protected int characterNumber;
     private CharacterSprite leftCharacterSprite;
     private CharacterSprite rightCharacterSprite;
     private CharacterSprite userLeftCharacterSprite;
@@ -176,15 +176,7 @@ public abstract class BaseLessonEditorFragment extends EditorFragment {
     }
 
     @OnClick(R.id.button_judge)
-    void judgeClicked() {
-        BaseJudgeFragment judgeFragment;
-        if (Lessons.isNormalLesson(lessonNumber)) {
-            judgeFragment = NormalJudgeFragment.newInstance(lessonNumber, characterNumber, mAdapter.getAsArray());
-        } else {
-            judgeFragment = DuoJudgeFragment.newInstance(lessonNumber, characterNumber, mAdapter.getAsArray(), mAdapter.getAsArray());
-        }
-        FragmentUtils.toNextFragment(getFragmentManager(), R.id.container, judgeFragment, true, STACK_TAG);
-    }
+    abstract void judgeClicked();
 
     @OnClick({R.id.character_left, R.id.character_right})
     void checkProgramClicked() {

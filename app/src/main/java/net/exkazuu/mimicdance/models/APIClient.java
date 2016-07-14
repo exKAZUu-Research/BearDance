@@ -6,13 +6,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import org.apache.http.client.HttpClient;
+import net.exkazuu.mimicdance.BuildConfig;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -24,10 +23,58 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class APIClient {
-    private static String TAG = "APIClient";
 
-    public static enum ClientType {
-        None, A, B;
+    private static String TAG = "APIClient";
+    private static final boolean USE_MOCK = true;
+
+    public enum ClientType {
+        NONE, A, B;
+    }
+
+    public static class PartnerState {
+
+        public static final PartnerState NONE = new PartnerState(false, null, null);
+        public static final PartnerState CONNECTED = new PartnerState(true, null, null);
+
+        public final boolean isConnected;
+        public final Date playAt;
+        public final String program;
+
+        private PartnerState(boolean isConnected, Date playAt, String program) {
+            this.isConnected = isConnected;
+            this.playAt = playAt;
+            this.program = program;
+        }
+
+        public boolean isNone() {
+            return !isConnected;
+        }
+
+        public boolean isConnected() {
+            return isConnected && playAt == null;
+        }
+
+        public boolean isReady() {
+            return playAt != null;
+        }
+
+        @Override
+        public String toString() {
+            if (isNone()) {
+                return "None";
+            }
+            if (isConnected()) {
+                return "Connected";
+            }
+            return "Ready(" + playAt + ")";
+        }
+
+        public static PartnerState createReady(Date date, String program) {
+            if (date == null || program == null) {
+                return CONNECTED;
+            }
+            return new PartnerState(true, date, program);
+        }
     }
 
     private static final String CLIENT_PREFERENCE = "CLIENT_PREFERENCE";
@@ -44,7 +91,7 @@ public class APIClient {
     @Nullable
     public static ClientType getClientType(String clientId) {
         if (clientId == null || clientId.length() == 0) {
-            return ClientType.None;
+            return ClientType.NONE;
         }
         if (clientId.endsWith("A")) {
             return ClientType.A;
@@ -73,7 +120,7 @@ public class APIClient {
                     .putString(CLIENT_ID, clientId)
                     .apply();
                 break;
-            case None:
+            case NONE:
                 pref.edit()
                     .remove(CLIENT_ID)
                     .apply();
@@ -87,19 +134,26 @@ public class APIClient {
      * @param lesson  プレイ中のレッスン
      * @return パートナーも同じレッスンをプレイ中かどうか
      */
-    public static boolean connect(Context context, String lesson) {
+    public static PartnerState connect(Context context, String lesson) {
+        if (USE_MOCK && BuildConfig.DEBUG) {
+            Log.v("Mimic", "connect USE MOCK!");
+            return PartnerState.CONNECTED;
+        }
+
         String id = getClientId(context);
         try {
-            String json = post(id, "connected", lesson);
+            String json = post(id, "connected", lesson, null);
             JSONObject obj = new JSONObject(json);
             String lesson2 = obj.getString("lesson");
-            return lesson.equals(lesson2);
+            return lesson.equals(lesson2)
+                ? PartnerState.CONNECTED
+                : PartnerState.NONE;
         } catch (JSONException e) {
             Log.w(TAG, e.getMessage());
         } catch (IOException e) {
             Log.w(TAG, e.getMessage());
         }
-        return false;
+        return PartnerState.NONE;
     }
 
     /**
@@ -107,15 +161,27 @@ public class APIClient {
      * @param lesson  プレイ中のレッスン
      * @return パートナーがreadyなら再生の開始時刻を返します。
      */
-    public static Date ready(Context context, String lesson) {
+    public static PartnerState ready(Context context, String lesson, String myProgram) {
+        if (USE_MOCK && BuildConfig.DEBUG) {
+            Log.v("Mimic", "ready USE MOCK");
+            return PartnerState.createReady(new Date(System.currentTimeMillis() + 2 * 1000), "");
+        }
+
         String id = getClientId(context);
         try {
-            String json = post(id, "ready", lesson);
+            String json = post(id, "ready", lesson, myProgram);
             JSONObject obj = new JSONObject(json);
-            String playAt = obj.getString("play_at");
-            if (playAt != null) {
-                return ISO8601.parse(playAt);
+            String lesson2 = obj.getString("lesson");
+            if (!lesson.equals(lesson2)) {
+                return PartnerState.NONE;
             }
+            String program = obj.getString("program");
+            String strPlayAt = obj.getString("play_at");
+            if (strPlayAt == null) {
+                return PartnerState.CONNECTED;
+            }
+            Date playAt = ISO8601.parse(strPlayAt);
+            return PartnerState.createReady(playAt, program);
         } catch (JSONException e) {
             Log.w(TAG, e.getMessage());
         } catch (ParseException e) {
@@ -123,14 +189,15 @@ public class APIClient {
         } catch (IOException e) {
             Log.w(TAG, e.getMessage());
         }
-        return null;
+        return PartnerState.NONE;
     }
 
-    private static String post(String id, String state, String lesson) throws IOException, JSONException {
+    private static String post(String id, String state, String lesson, String program) throws IOException, JSONException {
         JSONObject obj = new JSONObject();
         obj.put("id", id);
         obj.put("state", "ready");
         obj.put("lesson", lesson);
+        obj.put("program", program);
         String json = obj.toString();
 
         OkHttpClient client = new OkHttpClient();

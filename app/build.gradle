@@ -22,6 +22,7 @@ android {
     buildTypes {
         debug {
             buildConfigField "boolean", "OFFLINE_MODE", "true"
+//            buildConfigField "boolean", "OFFLINE_MODE", "false"
         }
         release {
             buildConfigField "boolean", "OFFLINE_MODE", "false"
