@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 
 import net.exkazuu.mimicdance.CharacterSprite;
@@ -17,8 +16,6 @@ import net.exkazuu.mimicdance.interpreter.EventType;
 import net.exkazuu.mimicdance.interpreter.Interpreter;
 import net.exkazuu.mimicdance.interpreter.RobotExecutor;
 import net.exkazuu.mimicdance.models.program.Program;
-import net.exkazuu.mimicdance.program.Block;
-import net.exkazuu.mimicdance.program.CodeParser;
 import net.exkazuu.mimicdance.program.UnrolledProgram;
 
 import java.util.ArrayList;
@@ -47,8 +44,10 @@ public class DuoJudgeFragment extends BaseJudgeFragment {
     @Bind(R.id.right_user_code)
     TextView rightUserCodeView;
 
-    private CharacterSprite userCharacterSprite;
-    private CharacterSprite answerCharacterSprite;
+    private CharacterSprite leftUserCharacterSprite;
+    private CharacterSprite leftAnswerCharacterSprite;
+    private CharacterSprite rightUserCharacterSprite;
+    private CharacterSprite rightAnswerCharacterSprite;
     protected ArrayList<Program> leftProgramList;
     protected ArrayList<Program> rightProgramList;
 
@@ -81,8 +80,10 @@ public class DuoJudgeFragment extends BaseJudgeFragment {
         View root = inflater.inflate(R.layout.fragment_judge_duo, container, false);
         ButterKnife.bind(this, root);
 
-        userCharacterSprite = CharacterSprite.createPiyoLeft(leftUserCharacter);
-        answerCharacterSprite = CharacterSprite.createCoccoLeft(leftAnswerCharacter);
+        leftUserCharacterSprite = CharacterSprite.createPiyoLeft(leftUserCharacter);
+        rightUserCharacterSprite = CharacterSprite.createPiyoRight(rightUserCharacter);
+        leftAnswerCharacterSprite = CharacterSprite.createCoccoLeft(leftAnswerCharacter);
+        rightAnswerCharacterSprite = CharacterSprite.createCoccoRight(rightAnswerCharacter);
         leftUserCodeView.setText(Program.getMultilineCode(leftProgramList));
         rightUserCodeView.setText(Program.getMultilineCode(rightProgramList));
 
@@ -123,10 +124,10 @@ public class DuoJudgeFragment extends BaseJudgeFragment {
         };
 
         List<Interpreter> interpreters = Lists.newArrayList(
-            Interpreter.createForPiyo(leftUserUnrolledProgram, userCharacterSprite, leftUserCodeView, 0),
-            Interpreter.createForPiyo(rightUserUnrolledProgram, userCharacterSprite, rightUserCodeView, 1),
-            Interpreter.createForCocco(leftAnswerUnrolledProgram, answerCharacterSprite, 0),
-            Interpreter.createForCocco(rightAnswerUnrolledProgram, answerCharacterSprite, 1)
+            Interpreter.createForPiyo(leftUserUnrolledProgram, leftUserCharacterSprite, leftUserCodeView, 0),
+            Interpreter.createForPiyo(rightUserUnrolledProgram, rightUserCharacterSprite, rightUserCodeView, 1),
+            Interpreter.createForCocco(leftAnswerUnrolledProgram, leftAnswerCharacterSprite, 0),
+            Interpreter.createForCocco(rightAnswerUnrolledProgram, rightAnswerCharacterSprite, 1)
         );
         robotExecutor = new RobotExecutor(interpreters, handler) {
             @Override
