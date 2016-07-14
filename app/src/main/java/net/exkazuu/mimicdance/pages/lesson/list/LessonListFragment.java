@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 
 import net.exkazuu.mimicdance.Lessons;
 import net.exkazuu.mimicdance.R;
+import net.exkazuu.mimicdance.models.APIClient;
 import net.exkazuu.mimicdance.pages.lesson.top.BaseLessonTopFragment;
 
 import butterknife.Bind;
@@ -99,15 +100,10 @@ public class LessonListFragment extends Fragment {
         public void onClick(View v) {
             int position = (int) v.getTag();
             int lessonStart = Lessons.getLessonStart(normalMode);
-
+            APIClient.ClientType clientType = APIClient.getClientType(getContext());
+            int characterNumber = clientType == APIClient.ClientType.B ? 1 : 0;
             FragmentUtils.toNextFragment(getFragmentManager(), R.id.container,
-                BaseLessonTopFragment.newInstance(lessonStart + position, 0), true); // TODO: read character number from the settings
-/*
-            Intent intent = new Intent(getActivity(), CoccoActivity.class);
-            intent.putExtra("lessonNumber", position + 1);
-            intent.putExtra("piyoCode", "");
-            startActivity(intent);
-*/
+                BaseLessonTopFragment.newInstance(lessonStart + position, characterNumber), true);
         }
     };
 }
