@@ -1,13 +1,19 @@
 package net.exkazuu.mimicdance.pages.lesson.editor;
 
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import net.exkazuu.mimicdance.BuildConfig;
 import net.exkazuu.mimicdance.Lessons;
 import net.exkazuu.mimicdance.R;
 import net.exkazuu.mimicdance.models.APIClient;
+import net.exkazuu.mimicdance.models.program.Command;
 import net.exkazuu.mimicdance.models.program.Program;
 import net.exkazuu.mimicdance.pages.lesson.judge.BaseJudgeFragment;
 import net.exkazuu.mimicdance.pages.lesson.judge.DuoJudgeFragment;
@@ -23,6 +29,15 @@ public class DuoLessonEditorFragment extends BaseLessonEditorFragment {
 
     private Handler handler;
     private volatile boolean isReady;
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View root = super.onCreateView(inflater, container, savedInstanceState);
+        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.tab_duo_action)));
+        position2Group.add(Command.GROUP_DUO_ACTION);
+        return root;
+    }
 
     @Override
     public void onResume() {

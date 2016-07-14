@@ -65,7 +65,7 @@ public class Command {
         // コマンドのグループを作っておく
         sCommandGroupMap = new SparseArray<>(4);
         sCommandGroupMap.put(GROUP_ACTION, new String[]{
-            RIGHT_HAND_UP, RIGHT_HAND_DOWN, LEFT_HAND_UP, LEFT_HAND_DOWN, TOUCH // TODO: remove touch from this group
+            RIGHT_HAND_UP, RIGHT_HAND_DOWN, LEFT_HAND_UP, LEFT_HAND_DOWN
         });
         sCommandGroupMap.put(GROUP_NUMBER, new String[]{
             LOOP, END_LOOP,
