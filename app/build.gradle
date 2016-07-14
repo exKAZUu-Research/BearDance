@@ -20,9 +20,20 @@ android {
         versionName "1.0.5"
     }
     buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    productFlavors {
+        offline {
+            buildConfigField "boolean", "OFFLINE_MODE", "true"
+        }
+        production {
+            buildConfigField "boolean", "OFFLINE_MODE", "false"
         }
     }
     packagingOptions {

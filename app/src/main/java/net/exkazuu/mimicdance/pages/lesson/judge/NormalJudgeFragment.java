@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 
 import net.exkazuu.mimicdance.CharacterSprite;
@@ -76,7 +75,7 @@ public class NormalJudgeFragment extends BaseJudgeFragment {
         altAnswerCharacterSprite = CharacterSprite.createCoccoRight(answerCharacter);
         userCharacterSprite = CharacterSprite.createPiyoLeft(userCharacter);
         answerCharacterSprite = CharacterSprite.createCoccoLeft(answerCharacter);
-        userCodeView.setText(Joiner.on("\n").skipNulls().join(Program.getCodeLines(programList)));
+        userCodeView.setText(Program.getMultilineCode(programList));
 
         return root;
     }

@@ -83,8 +83,8 @@ public class DuoJudgeFragment extends BaseJudgeFragment {
 
         userCharacterSprite = CharacterSprite.createPiyoLeft(leftUserCharacter);
         answerCharacterSprite = CharacterSprite.createCoccoLeft(leftAnswerCharacter);
-        leftUserCodeView.setText(Joiner.on("\n").skipNulls().join(Program.getCodeLines(leftProgramList)));
-        rightUserCodeView.setText(Joiner.on("\n").skipNulls().join(Program.getCodeLines(rightProgramList)));
+        leftUserCodeView.setText(Program.getMultilineCode(leftProgramList));
+        rightUserCodeView.setText(Program.getMultilineCode(rightProgramList));
 
         return root;
     }

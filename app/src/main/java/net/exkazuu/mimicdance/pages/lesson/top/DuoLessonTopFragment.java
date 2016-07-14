@@ -2,6 +2,8 @@ package net.exkazuu.mimicdance.pages.lesson.top;
 
 import net.exkazuu.mimicdance.CharacterSprite;
 import net.exkazuu.mimicdance.interpreter.EventType;
+import net.exkazuu.mimicdance.pages.lesson.editor.BaseLessonEditorFragment;
+import net.exkazuu.mimicdance.pages.lesson.editor.DuoLessonEditorFragment;
 import net.exkazuu.mimicdance.program.Block;
 import net.exkazuu.mimicdance.program.UnrolledProgram;
 
@@ -9,6 +11,7 @@ import net.exkazuu.mimicdance.program.UnrolledProgram;
  * Fragment for Duo lesson top page
  */
 public class DuoLessonTopFragment extends BaseLessonTopFragment {
+
     @Override
     protected void createCharacters() {
         leftCharacterSprite = CharacterSprite.createCoccoLeft(leftCharacterView);
@@ -24,4 +27,6 @@ public class DuoLessonTopFragment extends BaseLessonTopFragment {
     protected UnrolledProgram getRightUnrolledProgram(Block program) {
         return program.unroll(EventType.White);
     }
+
+
 }

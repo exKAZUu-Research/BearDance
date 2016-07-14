@@ -2,6 +2,7 @@ package net.exkazuu.mimicdance.models.program;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
@@ -55,6 +56,19 @@ public class Program implements Parcelable {
             lines.remove(i);
         }
         return lines;
+    }
+
+    public static String getMultilineCode(List<Program> programList) {
+        return Joiner.on("\n").skipNulls().join(getCodeLines(programList));
+    }
+
+    public static Program[] fromMultilineCode(String code) {
+        ArrayList<Program> list = new ArrayList<>();
+        for (String line : code.split("\n")) {
+            String[] pair = line.split(" ", 2);
+            list.add(new Program(pair[0], pair.length == 2 ? pair[1] : ""));
+        }
+        return list.toArray(new Program[0]);
     }
 
     // region Parcelable
