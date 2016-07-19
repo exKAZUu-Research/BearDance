@@ -14,8 +14,8 @@
 
   <Button
     android:id="@+id/start_button"
-    android:layout_width="200dp"
-    android:layout_height="75dp"
+    android:layout_width="wrap_content"
+    android:layout_height="100sp"
     android:layout_alignTop="@+id/notification_button"
     android:layout_marginRight="20dp"
     android:layout_toStartOf="@+id/notification_button"
@@ -25,8 +25,8 @@
 
   <Button
     android:id="@+id/notification_button"
-    android:layout_width="200dp"
-    android:layout_height="75dp"
+    android:layout_width="wrap_content"
+    android:layout_height="100sp"
     android:layout_alignParentBottom="true"
     android:layout_centerHorizontal="true"
     android:layout_marginBottom="40dp"
@@ -36,8 +36,8 @@
 
   <Button
     android:id="@+id/help_button"
-    android:layout_width="200dp"
-    android:layout_height="75dp"
+    android:layout_width="wrap_content"
+    android:layout_height="100sp"
     android:layout_alignParentBottom="true"
     android:layout_marginBottom="16dp"
     android:layout_marginStart="16dp"
@@ -50,8 +50,8 @@
 
   <Button
     android:id="@+id/free_button"
-    android:layout_width="150dp"
-    android:layout_height="60dp"
+    android:layout_width="wrap_content"
+    android:layout_height="100sp"
     android:layout_above="@id/help_button"
     android:layout_alignLeft="@id/help_button"
     android:layout_marginBottom="22dp"
@@ -62,8 +62,8 @@
 
   <Button
     android:id="@+id/duo_button"
-    android:layout_width="200dp"
-    android:layout_height="75dp"
+    android:layout_width="wrap_content"
+    android:layout_height="100sp"
     android:layout_alignTop="@+id/notification_button"
     android:layout_marginLeft="20dp"
     android:layout_toEndOf="@+id/notification_button"
