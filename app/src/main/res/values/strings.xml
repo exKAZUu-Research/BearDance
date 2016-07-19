@@ -1,6 +1,5 @@
 <resources>
 
-  <string name="app_name">おしらせベア</string>
   <string name="menu_settings">Settings</string>
   <string name="title_coding_activity">コーディング</string>
   <string name="title_cocco_activity">お手本確認</string>
