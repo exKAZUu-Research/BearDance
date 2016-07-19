@@ -110,11 +110,10 @@
       android:background="#ff81ff">
 
       <Button
-        android:id="@+id/button_lesson_editor"
+        android:id="@+id/button_lesson_editor_duo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:onClick="startCodingActivity"
         android:text="@string/try_again"/>
     </LinearLayout>
   </LinearLayout>

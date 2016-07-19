@@ -48,13 +48,4 @@ public abstract class BaseJudgeFragment extends Fragment {
         ButterKnife.unbind(this);
         robotExecutor.terminate();
     }
-
-    @OnClick(R.id.button_lesson_editor)
-    void lessonEditorClicked() {
-        FragmentManager manager = getFragmentManager();
-        if (manager == null) {
-            return;
-        }
-        manager.popBackStack();
-    }
 }

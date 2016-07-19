@@ -2,6 +2,7 @@ package net.exkazuu.mimicdance.pages.lesson.judge;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import jp.fkmsoft.android.framework.util.FragmentUtils;
 
 public class NormalJudgeFragment extends BaseJudgeFragment {
@@ -140,5 +142,14 @@ public class NormalJudgeFragment extends BaseJudgeFragment {
         };
 
         robotExecutor.start();
+    }
+
+    @OnClick(R.id.button_lesson_editor)
+    void lessonEditorClicked() {
+        FragmentManager manager = getFragmentManager();
+        if (manager == null) {
+            return;
+        }
+        manager.popBackStack();
     }
 }
