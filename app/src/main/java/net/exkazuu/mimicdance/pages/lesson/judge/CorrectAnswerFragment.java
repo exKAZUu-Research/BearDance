@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,7 @@ import android.widget.ImageView;
 
 import net.exkazuu.mimicdance.Lessons;
 import net.exkazuu.mimicdance.R;
-import net.exkazuu.mimicdance.pages.lesson.LessonFragmentVariables;
+import net.exkazuu.mimicdance.Lesson;
 import net.exkazuu.mimicdance.pages.lesson.top.BaseLessonTopFragment;
 import net.exkazuu.mimicdance.pages.lesson.top.DuoLessonTopFragment;
 import net.exkazuu.mimicdance.pages.lesson.top.NormalLessonTopFragment;
@@ -39,18 +38,18 @@ public class CorrectAnswerFragment extends Fragment {
     @Bind(R.id.next_lesson)
     Button nextLessonButton;
 
-    private LessonFragmentVariables lessonFragmentVariables;
+    private Lesson lesson;
 
-    public static CorrectAnswerFragment newInstance(int lessonNumber, int characterNumber) {
+    public static CorrectAnswerFragment newInstance(Lesson lesson) {
         CorrectAnswerFragment fragment = new CorrectAnswerFragment();
-        LessonFragmentVariables.setFragmentArguments(fragment, lessonNumber, characterNumber);
+        lesson.saveToArguments(fragment);
         return fragment;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        lessonFragmentVariables = new LessonFragmentVariables(getArguments());
+        lesson = Lesson.loadFromArguments(getArguments());
     }
 
     @Nullable
@@ -63,7 +62,7 @@ public class CorrectAnswerFragment extends Fragment {
         startCoccoAnimation(this.getContext(), coccoView);
         startPiyoAnimation(this.getContext(), piyoView);
 
-        if (hasNextLesson()) {
+        if (lesson.hasNextLesson()) {
             nextLessonButton.setText(R.string.next_lesson);
         } else {
             nextLessonButton.setText(R.string.goto_top);
@@ -103,7 +102,7 @@ public class CorrectAnswerFragment extends Fragment {
         if (manager == null) {
             return;
         }
-        if (!hasNextLesson()) {
+        if (!lesson.hasNextLesson()) {
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace(R.id.container, TitleFragment.newInstance());
             transaction.commit();
@@ -113,10 +112,11 @@ public class CorrectAnswerFragment extends Fragment {
             manager.popBackStack();
             manager.popBackStack();
 
-            int nextLessonNumber = lessonFragmentVariables.getLessonNumber() + 1;
+            int nextLessonNumber = lesson.getLessonNumber() + 1;
+            Lesson nextLesson = new Lesson(nextLessonNumber, lesson.getCharacterNumber());
             BaseLessonTopFragment lessonTopFragment = Lessons.isNormalLesson(nextLessonNumber) ?
-                NormalLessonTopFragment.newInstance(nextLessonNumber, lessonFragmentVariables.getCharacterNumber()) :
-                DuoLessonTopFragment.newInstance(nextLessonNumber, lessonFragmentVariables.getCharacterNumber());
+                NormalLessonTopFragment.newInstance(nextLesson) :
+                DuoLessonTopFragment.newInstance(nextLesson);
             FragmentUtils.toNextFragment(getFragmentManager(), R.id.container, lessonTopFragment, true);
         }
     }
@@ -165,10 +165,4 @@ public class CorrectAnswerFragment extends Fragment {
         piyoAnimation.start();
     }
 
-    private boolean hasNextLesson() {
-        int maxNumber = Lessons.isNormalLesson(lessonFragmentVariables.getLessonNumber())
-            ? Lessons.getLessonCount(true)
-            : Lessons.getLessonCount(true) + Lessons.getLessonCount(false);
-        return lessonFragmentVariables.getLessonNumber() < maxNumber;
-    }
 }

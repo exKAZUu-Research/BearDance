@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import net.exkazuu.mimicdance.Lesson;
 import net.exkazuu.mimicdance.Lessons;
 import net.exkazuu.mimicdance.R;
 import net.exkazuu.mimicdance.models.APIClient;
@@ -107,9 +108,10 @@ public class LessonListFragment extends Fragment {
             APIClient.ClientType clientType = APIClient.getClientType(getContext());
             int characterNumber = clientType == APIClient.ClientType.B ? 1 : 0;
 
-            BaseLessonTopFragment lessonTopFragment = Lessons.isNormalLesson(lessonNumber) ?
-                NormalLessonTopFragment.newInstance(lessonNumber, characterNumber) :
-                DuoLessonTopFragment.newInstance(lessonNumber, characterNumber);
+            Lesson lesson = new Lesson(lessonNumber, characterNumber);
+            BaseLessonTopFragment lessonTopFragment = Lessons.isNormalLesson(lessonNumber)
+                ? NormalLessonTopFragment.newInstance(lesson)
+                : DuoLessonTopFragment.newInstance(lesson);
             FragmentUtils.toNextFragment(getFragmentManager(), R.id.container, lessonTopFragment, true);
         }
     };

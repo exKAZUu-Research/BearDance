@@ -1,7 +1,5 @@
 package net.exkazuu.mimicdance;
 
-import android.support.annotation.Nullable;
-
 import net.exkazuu.mimicdance.interpreter.IconType;
 
 public class Lessons {

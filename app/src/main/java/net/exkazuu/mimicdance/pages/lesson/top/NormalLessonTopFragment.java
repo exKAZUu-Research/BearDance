@@ -1,15 +1,11 @@
 package net.exkazuu.mimicdance.pages.lesson.top;
 
-import android.os.Bundle;
 import android.view.View;
 
 import net.exkazuu.mimicdance.CharacterSprite;
-import net.exkazuu.mimicdance.Lessons;
 import net.exkazuu.mimicdance.R;
 import net.exkazuu.mimicdance.interpreter.EventType;
-import net.exkazuu.mimicdance.pages.lesson.LessonFragmentVariables;
-import net.exkazuu.mimicdance.pages.lesson.editor.BaseLessonEditorFragment;
-import net.exkazuu.mimicdance.pages.lesson.editor.DuoLessonEditorFragment;
+import net.exkazuu.mimicdance.Lesson;
 import net.exkazuu.mimicdance.pages.lesson.editor.NormalLessonEditorFragment;
 import net.exkazuu.mimicdance.program.Block;
 import net.exkazuu.mimicdance.program.UnrolledProgram;
@@ -20,15 +16,15 @@ import jp.fkmsoft.android.framework.util.FragmentUtils;
  * Fragment for Normal lesson top page
  */
 public class NormalLessonTopFragment extends BaseLessonTopFragment {
-    public static NormalLessonTopFragment newInstance(int lessonNumber, int characterNumber) {
+    public static NormalLessonTopFragment newInstance(Lesson lesson) {
         NormalLessonTopFragment fragment = new NormalLessonTopFragment();
-        LessonFragmentVariables.setFragmentArguments(fragment, lessonNumber, characterNumber);
+        lesson.saveToArguments(fragment);
         return fragment;
     }
 
     @Override
     protected void createCharacters() {
-        boolean hasIf = Lessons.hasIf(lessonFragmentVariables.getLessonNumber(), lessonFragmentVariables.getCharacterNumber());
+        boolean hasIf = lesson.hasIf();
         rightCharacterView.setVisibility(hasIf ? View.VISIBLE : View.INVISIBLE);
         leftCharacterSprite = CharacterSprite.createCoccoLeft(leftCharacterView);
         rightCharacterSprite = CharacterSprite.createCoccoRight(rightCharacterView);
@@ -47,6 +43,6 @@ public class NormalLessonTopFragment extends BaseLessonTopFragment {
     @Override
     void writeClicked() {
         FragmentUtils.toNextFragment(getFragmentManager(), R.id.container,
-            NormalLessonEditorFragment.newInstance(lessonFragmentVariables.getLessonNumber(), lessonFragmentVariables.getCharacterNumber()), true);
+            NormalLessonEditorFragment.newInstance(lesson), true);
     }
 }

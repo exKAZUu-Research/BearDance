@@ -19,12 +19,11 @@ import net.exkazuu.mimicdance.interpreter.Interpreter;
 import net.exkazuu.mimicdance.models.APIClient;
 import net.exkazuu.mimicdance.models.program.Command;
 import net.exkazuu.mimicdance.models.program.Program;
-import net.exkazuu.mimicdance.pages.lesson.LessonFragmentVariables;
+import net.exkazuu.mimicdance.Lesson;
 import net.exkazuu.mimicdance.pages.lesson.judge.BaseJudgeFragment;
 import net.exkazuu.mimicdance.pages.lesson.judge.DuoJudgeFragment;
 import net.exkazuu.mimicdance.program.UnrolledProgram;
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -37,9 +36,9 @@ public class DuoLessonEditorFragment extends BaseLessonEditorFragment {
     private Handler handler;
     private volatile boolean isReady;
 
-    public static DuoLessonEditorFragment newInstance(int lessonNumber, int characterNumber) {
+    public static DuoLessonEditorFragment newInstance(Lesson lesson) {
         DuoLessonEditorFragment fragment = new DuoLessonEditorFragment();
-        LessonFragmentVariables.setFragmentArguments(fragment, lessonNumber, characterNumber);
+        lesson.saveToArguments(fragment);
         return fragment;
     }
 
@@ -69,7 +68,7 @@ public class DuoLessonEditorFragment extends BaseLessonEditorFragment {
     @Override
     void judgeClicked() {
         if (BuildConfig.OFFLINE_MODE) {
-            String partnerCode = Lessons.getCoccoCode(lessonFragmentVariables.getLessonNumber(), lessonFragmentVariables.getCharacterNumber() ^ 1);
+            String partnerCode = Lessons.getCoccoCode(lesson.getLessonNumber(), lesson.getCharacterNumber() ^ 1);
             startJudge(partnerCode);
             return;
         }
@@ -85,7 +84,7 @@ public class DuoLessonEditorFragment extends BaseLessonEditorFragment {
         isReady = false;
 
         final String leftCode, rightCode;
-        if (lessonFragmentVariables.getCharacterNumber() == 0) {
+        if (lesson.getCharacterNumber() == 0) {
             leftCode = Program.getMultilineCode(mAdapter.getAsArray());
             rightCode = partnerCode;
         } else {
@@ -93,7 +92,7 @@ public class DuoLessonEditorFragment extends BaseLessonEditorFragment {
             rightCode = Program.getMultilineCode(mAdapter.getAsArray());
         }
 
-        BaseJudgeFragment judgeFragment = DuoJudgeFragment.newInstance(lessonFragmentVariables.getLessonNumber(), lessonFragmentVariables.getCharacterNumber(), leftCode, rightCode);
+        BaseJudgeFragment judgeFragment = DuoJudgeFragment.newInstance(lesson, leftCode, rightCode);
         FragmentUtils.toNextFragment(getFragmentManager(), R.id.container, judgeFragment, true, STACK_TAG);
     }
 
@@ -123,7 +122,7 @@ public class DuoLessonEditorFragment extends BaseLessonEditorFragment {
                     @Override
                     protected APIClient.PartnerState doInBackground(Void... params) {
                         if (handler == null) return APIClient.PartnerState.NONE;
-                        return APIClient.ready(getContext(), String.valueOf(lessonFragmentVariables.getLessonNumber()), getProgram());
+                        return APIClient.ready(getContext(), String.valueOf(lesson.getLessonNumber()), getProgram());
                     }
 
                     @Override
@@ -155,7 +154,7 @@ public class DuoLessonEditorFragment extends BaseLessonEditorFragment {
                     @Override
                     protected APIClient.PartnerState doInBackground(Void... params) {
                         if (handler == null) return APIClient.PartnerState.NONE;
-                        return APIClient.connect(getContext(), String.valueOf(lessonFragmentVariables.getLessonNumber()));
+                        return APIClient.connect(getContext(), String.valueOf(lesson.getLessonNumber()));
                     }
 
                     @Override
@@ -172,8 +171,8 @@ public class DuoLessonEditorFragment extends BaseLessonEditorFragment {
 
     @Override
     void setCharacterVisibilities() {
-        int leftVisibility = lessonFragmentVariables.getCharacterNumber() == 0 ? View.VISIBLE : View.INVISIBLE;
-        int rightVisibility = lessonFragmentVariables.getCharacterNumber() == 1 ? View.VISIBLE : View.INVISIBLE;
+        int leftVisibility = lesson.getCharacterNumber() == 0 ? View.VISIBLE : View.INVISIBLE;
+        int rightVisibility = lesson.getCharacterNumber() == 1 ? View.VISIBLE : View.INVISIBLE;
         leftCharacterView.setVisibility(leftVisibility);
         userLeftCharacterView.setVisibility(leftVisibility);
         rightCharacterView.setVisibility(rightVisibility);
