@@ -9,17 +9,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.common.collect.Lists;
+
 import net.exkazuu.mimicdance.BuildConfig;
+import net.exkazuu.mimicdance.CharacterSprite;
 import net.exkazuu.mimicdance.Lessons;
 import net.exkazuu.mimicdance.R;
+import net.exkazuu.mimicdance.interpreter.Interpreter;
 import net.exkazuu.mimicdance.models.APIClient;
 import net.exkazuu.mimicdance.models.program.Command;
 import net.exkazuu.mimicdance.models.program.Program;
 import net.exkazuu.mimicdance.pages.lesson.judge.BaseJudgeFragment;
 import net.exkazuu.mimicdance.pages.lesson.judge.DuoJudgeFragment;
+import net.exkazuu.mimicdance.program.UnrolledProgram;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import jp.fkmsoft.android.framework.util.FragmentUtils;
 
@@ -139,5 +145,23 @@ public class DuoLessonEditorFragment extends BaseLessonEditorFragment {
                 }.execute();
             }
         }
+    }
+
+    @Override
+    void setCharacterVisibilities() {
+        int leftVisibility = characterNumber == 0 ? View.VISIBLE : View.INVISIBLE;
+        int rightVisibility = characterNumber == 1 ? View.VISIBLE : View.INVISIBLE;
+        leftCharacterView.setVisibility(leftVisibility);
+        userLeftCharacterView.setVisibility(leftVisibility);
+        rightCharacterView.setVisibility(rightVisibility);
+        userRightCharacterView.setVisibility(rightVisibility);
+    }
+
+    @Override
+    List<Interpreter> getInterpreters(UnrolledProgram leftProgram, UnrolledProgram rightProgram, CharacterSprite leftCharacterSprite, CharacterSprite rightCharacterSprite) {
+        return Lists.newArrayList(
+            Interpreter.createForCocco(leftProgram, leftCharacterSprite, 0),
+            Interpreter.createForCocco(rightProgram, rightCharacterSprite, 1)
+        );
     }
 }

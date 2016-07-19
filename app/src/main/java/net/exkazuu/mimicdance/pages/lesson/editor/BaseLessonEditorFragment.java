@@ -131,8 +131,7 @@ public abstract class BaseLessonEditorFragment extends EditorFragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(inflater.getContext(), LinearLayoutManager.HORIZONTAL, false));
         initTab();
 
-        rightCharacterView.setVisibility(Lessons.hasIf(lessonNumber, characterNumber) ? View.VISIBLE : View.INVISIBLE);
-        userRightCharacterView.setVisibility(Lessons.hasIf(lessonNumber, characterNumber) ? View.VISIBLE : View.INVISIBLE);
+        setCharacterVisibilities();
         leftCharacterSprite = CharacterSprite.createCoccoLeft(leftCharacterView);
         rightCharacterSprite = CharacterSprite.createCoccoRight(rightCharacterView);
         userLeftCharacterSprite = CharacterSprite.createPiyoLeft(userLeftCharacterView);
@@ -159,6 +158,8 @@ public abstract class BaseLessonEditorFragment extends EditorFragment {
         return root;
     }
 
+    abstract void setCharacterVisibilities();
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
@@ -183,27 +184,25 @@ public abstract class BaseLessonEditorFragment extends EditorFragment {
         String answerCode = Lessons.getCoccoCode(lessonNumber, characterNumber);
         UnrolledProgram leftProgram = CodeParser.parse(answerCode).unroll(EventType.White);
         UnrolledProgram rightProgram = CodeParser.parse(answerCode).unroll(EventType.Yellow);
-        if (robotExecutor != null) {
-            robotExecutor.terminate();
-        }
-        robotExecutor = new RobotExecutor(Lists.newArrayList(
-            Interpreter.createForCocco(leftProgram, leftCharacterSprite),
-            Interpreter.createForCocco(rightProgram, rightCharacterSprite)), handler, 300);
-        robotExecutor.start();
+        checkProgram(leftProgram, rightProgram, leftCharacterSprite, rightCharacterSprite);
     }
 
     @OnClick({R.id.user_character_left, R.id.user_character_right})
     void checkUserProgramClicked() {
-        // Get current program
-        List<Program> programList = mAdapter.getAsList();
-        UnrolledProgram leftProgram = CodeParser.parse(programList).unroll(EventType.White);
-        UnrolledProgram rightProgram = CodeParser.parse(programList).unroll(EventType.Yellow);
+        List<Program> userProgramList = mAdapter.getAsList();
+        UnrolledProgram leftProgram = CodeParser.parse(userProgramList).unroll(EventType.White);
+        UnrolledProgram rightProgram = CodeParser.parse(userProgramList).unroll(EventType.Yellow);
+        checkProgram(leftProgram, rightProgram, userLeftCharacterSprite, userRightCharacterSprite);
+    }
+
+    void checkProgram(UnrolledProgram leftProgram, UnrolledProgram rightProgram, CharacterSprite leftCharacterSprite, CharacterSprite rightCharacterSprite) {
         if (robotExecutor != null) {
             robotExecutor.terminate();
         }
-        robotExecutor = new RobotExecutor(Lists.newArrayList(
-            Interpreter.createForCocco(leftProgram, userLeftCharacterSprite),
-            Interpreter.createForCocco(rightProgram, userRightCharacterSprite)), handler, 300);
+        List<Interpreter> interpreters = getInterpreters(leftProgram, rightProgram, leftCharacterSprite, rightCharacterSprite);
+        robotExecutor = new RobotExecutor(interpreters, handler, 300);
         robotExecutor.start();
     }
+
+    abstract List<Interpreter> getInterpreters(UnrolledProgram leftProgram, UnrolledProgram rightProgram, CharacterSprite leftCharacterSprite, CharacterSprite rightCharacterSprite);
 }
