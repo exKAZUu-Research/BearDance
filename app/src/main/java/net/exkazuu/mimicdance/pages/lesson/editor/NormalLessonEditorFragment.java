@@ -9,12 +9,14 @@ import net.exkazuu.mimicdance.CharacterSprite;
 import net.exkazuu.mimicdance.Lessons;
 import net.exkazuu.mimicdance.R;
 import net.exkazuu.mimicdance.interpreter.Interpreter;
+import net.exkazuu.mimicdance.models.program.Program;
 import net.exkazuu.mimicdance.pages.lesson.LessonFragmentVariables;
 import net.exkazuu.mimicdance.pages.lesson.judge.BaseJudgeFragment;
 import net.exkazuu.mimicdance.pages.lesson.judge.DuoJudgeFragment;
 import net.exkazuu.mimicdance.pages.lesson.judge.NormalJudgeFragment;
 import net.exkazuu.mimicdance.program.UnrolledProgram;
 
+import java.util.Arrays;
 import java.util.List;
 
 import jp.fkmsoft.android.framework.util.FragmentUtils;
@@ -29,7 +31,8 @@ public class NormalLessonEditorFragment extends BaseLessonEditorFragment {
 
     @Override
     void judgeClicked() {
-        BaseJudgeFragment judgeFragment = NormalJudgeFragment.newInstance(lessonFragmentVariables.getLessonNumber(), lessonFragmentVariables.getCharacterNumber(), mAdapter.getAsArray());
+        String program = Program.getMultilineCode(mAdapter.getAsArray());
+        BaseJudgeFragment judgeFragment = NormalJudgeFragment.newInstance(lessonFragmentVariables.getLessonNumber(), lessonFragmentVariables.getCharacterNumber(), program);
         FragmentUtils.toNextFragment(getFragmentManager(), R.id.container, judgeFragment, true, STACK_TAG);
     }
 

@@ -41,15 +41,15 @@ public class NormalJudgeFragment extends BaseJudgeFragment {
     @Bind(R.id.white_or_orange)
     TextView whiteOrYellow;
 
-    protected ArrayList<Program> programList;
+    protected String programList;
     private CharacterSprite userCharacterSprite, altUserCharacterSprite;
     private CharacterSprite answerCharacterSprite, altAnswerCharacterSprite;
 
-    public static NormalJudgeFragment newInstance(int lessonNumber, int characterNumber, Program[] programList) {
+    public static NormalJudgeFragment newInstance(int lessonNumber, int characterNumber, String programList) {
         NormalJudgeFragment fragment = new NormalJudgeFragment();
 
         Bundle args = new Bundle();
-        args.putParcelableArray(ARGS_USER_PROGRAM_LIST, programList);
+        args.putString(ARGS_USER_PROGRAM_LIST, programList);
         fragment.setArguments(args);
         LessonFragmentVariables.setFragmentArguments(fragment, lessonNumber, characterNumber);
 
@@ -61,7 +61,7 @@ public class NormalJudgeFragment extends BaseJudgeFragment {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         lessonFragmentVariables = new LessonFragmentVariables(args);
-        programList = convertParcelableArrayToProgramList(args.getParcelableArray(ARGS_USER_PROGRAM_LIST));
+        programList = args.getString(ARGS_USER_PROGRAM_LIST);
     }
 
     @Nullable
@@ -74,7 +74,7 @@ public class NormalJudgeFragment extends BaseJudgeFragment {
         altAnswerCharacterSprite = CharacterSprite.createCoccoRight(answerCharacter);
         userCharacterSprite = CharacterSprite.createPiyoLeft(userCharacter);
         answerCharacterSprite = CharacterSprite.createCoccoLeft(answerCharacter);
-        userCodeView.setText(Program.getMultilineCode(programList));
+        userCodeView.setText(programList);
 
         return root;
     }

@@ -84,13 +84,13 @@ public class DuoLessonEditorFragment extends BaseLessonEditorFragment {
     private void startJudge(String partnerCode) {
         isReady = false;
 
-        final Program[] leftProgramList, rightProgramList;
+        final String leftProgramList, rightProgramList;
         if (lessonFragmentVariables.getCharacterNumber() == 0) {
-            leftProgramList = mAdapter.getAsArray();
-            rightProgramList = Program.fromMultilineCode(partnerCode);
+            leftProgramList = Program.getMultilineCode(mAdapter.getAsArray());
+            rightProgramList = partnerCode;
         } else {
-            leftProgramList = Program.fromMultilineCode(partnerCode);
-            rightProgramList = mAdapter.getAsArray();
+            leftProgramList = partnerCode;
+            rightProgramList = Program.getMultilineCode(mAdapter.getAsArray());
         }
 
         BaseJudgeFragment judgeFragment = DuoJudgeFragment.newInstance(lessonFragmentVariables.getLessonNumber(), lessonFragmentVariables.getCharacterNumber(), leftProgramList, rightProgramList);
@@ -108,7 +108,7 @@ public class DuoLessonEditorFragment extends BaseLessonEditorFragment {
     }
 
     private String getProgram() {
-        return Program.getMultilineCode(Arrays.asList(mAdapter.getAsArray()));
+        return Program.getMultilineCode(mAdapter.getAsArray());
     }
 
     class ConnectionTask implements Runnable {

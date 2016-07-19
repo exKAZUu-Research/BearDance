@@ -2,13 +2,10 @@ package net.exkazuu.mimicdance.models.program;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
@@ -63,19 +60,8 @@ public class Program implements Parcelable {
         return lines;
     }
 
-    public static String getMultilineCode(List<Program> programList) {
-        return Joiner.on("\n").skipNulls().join(getCodeLines(programList));
-    }
-
-    public static Program[] fromMultilineCode(String code) {
-        ArrayList<Program> list = new ArrayList<>();
-        for (String line : code.split("\n")) {
-            String[] pair = line.split(" ", 2);
-            String cmd1 = Command.fromJpCmdToEnCmd(pair[0]);
-            String cmd2 = pair.length == 2 ? Command.fromJpCmdToEnCmd(pair[1]) : "";
-            list.add(new Program(cmd1, cmd2));
-        }
-        return list.toArray(new Program[0]);
+    public static String getMultilineCode(Program[] programs) {
+        return Joiner.on("\n").skipNulls().join(getCodeLines(Arrays.asList(programs)));
     }
 
     // region Parcelable

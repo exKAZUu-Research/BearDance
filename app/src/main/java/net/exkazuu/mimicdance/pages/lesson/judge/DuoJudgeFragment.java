@@ -49,15 +49,15 @@ public class DuoJudgeFragment extends BaseJudgeFragment {
     private CharacterSprite leftAnswerCharacterSprite;
     private CharacterSprite rightUserCharacterSprite;
     private CharacterSprite rightAnswerCharacterSprite;
-    protected ArrayList<Program> leftProgramList;
-    protected ArrayList<Program> rightProgramList;
+    protected String leftProgramList;
+    protected String rightProgramList;
 
-    public static DuoJudgeFragment newInstance(int lessonNumber, int characterNumber, Program[] leftProgramList, Program[] rightProgramList) {
+    public static DuoJudgeFragment newInstance(int lessonNumber, int characterNumber, String leftProgramList, String rightProgramList) {
         DuoJudgeFragment fragment = new DuoJudgeFragment();
 
         Bundle args = new Bundle();
-        args.putParcelableArray(ARGS_LEFT_USER_PROGRAM_LIST, leftProgramList);
-        args.putParcelableArray(ARGS_RIGHT_USER_PROGRAM_LIST, rightProgramList);
+        args.putString(ARGS_LEFT_USER_PROGRAM_LIST, leftProgramList);
+        args.putString(ARGS_RIGHT_USER_PROGRAM_LIST, rightProgramList);
         fragment.setArguments(args);
         LessonFragmentVariables.setFragmentArguments(fragment, lessonNumber, characterNumber);
 
@@ -69,8 +69,8 @@ public class DuoJudgeFragment extends BaseJudgeFragment {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         lessonFragmentVariables = new LessonFragmentVariables(args);
-        leftProgramList = convertParcelableArrayToProgramList(args.getParcelableArray(ARGS_LEFT_USER_PROGRAM_LIST));
-        rightProgramList = convertParcelableArrayToProgramList(args.getParcelableArray(ARGS_RIGHT_USER_PROGRAM_LIST));
+        leftProgramList = args.getString(ARGS_LEFT_USER_PROGRAM_LIST);
+        rightProgramList = args.getString(ARGS_RIGHT_USER_PROGRAM_LIST);
     }
 
     @Nullable
@@ -83,8 +83,8 @@ public class DuoJudgeFragment extends BaseJudgeFragment {
         rightUserCharacterSprite = CharacterSprite.createPiyoRight(rightUserCharacter);
         leftAnswerCharacterSprite = CharacterSprite.createCoccoLeft(leftAnswerCharacter);
         rightAnswerCharacterSprite = CharacterSprite.createCoccoRight(rightAnswerCharacter);
-        leftUserCodeView.setText(Program.getMultilineCode(leftProgramList));
-        rightUserCodeView.setText(Program.getMultilineCode(rightProgramList));
+        leftUserCodeView.setText(leftProgramList);
+        rightUserCodeView.setText(rightProgramList);
 
         return root;
     }
