@@ -100,23 +100,28 @@ public class DuoLessonEditorFragment extends BaseLessonEditorFragment {
         @Override
         public void run() {
             // 2個以上のタスクがhandlerにつっこまれてたら、自分以外を消す。
+            if (handler == null) return;
             handler.removeCallbacksAndMessages(null);
             if (isReady) {
                 new AsyncTask<Void, Void, APIClient.PartnerState>() {
 
                     @Override
                     protected APIClient.PartnerState doInBackground(Void... params) {
+                        if (handler == null) return APIClient.PartnerState.NONE;
                         return APIClient.ready(getContext(), String.valueOf(lessonNumber), getProgram());
                     }
 
                     @Override
                     protected void onPostExecute(final APIClient.PartnerState partnerState) {
+                        if (handler == null) return;
+
                         Log.v("Mimic", String.format("partnerState:%s, now:%s", partnerState, new Date()));
                         if (partnerState.isReady()) {
                             long rest = Math.max(0, partnerState.playAt.getTime() - System.currentTimeMillis());
                             handler.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
+                                    if (handler == null) return;
                                     Log.v("Mimic", "startJudge");
                                     startJudge(partnerState.program);
                                 }
@@ -134,11 +139,14 @@ public class DuoLessonEditorFragment extends BaseLessonEditorFragment {
 
                     @Override
                     protected APIClient.PartnerState doInBackground(Void... params) {
+                        if (handler == null) return APIClient.PartnerState.NONE;
                         return APIClient.connect(getContext(), String.valueOf(lessonNumber));
                     }
 
                     @Override
                     protected void onPostExecute(APIClient.PartnerState partnerState) {
+                        if (handler == null) return;
+
                         handler.postDelayed(ConnectionTask.this, 7 * SECONDS);
                         changeJudgeButtonState(partnerState);
                     }
