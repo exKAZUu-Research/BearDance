@@ -54,11 +54,6 @@ public class UnrolledProgram {
         return actionSets.size();
     }
 
-    public static UnrolledProgram convertFromCode(ArrayList<Program> code, EventType eventType) {
-        Block program = CodeParser.parse(code);
-        return program.unroll(eventType);
-    }
-
     public static UnrolledProgram convertFromCode(String code, EventType eventType) {
         Block program = CodeParser.parse(code);
         return program.unroll(eventType);

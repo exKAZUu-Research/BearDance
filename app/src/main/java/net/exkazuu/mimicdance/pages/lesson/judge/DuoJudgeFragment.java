@@ -16,11 +16,10 @@ import net.exkazuu.mimicdance.R;
 import net.exkazuu.mimicdance.interpreter.EventType;
 import net.exkazuu.mimicdance.interpreter.Interpreter;
 import net.exkazuu.mimicdance.interpreter.RobotExecutor;
-import net.exkazuu.mimicdance.models.program.Program;
 import net.exkazuu.mimicdance.pages.lesson.LessonFragmentVariables;
+import net.exkazuu.mimicdance.program.CodeParser;
 import net.exkazuu.mimicdance.program.UnrolledProgram;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -29,8 +28,8 @@ import butterknife.OnClick;
 import jp.fkmsoft.android.framework.util.FragmentUtils;
 
 public class DuoJudgeFragment extends BaseJudgeFragment {
-    private static final String ARGS_LEFT_USER_PROGRAM_LIST = "leftUserProgramList";
-    private static final String ARGS_RIGHT_USER_PROGRAM_LIST = "rightUserProgramList";
+    private static final String ARGS_LEFT_USER_CODE = "leftUserProgramList";
+    private static final String ARGS_RIGHT_USER_CODE = "rightUserProgramList";
 
     @Bind(R.id.left_user_character)
     View leftUserCharacter;
@@ -49,15 +48,15 @@ public class DuoJudgeFragment extends BaseJudgeFragment {
     private CharacterSprite leftAnswerCharacterSprite;
     private CharacterSprite rightUserCharacterSprite;
     private CharacterSprite rightAnswerCharacterSprite;
-    protected String leftProgramList;
-    protected String rightProgramList;
+    protected String leftCode;
+    protected String rightCode;
 
-    public static DuoJudgeFragment newInstance(int lessonNumber, int characterNumber, String leftProgramList, String rightProgramList) {
+    public static DuoJudgeFragment newInstance(int lessonNumber, int characterNumber, String leftCode, String rightCode) {
         DuoJudgeFragment fragment = new DuoJudgeFragment();
 
         Bundle args = new Bundle();
-        args.putString(ARGS_LEFT_USER_PROGRAM_LIST, leftProgramList);
-        args.putString(ARGS_RIGHT_USER_PROGRAM_LIST, rightProgramList);
+        args.putString(ARGS_LEFT_USER_CODE, leftCode);
+        args.putString(ARGS_RIGHT_USER_CODE, rightCode);
         fragment.setArguments(args);
         LessonFragmentVariables.setFragmentArguments(fragment, lessonNumber, characterNumber);
 
@@ -69,8 +68,8 @@ public class DuoJudgeFragment extends BaseJudgeFragment {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         lessonFragmentVariables = new LessonFragmentVariables(args);
-        leftProgramList = args.getString(ARGS_LEFT_USER_PROGRAM_LIST);
-        rightProgramList = args.getString(ARGS_RIGHT_USER_PROGRAM_LIST);
+        leftCode = args.getString(ARGS_LEFT_USER_CODE);
+        rightCode = args.getString(ARGS_RIGHT_USER_CODE);
     }
 
     @Nullable
@@ -83,8 +82,8 @@ public class DuoJudgeFragment extends BaseJudgeFragment {
         rightUserCharacterSprite = CharacterSprite.createPiyoRight(rightUserCharacter);
         leftAnswerCharacterSprite = CharacterSprite.createCoccoLeft(leftAnswerCharacter);
         rightAnswerCharacterSprite = CharacterSprite.createCoccoRight(rightAnswerCharacter);
-        leftUserCodeView.setText(leftProgramList);
-        rightUserCodeView.setText(rightProgramList);
+        leftUserCodeView.setText(leftCode);
+        rightUserCodeView.setText(rightCode);
 
         return root;
     }
@@ -93,12 +92,12 @@ public class DuoJudgeFragment extends BaseJudgeFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        final UnrolledProgram leftUserUnrolledProgram = UnrolledProgram.convertFromCode(leftProgramList, EventType.White);
-        final UnrolledProgram rightUserUnrolledProgram = UnrolledProgram.convertFromCode(rightProgramList, EventType.White);
+        final UnrolledProgram leftUserUnrolledProgram = CodeParser.parse(leftCode).unroll(EventType.White);
+        final UnrolledProgram rightUserUnrolledProgram = CodeParser.parse(rightCode).unroll(EventType.White);
         String leftAnswerCode = Lessons.getCoccoCode(lessonFragmentVariables.getLessonNumber(), 0);
         String rightAnswerCode = Lessons.getCoccoCode(lessonFragmentVariables.getLessonNumber(), 1);
-        final UnrolledProgram leftAnswerUnrolledProgram = UnrolledProgram.convertFromCode(leftAnswerCode, EventType.White);
-        final UnrolledProgram rightAnswerUnrolledProgram = UnrolledProgram.convertFromCode(rightAnswerCode, EventType.White);
+        final UnrolledProgram leftAnswerUnrolledProgram = CodeParser.parse(leftAnswerCode).unroll(EventType.White);
+        final UnrolledProgram rightAnswerUnrolledProgram = CodeParser.parse(rightAnswerCode).unroll(EventType.White);
 
         if (robotExecutor != null) {
             robotExecutor.terminate();
