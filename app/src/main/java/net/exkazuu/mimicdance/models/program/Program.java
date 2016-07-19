@@ -45,6 +45,11 @@ public class Program implements Parcelable {
         return Joiner.on(" ").skipNulls().join(codes);
     }
 
+    @Override
+    public String toString() {
+        return String.format("\"%s\", \"%s\"", commands[0], commands[1]);
+    }
+
     public static ArrayList<String> getCodeLines(List<Program> programs) {
         ArrayList<String> lines = Lists.newArrayList(Lists.transform(programs, new Function<Program, String>() {
             @Override
@@ -66,7 +71,9 @@ public class Program implements Parcelable {
         ArrayList<Program> list = new ArrayList<>();
         for (String line : code.split("\n")) {
             String[] pair = line.split(" ", 2);
-            list.add(new Program(pair[0], pair.length == 2 ? pair[1] : ""));
+            String cmd1 = Command.fromJpCmdToEnCmd(pair[0]);
+            String cmd2 = pair.length == 2 ? Command.fromJpCmdToEnCmd(pair[1]) : "";
+            list.add(new Program(cmd1, cmd2));
         }
         return list.toArray(new Program[0]);
     }

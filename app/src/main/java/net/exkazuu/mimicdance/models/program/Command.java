@@ -59,6 +59,7 @@ public class Command {
     private static final Map<String, Integer> sCommandImageMap;
 
     private static final Map<String, String> sCommandCode;
+    private static final Map<String, String> sReverseCommandCode;
 
 
     static {
@@ -142,6 +143,11 @@ public class Command {
         sCommandCode.put(TWITTER, IconType.Twitter.code);
         sCommandCode.put(FACEBOOK, IconType.Facebook.code);
         sCommandCode.put(CALENDER, IconType.Calendar.code);
+
+        sReverseCommandCode = new HashMap<>();
+        for (HashMap.Entry<String, String> pair : sCommandCode.entrySet()) {
+            sReverseCommandCode.put(pair.getValue(), pair.getKey());
+        }
     }
 
     public static String[] getByGroup(int group) {
@@ -155,5 +161,9 @@ public class Command {
 
     public static String getCode(String command) {
         return sCommandCode.get(command);
+    }
+
+    public static String fromJpCmdToEnCmd(String command) {
+        return sReverseCommandCode.get(command);
     }
 }

@@ -74,10 +74,10 @@ public class DuoLessonEditorFragment extends BaseLessonEditorFragment {
         judgeButton.setEnabled(false); // 2回押しを防ぐ
     }
 
-    private void startJudge(String partnerCodes) {
+    private void startJudge(String partnerCode) {
         isReady = false;
 
-        Program[] partnerPrograms = Program.fromMultilineCode(partnerCodes);
+        Program[] partnerPrograms = Program.fromMultilineCode(partnerCode);
         BaseJudgeFragment judgeFragment = DuoJudgeFragment.newInstance(lessonNumber, characterNumber, mAdapter.getAsArray(), partnerPrograms);
         FragmentUtils.toNextFragment(getFragmentManager(), R.id.container, judgeFragment, true, STACK_TAG);
     }
