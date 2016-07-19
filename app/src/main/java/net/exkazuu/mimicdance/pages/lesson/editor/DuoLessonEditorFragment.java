@@ -84,8 +84,16 @@ public class DuoLessonEditorFragment extends BaseLessonEditorFragment {
     private void startJudge(String partnerCode) {
         isReady = false;
 
-        Program[] partnerPrograms = Program.fromMultilineCode(partnerCode);
-        BaseJudgeFragment judgeFragment = DuoJudgeFragment.newInstance(lessonFragmentVariables.getLessonNumber(), lessonFragmentVariables.getCharacterNumber(), mAdapter.getAsArray(), partnerPrograms);
+        final Program[] leftProgramList, rightProgramList;
+        if (lessonFragmentVariables.getCharacterNumber() == 0) {
+            leftProgramList = mAdapter.getAsArray();
+            rightProgramList = Program.fromMultilineCode(partnerCode);
+        } else {
+            leftProgramList = Program.fromMultilineCode(partnerCode);
+            rightProgramList = mAdapter.getAsArray();
+        }
+
+        BaseJudgeFragment judgeFragment = DuoJudgeFragment.newInstance(lessonFragmentVariables.getLessonNumber(), lessonFragmentVariables.getCharacterNumber(), leftProgramList, rightProgramList);
         FragmentUtils.toNextFragment(getFragmentManager(), R.id.container, judgeFragment, true, STACK_TAG);
     }
 

@@ -8,9 +8,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import net.exkazuu.mimicdance.Lessons;
@@ -34,6 +36,8 @@ public class CorrectAnswerFragment extends Fragment {
     ImageView coccoView;
     @Bind(R.id.piyo)
     ImageView piyoView;
+    @Bind(R.id.next_lesson)
+    Button nextLessonButton;
 
     private LessonFragmentVariables lessonFragmentVariables;
 
@@ -58,6 +62,12 @@ public class CorrectAnswerFragment extends Fragment {
 
         startCoccoAnimation(this.getContext(), coccoView);
         startPiyoAnimation(this.getContext(), piyoView);
+
+        if (hasNextLesson()) {
+            nextLessonButton.setText(R.string.next_lesson);
+        } else {
+            nextLessonButton.setText(R.string.goto_top);
+        }
 
         return root;
     }
@@ -93,10 +103,7 @@ public class CorrectAnswerFragment extends Fragment {
         if (manager == null) {
             return;
         }
-        int nextLessonNumber = lessonFragmentVariables.getLessonNumber() + 1;
-        boolean isNormalLesson = Lessons.isNormalLesson(lessonFragmentVariables.getLessonNumber());
-        int maxLessonNumber = Lessons.getLessonCount(isNormalLesson) + Lessons.getLessonStart(isNormalLesson) - 1;
-        if (nextLessonNumber > maxLessonNumber) {
+        if (!hasNextLesson()) {
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace(R.id.container, TitleFragment.newInstance());
             transaction.commit();
@@ -106,6 +113,7 @@ public class CorrectAnswerFragment extends Fragment {
             manager.popBackStack();
             manager.popBackStack();
 
+            int nextLessonNumber = lessonFragmentVariables.getLessonNumber() + 1;
             BaseLessonTopFragment lessonTopFragment = Lessons.isNormalLesson(nextLessonNumber) ?
                 NormalLessonTopFragment.newInstance(nextLessonNumber, lessonFragmentVariables.getCharacterNumber()) :
                 DuoLessonTopFragment.newInstance(nextLessonNumber, lessonFragmentVariables.getCharacterNumber());
@@ -155,5 +163,12 @@ public class CorrectAnswerFragment extends Fragment {
 
         // アニメーション開始
         piyoAnimation.start();
+    }
+
+    private boolean hasNextLesson() {
+        int maxNumber = Lessons.isNormalLesson(lessonFragmentVariables.getLessonNumber())
+            ? Lessons.getLessonCount(true)
+            : Lessons.getLessonCount(true) + Lessons.getLessonCount(false);
+        return lessonFragmentVariables.getLessonNumber() < maxNumber;
     }
 }

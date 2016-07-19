@@ -81,6 +81,7 @@ public class ToolboxFragment extends Fragment {
             // 親にコマンドが選択されたことを伝える
             EditorFragment parent = (EditorFragment) getParentFragment();
             parent.onCommandClicked(command);
+            mAdapter.notifyDataSetChanged();
         }
     };
 

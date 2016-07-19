@@ -98,5 +98,7 @@
   <string name="tap_and_move">タッチして動きをかくにんしよう</string>
   <string name="select_command_first">アイコンか、プログラムが入っているところをえらんでね</string>
   <string name="Title_duo_button">ふたりでおどる</string>
+  <string name="next_lesson">つぎのもんだいへ</string>
+  <string name="goto_top">さいしょにもどる</string>
 
 </resources>
