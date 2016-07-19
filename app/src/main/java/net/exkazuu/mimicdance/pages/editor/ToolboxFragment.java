@@ -86,4 +86,8 @@ public class ToolboxFragment extends Fragment {
     };
 
     // endregion
+
+    public void clearSelection() {
+        mAdapter.clearSelection();
+    }
 }
