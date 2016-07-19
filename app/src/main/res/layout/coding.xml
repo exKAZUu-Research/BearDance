@@ -754,7 +754,7 @@
       android:layout_height="match_parent"
       android:layout_weight="1"
       android:onClick="startCoccoActivity"
-      android:text="@string/look_answer_button2" />
+      android:text="@string/look_answer" />
 
     <Button
       android:id="@+id/btnJudge"
