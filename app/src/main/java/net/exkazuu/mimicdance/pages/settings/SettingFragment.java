@@ -74,7 +74,6 @@ public class SettingFragment extends Fragment {
         manager.popBackStack();
     }
 
-
     @OnTextChanged(R.id.editText)
     void textChange() {
         String clientId = editText.getText().toString();
@@ -84,10 +83,20 @@ public class SettingFragment extends Fragment {
     @OnClick(R.id.save_button)
     void saveClientId() {
         String clientId = editText.getText().toString();
-        boolean saved = APIClient.setClientId(getContext(), clientId);
+        saveId(clientId);
+    }
+
+    @OnClick(R.id.random_gen_button)
+    void clickRandomGen() {
+        String newId = String.format("%04dA", (int)(Math.random() * 10000));
+        editText.setText(newId);
+        saveId(newId);
+    }
+
+    private void saveId(String id) {
+        boolean saved = APIClient.setClientId(getContext(), id);
         if (saved) {
             Toast.makeText(getContext(), R.string.saved, Toast.LENGTH_SHORT).show();
         }
     }
-
 }
