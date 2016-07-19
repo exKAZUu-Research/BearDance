@@ -123,7 +123,7 @@ public class DuoLessonEditorFragment extends BaseLessonEditorFragment {
                     @Override
                     protected APIClient.PartnerState doInBackground(Void... params) {
                         if (handler == null) return APIClient.PartnerState.NONE;
-                        return APIClient.ready(getContext(), String.valueOf(lessonFragmentVariables.getCharacterNumber()), getProgram());
+                        return APIClient.ready(getContext(), String.valueOf(lessonFragmentVariables.getLessonNumber()), getProgram());
                     }
 
                     @Override
@@ -155,7 +155,7 @@ public class DuoLessonEditorFragment extends BaseLessonEditorFragment {
                     @Override
                     protected APIClient.PartnerState doInBackground(Void... params) {
                         if (handler == null) return APIClient.PartnerState.NONE;
-                        return APIClient.connect(getContext(), String.valueOf(lessonFragmentVariables.getCharacterNumber()));
+                        return APIClient.connect(getContext(), String.valueOf(lessonFragmentVariables.getLessonNumber()));
                     }
 
                     @Override
