@@ -8,9 +8,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import net.exkazuu.mimicdance.Lessons;
@@ -35,6 +37,8 @@ public class CorrectAnswerFragment extends Fragment {
     ImageView coccoView;
     @Bind(R.id.piyo)
     ImageView piyoView;
+    @Bind(R.id.next_lesson)
+    Button nextLessonButton;
 
     private AnimationDrawable coccoAnimation;
     private AnimationDrawable piyoAnimation;
@@ -70,6 +74,12 @@ public class CorrectAnswerFragment extends Fragment {
         startCoccoAnimation(this.getContext(), coccoView);
         startPiyoAnimation(this.getContext(), piyoView);
 
+        if (hasNextLesson()) {
+            nextLessonButton.setText(R.string.next_lesson);
+        } else {
+            nextLessonButton.setText(R.string.goto_top);
+        }
+
         return root;
     }
 
@@ -104,7 +114,7 @@ public class CorrectAnswerFragment extends Fragment {
         if (manager == null) {
             return;
         }
-        if (lessonNumber + 1 > Lessons.getLessonCount(true)) {
+        if (!hasNextLesson()) {
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace(R.id.container, TitleFragment.newInstance());
             transaction.commit();
@@ -160,5 +170,12 @@ public class CorrectAnswerFragment extends Fragment {
 
         // アニメーション開始
         piyoAnimation.start();
+    }
+
+    private boolean hasNextLesson() {
+        int maxNumber = Lessons.isNormalLesson(lessonNumber)
+            ? Lessons.getLessonCount(true)
+            : Lessons.getLessonCount(true) + Lessons.getLessonCount(false);
+        return lessonNumber < maxNumber;
     }
 }
