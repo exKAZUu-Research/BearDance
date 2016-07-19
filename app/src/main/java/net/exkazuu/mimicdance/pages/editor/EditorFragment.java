@@ -233,7 +233,7 @@ public abstract class EditorFragment extends Fragment {
 
 //            mAdapter.setCommand(mSelectedPosition, mSelectedIndex, command);
 //            mAdapter.setSelected(-1, -1);
-            mAdapter.notifyDataSetChanged();
+//            mAdapter.notifyDataSetChanged();
 //            mState = STATE_SELECT_PROGRAM;
         }
     }
@@ -247,6 +247,7 @@ public abstract class EditorFragment extends Fragment {
             if (mState == STATE_SELECT_PROGRAM) {
                 mAdapter.setCommand(position,index,mSelectedCommand);
                 mState = STATE_SELECT_COMMAND;
+                clearCommandSelection();
 
 //                mSelectedPosition = position;
 //                mSelectedIndex = index;
@@ -311,6 +312,14 @@ public abstract class EditorFragment extends Fragment {
     };
 
     // endregion
+
+    private void clearCommandSelection() {
+        FragmentManager manager = getChildFragmentManager();
+        Fragment f = manager.findFragmentById(R.id.layout_toolbox);
+        if (f != null && f instanceof ToolboxFragment) {
+            ((ToolboxFragment)f).clearSelection();
+        }
+    }
 
     // region RecyclerView
 

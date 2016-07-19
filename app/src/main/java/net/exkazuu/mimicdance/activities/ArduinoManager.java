@@ -76,12 +76,17 @@ public class ArduinoManager {
 
 
         // 接続されているUSBアクセサリの確認
-        UsbAccessory[] accessories = usbManager.getAccessoryList();
-        UsbAccessory accessory = (accessories == null ? null : accessories[0]);
-        if (accessory == null) {
+        UsbAccessory accessory;
+        try {
+            UsbAccessory[] accessories = usbManager.getAccessoryList();
+            accessory = (accessories == null ? null : accessories[0]);
+            if (accessory == null) {
 //            Toast toast = Toast.makeText(context, "accessory was not found.", Toast.LENGTH_SHORT);
 //            toast.show();
 
+                return;
+            }
+        } catch (NullPointerException e) {
             return;
         }
 

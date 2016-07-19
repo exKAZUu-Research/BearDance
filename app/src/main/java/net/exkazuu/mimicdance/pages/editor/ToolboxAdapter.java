@@ -113,4 +113,9 @@ public class ToolboxAdapter extends RecyclerView.Adapter<ToolboxAdapter.ViewHold
         }
 
     }
+
+    public void clearSelection() {
+        mSelectedPosition = -1;
+        notifyDataSetChanged();
+    }
 }
