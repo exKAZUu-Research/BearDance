@@ -40,4 +40,13 @@
     android:layout_toRightOf="@+id/editText"
     android:text="@string/save" />
 
+  <Button
+    android:id="@+id/random_gen_button"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerInParent="true"
+    android:layout_marginLeft="8dp"
+    android:layout_toRightOf="@+id/save_button"
+    android:text="@string/random_gen" />
+
 </RelativeLayout>

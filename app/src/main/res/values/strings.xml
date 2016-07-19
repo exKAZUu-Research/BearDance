@@ -43,6 +43,7 @@
   <string name="settings">設定</string>
   <string name="deviceId">端末ID</string>
   <string name="save">保存</string>
+  <string name="random_gen">IDをランダム生成(A)</string>
   <string name="saved">保存しました</string>
 
 
