@@ -17,6 +17,7 @@ public class Lessons {
     private static final String ELSE = IconType.Else.code;
     private static final String FI = IconType.EndIf.code;
     private static final String WHITE = IconType.White.code;
+    private static final String _2 = IconType.Number2.code;
     private static final String _3 = IconType.Number3.code;
 
     private static String[] normalCoccoCodes = {
@@ -30,11 +31,11 @@ public class Lessons {
     };
 
     private static String[][] duoCoccoCodes = {
-        {commands(LU, TOUCH), commands(RU, TOUCH)},
-        {commands(LU, LD, RU, RD, LU, LD, RU, RD), commands(LU, LD, RU, RD, LU, LD, RU, RD)},
+        {commands(LU, TOUCH, LD), commands(RU, TOUCH, RD)},
+        {commands(DO + _2, RU, LU, RD, TOUCH, LD, DONE), commands(DO + _2, LU, RU, LD, TOUCH, RD, DONE)},
     };
 
-    private static int[] maxSteps = {6, 8, 8, 8, 7, 10, 10, 6, 8};
+    private static int[] maxSteps = {6, 8, 8, 8, 7, 10, 10, 4, 8};
 
     private static String commands(String... args) {
         StringBuilder sb = new StringBuilder();
