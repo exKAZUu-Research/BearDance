@@ -17,6 +17,7 @@ import net.exkazuu.mimicdance.Lessons;
 import net.exkazuu.mimicdance.R;
 import net.exkazuu.mimicdance.interpreter.Interpreter;
 import net.exkazuu.mimicdance.interpreter.RobotExecutor;
+import net.exkazuu.mimicdance.pages.lesson.LessonFragmentVariables;
 import net.exkazuu.mimicdance.pages.lesson.editor.BaseLessonEditorFragment;
 import net.exkazuu.mimicdance.program.Block;
 import net.exkazuu.mimicdance.program.CodeParser;
@@ -31,40 +32,23 @@ import jp.fkmsoft.android.framework.util.FragmentUtils;
  * Base class of a fragment for Lesson top page
  */
 public abstract class BaseLessonTopFragment extends Fragment {
-    private static final String ARGS_LESSON_NUMBER = "lessonNumber";
-    private static final String ARGS_CHARACTER_NUMBER = "characterNumber";
     @Bind(R.id.character_left)
     View leftCharacterView;
     @Bind(R.id.character_right)
     View rightCharacterView;
     @Bind(R.id.image_lesson_logo)
     ImageView lessonLogoImageView;
-    protected int lessonNumber;
-    protected int characterNumber;
     protected CharacterSprite leftCharacterSprite;
     protected CharacterSprite rightCharacterSprite;
+    protected LessonFragmentVariables lessonFragmentVariables;
     private Handler handler;
     private RobotExecutor robotExecutor;
-
-    public static BaseLessonTopFragment newInstance(int lessonNumber, int characterNumber) {
-        BaseLessonTopFragment fragment = Lessons.isNormalLesson(lessonNumber) ? new NormalLessonTopFragment() : new DuoLessonTopFragment();
-
-        Bundle args = new Bundle();
-        args.putInt(ARGS_LESSON_NUMBER, lessonNumber);
-        args.putInt(ARGS_CHARACTER_NUMBER, characterNumber);
-        fragment.setArguments(args);
-
-        return fragment;
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle args = getArguments();
-        lessonNumber = args.getInt(ARGS_LESSON_NUMBER);
-        characterNumber = args.getInt(ARGS_CHARACTER_NUMBER);
-
         handler = new Handler();
+        lessonFragmentVariables = new LessonFragmentVariables(getArguments());
     }
 
     @Nullable
@@ -74,7 +58,7 @@ public abstract class BaseLessonTopFragment extends Fragment {
 
         ButterKnife.bind(this, root);
         createCharacters();
-        int drawableId = getResources().getIdentifier("lesson_message" + lessonNumber, "drawable", getContext().getPackageName());
+        int drawableId = getResources().getIdentifier("lesson_message" + lessonFragmentVariables.getLessonNumber(), "drawable", getContext().getPackageName());
         lessonLogoImageView.setImageResource(drawableId);
 
         return root;
@@ -102,15 +86,12 @@ public abstract class BaseLessonTopFragment extends Fragment {
     }
 
     @OnClick(R.id.button_write)
-    void writeClicked() {
-        FragmentUtils.toNextFragment(getFragmentManager(), R.id.container,
-        BaseLessonEditorFragment.newInstance(lessonNumber, characterNumber), true);
-    }
+    abstract void writeClicked();
 
     @OnClick(R.id.button_move)
     void moveClicked() {
-        String leftCoccoCode = Lessons.getCoccoCode(lessonNumber, 0);
-        String rightCoccoCode = Lessons.getCoccoCode(lessonNumber, 1);
+        String leftCoccoCode = Lessons.getCoccoCode(lessonFragmentVariables.getLessonNumber(), 0);
+        String rightCoccoCode = Lessons.getCoccoCode(lessonFragmentVariables.getLessonNumber(), 1);
         Block leftProgram = CodeParser.parse(leftCoccoCode);
         Block rightProgram = CodeParser.parse(rightCoccoCode);
         UnrolledProgram leftUnrolledProgram = getLeftUnrolledProgram(leftProgram);

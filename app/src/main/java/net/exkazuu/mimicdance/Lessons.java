@@ -51,14 +51,14 @@ public class Lessons {
     }
 
     public static boolean isNormalLesson(int lessonNumber) {
-        return lessonNumber < normalCoccoCodes.length;
+        return lessonNumber <= normalCoccoCodes.length;
     }
 
     public static String getCoccoCode(int lessonNumber, int characterNumber) {
         if (isNormalLesson(lessonNumber)) {
             return normalCoccoCodes[lessonNumber - 1];
         } else {
-            return duoCoccoCodes[lessonNumber - getLessonCount(true) - 1][characterNumber];
+            return duoCoccoCodes[lessonNumber - getLessonStart(false)][characterNumber];
         }
     }
 
@@ -66,12 +66,12 @@ public class Lessons {
         return maxSteps[lessonNumber - 1];
     }
 
-    public static int getLessonCount(boolean normal) {
-        return normal ? normalCoccoCodes.length : duoCoccoCodes.length;
+    public static int getLessonCount(boolean isNormalLesson) {
+        return isNormalLesson ? normalCoccoCodes.length : duoCoccoCodes.length;
     }
 
-    public static int getLessonStart(boolean normal) {
-        return normal ? 1 : getLessonCount(true) + 1;
+    public static int getLessonStart(boolean isNormalLesson) {
+        return isNormalLesson ? 1 : getLessonCount(true) + 1;
     }
 
     public static boolean hasLoop(int lessonNumber, int characterNumber) {

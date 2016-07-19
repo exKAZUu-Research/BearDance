@@ -17,6 +17,8 @@ import net.exkazuu.mimicdance.Lessons;
 import net.exkazuu.mimicdance.R;
 import net.exkazuu.mimicdance.models.APIClient;
 import net.exkazuu.mimicdance.pages.lesson.top.BaseLessonTopFragment;
+import net.exkazuu.mimicdance.pages.lesson.top.DuoLessonTopFragment;
+import net.exkazuu.mimicdance.pages.lesson.top.NormalLessonTopFragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -100,10 +102,15 @@ public class LessonListFragment extends Fragment {
         public void onClick(View v) {
             int position = (int) v.getTag();
             int lessonStart = Lessons.getLessonStart(normalMode);
+            int lessonNumber = lessonStart + position;
+
             APIClient.ClientType clientType = APIClient.getClientType(getContext());
             int characterNumber = clientType == APIClient.ClientType.B ? 1 : 0;
-            FragmentUtils.toNextFragment(getFragmentManager(), R.id.container,
-                BaseLessonTopFragment.newInstance(lessonStart + position, characterNumber), true);
+
+            BaseLessonTopFragment lessonTopFragment = Lessons.isNormalLesson(lessonNumber) ?
+                NormalLessonTopFragment.newInstance(lessonNumber, characterNumber) :
+                DuoLessonTopFragment.newInstance(lessonNumber, characterNumber);
+            FragmentUtils.toNextFragment(getFragmentManager(), R.id.container, lessonTopFragment, true);
         }
     };
 }

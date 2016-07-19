@@ -12,6 +12,7 @@ import net.exkazuu.mimicdance.Lessons;
 import net.exkazuu.mimicdance.R;
 import net.exkazuu.mimicdance.interpreter.RobotExecutor;
 import net.exkazuu.mimicdance.models.program.Program;
+import net.exkazuu.mimicdance.pages.lesson.LessonFragmentVariables;
 
 import java.util.ArrayList;
 
@@ -19,14 +20,14 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public abstract class BaseJudgeFragment extends Fragment {
-    protected int lessonNumber;
-    protected int characterNumber;
     protected Handler handler;
     protected RobotExecutor robotExecutor;
+    protected LessonFragmentVariables lessonFragmentVariables;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        lessonFragmentVariables = new LessonFragmentVariables(getArguments());
         this.handler = new Handler();
     }
 

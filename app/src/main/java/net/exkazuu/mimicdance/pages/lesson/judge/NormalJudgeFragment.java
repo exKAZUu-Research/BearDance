@@ -16,6 +16,7 @@ import net.exkazuu.mimicdance.interpreter.EventType;
 import net.exkazuu.mimicdance.interpreter.Interpreter;
 import net.exkazuu.mimicdance.interpreter.RobotExecutor;
 import net.exkazuu.mimicdance.models.program.Program;
+import net.exkazuu.mimicdance.pages.lesson.LessonFragmentVariables;
 import net.exkazuu.mimicdance.program.Block;
 import net.exkazuu.mimicdance.program.CodeParser;
 import net.exkazuu.mimicdance.program.UnrolledProgram;
@@ -27,8 +28,6 @@ import butterknife.ButterKnife;
 import jp.fkmsoft.android.framework.util.FragmentUtils;
 
 public class NormalJudgeFragment extends BaseJudgeFragment {
-    private static final String ARGS_LESSON_NUMBER = "lessonNumber";
-    private static final String ARGS_CHARACTER_NUMBER = "characterNumber";
     private static final String ARGS_USER_PROGRAM_LIST = "userProgramList";
 
     @Bind(R.id.user_character)
@@ -48,10 +47,9 @@ public class NormalJudgeFragment extends BaseJudgeFragment {
         NormalJudgeFragment fragment = new NormalJudgeFragment();
 
         Bundle args = new Bundle();
-        args.putInt(ARGS_LESSON_NUMBER, lessonNumber);
-        args.putInt(ARGS_CHARACTER_NUMBER, characterNumber);
         args.putParcelableArray(ARGS_USER_PROGRAM_LIST, programList);
         fragment.setArguments(args);
+        LessonFragmentVariables.setFragmentArguments(fragment, lessonNumber, characterNumber);
 
         return fragment;
     }
@@ -60,8 +58,7 @@ public class NormalJudgeFragment extends BaseJudgeFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
-        lessonNumber = args.getInt(ARGS_LESSON_NUMBER);
-        characterNumber = args.getInt(ARGS_CHARACTER_NUMBER);
+        lessonFragmentVariables = new LessonFragmentVariables(args);
         programList = convertParcelableArrayToProgramList(args.getParcelableArray(ARGS_USER_PROGRAM_LIST));
     }
 
@@ -84,7 +81,7 @@ public class NormalJudgeFragment extends BaseJudgeFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        String answerCode = Lessons.getCoccoCode(lessonNumber, characterNumber);
+        String answerCode = Lessons.getCoccoCode(lessonFragmentVariables.getLessonNumber(), lessonFragmentVariables.getCharacterNumber());
         Block userProgram = CodeParser.parse(programList);
         Block answerProgram = CodeParser.parse(answerCode);
         final UnrolledProgram userUnrolledProgram = userProgram.unroll(EventType.White);
@@ -101,13 +98,13 @@ public class NormalJudgeFragment extends BaseJudgeFragment {
             public void run() {
                 int diffCount = userUnrolledProgram.countDifferences(answerUnrolledProgram);
                 int size = answerUnrolledProgram.size();
-                if (Lessons.hasIf(lessonNumber, characterNumber)) {
+                if (Lessons.hasIf(lessonFragmentVariables.getLessonNumber(), lessonFragmentVariables.getCharacterNumber())) {
                     diffCount += altUserUnrolledProgram.countDifferences(altAnswerUnrolledProgram);
                     size += altAnswerUnrolledProgram.size();
                 }
                 if (diffCount == 0) {
                     FragmentUtils.toNextFragment(getFragmentManager(), R.id.container,
-                        CorrectAnswerFragment.newInstance(lessonNumber, characterNumber), true);
+                        CorrectAnswerFragment.newInstance(lessonFragmentVariables.getLessonNumber(), lessonFragmentVariables.getCharacterNumber()), true);
                 } else {
                     boolean almostCorrect = diffCount <= size / 3;
                     FragmentUtils.toNextFragment(getFragmentManager(), R.id.container,
@@ -116,7 +113,7 @@ public class NormalJudgeFragment extends BaseJudgeFragment {
             }
         };
 
-        if (Lessons.hasIf(lessonNumber, characterNumber)) {
+        if (Lessons.hasIf(lessonFragmentVariables.getLessonNumber(), lessonFragmentVariables.getCharacterNumber())) {
             whiteOrYellow.setText("しろいひよこのばあい");
             whiteOrYellow.setTextColor(0xFF807700);
         }
@@ -125,7 +122,7 @@ public class NormalJudgeFragment extends BaseJudgeFragment {
             Interpreter.createForCocco(answerUnrolledProgram, answerCharacterSprite)), handler) {
             @Override
             public void afterRun() {
-                if (Lessons.hasIf(lessonNumber, characterNumber)) {
+                if (Lessons.hasIf(lessonFragmentVariables.getLessonNumber(), lessonFragmentVariables.getCharacterNumber())) {
                     whiteOrYellow.setText("きいろいひよこのばあい");
                     whiteOrYellow.setTextColor(0xFFFF3300);
                     robotExecutor = new RobotExecutor(Lists.newArrayList(Interpreter.createForPiyo(altUserUnrolledProgram, altUserCharacterSprite, userCodeView),

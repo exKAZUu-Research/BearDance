@@ -16,6 +16,7 @@ import net.exkazuu.mimicdance.interpreter.EventType;
 import net.exkazuu.mimicdance.interpreter.Interpreter;
 import net.exkazuu.mimicdance.interpreter.RobotExecutor;
 import net.exkazuu.mimicdance.models.program.Program;
+import net.exkazuu.mimicdance.pages.lesson.LessonFragmentVariables;
 import net.exkazuu.mimicdance.program.UnrolledProgram;
 
 import java.util.ArrayList;
@@ -26,8 +27,6 @@ import butterknife.ButterKnife;
 import jp.fkmsoft.android.framework.util.FragmentUtils;
 
 public class DuoJudgeFragment extends BaseJudgeFragment {
-    private static final String ARGS_LESSON_NUMBER = "lessonNumber";
-    private static final String ARGS_CHARACTER_NUMBER = "characterNumber";
     private static final String ARGS_LEFT_USER_PROGRAM_LIST = "leftUserProgramList";
     private static final String ARGS_RIGHT_USER_PROGRAM_LIST = "rightUserProgramList";
 
@@ -55,11 +54,10 @@ public class DuoJudgeFragment extends BaseJudgeFragment {
         DuoJudgeFragment fragment = new DuoJudgeFragment();
 
         Bundle args = new Bundle();
-        args.putInt(ARGS_LESSON_NUMBER, lessonNumber);
-        args.putInt(ARGS_CHARACTER_NUMBER, characterNumber);
         args.putParcelableArray(ARGS_LEFT_USER_PROGRAM_LIST, leftProgramList);
         args.putParcelableArray(ARGS_RIGHT_USER_PROGRAM_LIST, rightProgramList);
         fragment.setArguments(args);
+        LessonFragmentVariables.setFragmentArguments(fragment, lessonNumber, characterNumber);
 
         return fragment;
     }
@@ -68,8 +66,7 @@ public class DuoJudgeFragment extends BaseJudgeFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
-        lessonNumber = args.getInt(ARGS_LESSON_NUMBER);
-        characterNumber = args.getInt(ARGS_CHARACTER_NUMBER);
+        lessonFragmentVariables = new LessonFragmentVariables(args);
         leftProgramList = convertParcelableArrayToProgramList(args.getParcelableArray(ARGS_LEFT_USER_PROGRAM_LIST));
         rightProgramList = convertParcelableArrayToProgramList(args.getParcelableArray(ARGS_RIGHT_USER_PROGRAM_LIST));
     }
@@ -96,8 +93,8 @@ public class DuoJudgeFragment extends BaseJudgeFragment {
 
         final UnrolledProgram leftUserUnrolledProgram = UnrolledProgram.convertFromCode(leftProgramList, EventType.White);
         final UnrolledProgram rightUserUnrolledProgram = UnrolledProgram.convertFromCode(rightProgramList, EventType.White);
-        String leftAnswerCode = Lessons.getCoccoCode(lessonNumber, 0);
-        String rightAnswerCode = Lessons.getCoccoCode(lessonNumber, 1);
+        String leftAnswerCode = Lessons.getCoccoCode(lessonFragmentVariables.getLessonNumber(), 0);
+        String rightAnswerCode = Lessons.getCoccoCode(lessonFragmentVariables.getLessonNumber(), 1);
         final UnrolledProgram leftAnswerUnrolledProgram = UnrolledProgram.convertFromCode(leftAnswerCode, EventType.White);
         final UnrolledProgram rightAnswerUnrolledProgram = UnrolledProgram.convertFromCode(rightAnswerCode, EventType.White);
 
@@ -114,7 +111,7 @@ public class DuoJudgeFragment extends BaseJudgeFragment {
                 int size = leftAnswerUnrolledProgram.size() + rightAnswerUnrolledProgram.size();
                 if (diffCount == 0) {
                     FragmentUtils.toNextFragment(getFragmentManager(), R.id.container,
-                        CorrectAnswerFragment.newInstance(lessonNumber, characterNumber), true);
+                        CorrectAnswerFragment.newInstance(lessonFragmentVariables.getLessonNumber(), lessonFragmentVariables.getCharacterNumber()), true);
                 } else {
                     boolean almostCorrect = diffCount <= size / 3;
                     FragmentUtils.toNextFragment(getFragmentManager(), R.id.container,

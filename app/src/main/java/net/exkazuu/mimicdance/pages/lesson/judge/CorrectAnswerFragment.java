@@ -15,7 +15,9 @@ import android.widget.ImageView;
 
 import net.exkazuu.mimicdance.Lessons;
 import net.exkazuu.mimicdance.R;
+import net.exkazuu.mimicdance.pages.lesson.LessonFragmentVariables;
 import net.exkazuu.mimicdance.pages.lesson.top.BaseLessonTopFragment;
+import net.exkazuu.mimicdance.pages.lesson.top.DuoLessonTopFragment;
 import net.exkazuu.mimicdance.pages.lesson.top.NormalLessonTopFragment;
 import net.exkazuu.mimicdance.pages.title.TitleFragment;
 
@@ -28,36 +30,23 @@ import jp.fkmsoft.android.framework.util.FragmentUtils;
  * Fragment for Lesson top page
  */
 public class CorrectAnswerFragment extends Fragment {
-    private static final String ARGS_LESSON_NUMBER = "lessonNumber";
-    private static final String ARGS_CHARACTER_NUMBER = "characterNumber";
-
     @Bind(R.id.cocco)
     ImageView coccoView;
     @Bind(R.id.piyo)
     ImageView piyoView;
 
-    private AnimationDrawable coccoAnimation;
-    private AnimationDrawable piyoAnimation;
-    private int lessonNumber;
-    private int characterNumber;
+    private LessonFragmentVariables lessonFragmentVariables;
 
     public static CorrectAnswerFragment newInstance(int lessonNumber, int characterNumber) {
         CorrectAnswerFragment fragment = new CorrectAnswerFragment();
-
-        Bundle args = new Bundle();
-        args.putInt(ARGS_LESSON_NUMBER, lessonNumber);
-        args.putInt(ARGS_CHARACTER_NUMBER, characterNumber);
-        fragment.setArguments(args);
-
+        LessonFragmentVariables.setFragmentArguments(fragment, lessonNumber, characterNumber);
         return fragment;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle args = getArguments();
-        lessonNumber = args.getInt(ARGS_LESSON_NUMBER);
-        characterNumber = args.getInt(ARGS_CHARACTER_NUMBER);
+        lessonFragmentVariables = new LessonFragmentVariables(getArguments());
     }
 
     @Nullable
@@ -104,7 +93,10 @@ public class CorrectAnswerFragment extends Fragment {
         if (manager == null) {
             return;
         }
-        if (lessonNumber + 1 > Lessons.getLessonCount(true)) {
+        int nextLessonNumber = lessonFragmentVariables.getLessonNumber() + 1;
+        boolean isNormalLesson = Lessons.isNormalLesson(lessonFragmentVariables.getLessonNumber());
+        int maxLessonNumber = Lessons.getLessonCount(isNormalLesson) + Lessons.getLessonStart(isNormalLesson) - 1;
+        if (nextLessonNumber > maxLessonNumber) {
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace(R.id.container, TitleFragment.newInstance());
             transaction.commit();
@@ -113,15 +105,18 @@ public class CorrectAnswerFragment extends Fragment {
             manager.popBackStack();
             manager.popBackStack();
             manager.popBackStack();
-            FragmentUtils.toNextFragment(getFragmentManager(), R.id.container,
-                BaseLessonTopFragment.newInstance(lessonNumber + 1, characterNumber), true);
+
+            BaseLessonTopFragment lessonTopFragment = Lessons.isNormalLesson(nextLessonNumber) ?
+                NormalLessonTopFragment.newInstance(nextLessonNumber, lessonFragmentVariables.getCharacterNumber()) :
+                DuoLessonTopFragment.newInstance(nextLessonNumber, lessonFragmentVariables.getCharacterNumber());
+            FragmentUtils.toNextFragment(getFragmentManager(), R.id.container, lessonTopFragment, true);
         }
     }
 
     // endregion
 
     void startCoccoAnimation(Context con, View v) {
-        coccoAnimation = new AnimationDrawable();
+        AnimationDrawable coccoAnimation = new AnimationDrawable();
 
         // 画像の読み込み //
         Drawable frame1 = con.getResources().getDrawable(R.drawable.cocco_jump1);
@@ -142,7 +137,7 @@ public class CorrectAnswerFragment extends Fragment {
     }
 
     void startPiyoAnimation(Context con, View v) {
-        piyoAnimation = new AnimationDrawable();
+        AnimationDrawable piyoAnimation = new AnimationDrawable();
 
         // 画像の読み込み
         Drawable frame1 = con.getResources().getDrawable(R.drawable.piyo_jump1);

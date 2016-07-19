@@ -9,6 +9,7 @@ import net.exkazuu.mimicdance.CharacterSprite;
 import net.exkazuu.mimicdance.Lessons;
 import net.exkazuu.mimicdance.R;
 import net.exkazuu.mimicdance.interpreter.Interpreter;
+import net.exkazuu.mimicdance.pages.lesson.LessonFragmentVariables;
 import net.exkazuu.mimicdance.pages.lesson.judge.BaseJudgeFragment;
 import net.exkazuu.mimicdance.pages.lesson.judge.DuoJudgeFragment;
 import net.exkazuu.mimicdance.pages.lesson.judge.NormalJudgeFragment;
@@ -20,16 +21,23 @@ import jp.fkmsoft.android.framework.util.FragmentUtils;
 
 public class NormalLessonEditorFragment extends BaseLessonEditorFragment {
 
+    public static NormalLessonEditorFragment newInstance(int lessonNumber, int characterNumber) {
+        NormalLessonEditorFragment fragment = new NormalLessonEditorFragment();
+        LessonFragmentVariables.setFragmentArguments(fragment, lessonNumber, characterNumber);
+        return fragment;
+    }
+
     @Override
     void judgeClicked() {
-        BaseJudgeFragment judgeFragment = NormalJudgeFragment.newInstance(lessonNumber, characterNumber, mAdapter.getAsArray());
+        BaseJudgeFragment judgeFragment = NormalJudgeFragment.newInstance(lessonFragmentVariables.getLessonNumber(), lessonFragmentVariables.getCharacterNumber(), mAdapter.getAsArray());
         FragmentUtils.toNextFragment(getFragmentManager(), R.id.container, judgeFragment, true, STACK_TAG);
     }
 
     @Override
     void setCharacterVisibilities() {
-        rightCharacterView.setVisibility(Lessons.hasIf(lessonNumber, characterNumber) ? View.VISIBLE : View.INVISIBLE);
-        userRightCharacterView.setVisibility(Lessons.hasIf(lessonNumber, characterNumber) ? View.VISIBLE : View.INVISIBLE);
+        boolean hasIf = Lessons.hasIf(lessonFragmentVariables.getLessonNumber(), lessonFragmentVariables.getCharacterNumber());
+        rightCharacterView.setVisibility(hasIf ? View.VISIBLE : View.INVISIBLE);
+        userRightCharacterView.setVisibility(hasIf ? View.VISIBLE : View.INVISIBLE);
     }
 
     @Override

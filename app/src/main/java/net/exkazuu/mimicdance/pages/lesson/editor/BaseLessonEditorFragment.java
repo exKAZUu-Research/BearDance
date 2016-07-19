@@ -26,9 +26,7 @@ import net.exkazuu.mimicdance.interpreter.RobotExecutor;
 import net.exkazuu.mimicdance.models.program.Program;
 import net.exkazuu.mimicdance.models.program.ProgramDAO;
 import net.exkazuu.mimicdance.pages.editor.EditorFragment;
-import net.exkazuu.mimicdance.pages.lesson.judge.BaseJudgeFragment;
-import net.exkazuu.mimicdance.pages.lesson.judge.DuoJudgeFragment;
-import net.exkazuu.mimicdance.pages.lesson.judge.NormalJudgeFragment;
+import net.exkazuu.mimicdance.pages.lesson.LessonFragmentVariables;
 import net.exkazuu.mimicdance.program.CodeParser;
 import net.exkazuu.mimicdance.program.UnrolledProgram;
 
@@ -38,14 +36,11 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import jp.fkmsoft.android.framework.util.FragmentUtils;
 
 /**
  * Editor for Lesson
  */
 public abstract class BaseLessonEditorFragment extends EditorFragment {
-    public static final String ARGS_LESSON_NUMBER = "lessonNumber";
-    public static final String ARGS_CHARACTER_NUMBER = "characterNumber";
     public static final String STACK_TAG = "lessonEdit";
 
     @Bind(R.id.root)
@@ -67,29 +62,13 @@ public abstract class BaseLessonEditorFragment extends EditorFragment {
     @Bind(R.id.button_judge)
     Button judgeButton;
 
-
+    protected LessonFragmentVariables lessonFragmentVariables;
     private Handler handler;
     private RobotExecutor robotExecutor;
-    protected int lessonNumber;
-    protected int characterNumber;
     private CharacterSprite leftCharacterSprite;
     private CharacterSprite rightCharacterSprite;
     private CharacterSprite userLeftCharacterSprite;
     private CharacterSprite userRightCharacterSprite;
-
-
-    public static BaseLessonEditorFragment newInstance(int lessonNumber, int characterNumber) {
-        BaseLessonEditorFragment fragment = Lessons.isNormalLesson(lessonNumber)
-            ? new NormalLessonEditorFragment()
-            : new DuoLessonEditorFragment();
-
-        Bundle args = new Bundle();
-        args.putInt(ARGS_LESSON_NUMBER, lessonNumber);
-        args.putInt(ARGS_CHARACTER_NUMBER, characterNumber);
-        fragment.setArguments(args);
-
-        return fragment;
-    }
 
     @Override
     protected ProgramDAO createProgramDAO() {
@@ -101,7 +80,7 @@ public abstract class BaseLessonEditorFragment extends EditorFragment {
             @Override
             public List<Program> load() {
                 List<Program> list = new ArrayList<>();
-                for (int i = 0; i < Lessons.getMaxStep(lessonNumber); ++i) {
+                for (int i = 0; i < Lessons.getMaxStep(lessonFragmentVariables.getLessonNumber()); ++i) {
                     list.add(new Program());
                 }
                 return list;
@@ -112,9 +91,7 @@ public abstract class BaseLessonEditorFragment extends EditorFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle args = getArguments();
-        lessonNumber = args.getInt(ARGS_LESSON_NUMBER);
-        characterNumber = args.getInt(ARGS_CHARACTER_NUMBER);
+        lessonFragmentVariables = new LessonFragmentVariables(getArguments());
     }
 
     @Nullable
@@ -142,14 +119,14 @@ public abstract class BaseLessonEditorFragment extends EditorFragment {
             position2Group = Lists.newArrayList(0, 1, 2, 3, 4);
             mTabLayout.removeTabAt(4);
             position2Group.remove(4);
-            if (!Lessons.hasIf(lessonNumber, characterNumber)) {
+            if (!Lessons.hasIf(lessonFragmentVariables.getLessonNumber(), lessonFragmentVariables.getCharacterNumber())) {
                 mTabLayout.removeTabAt(3);
                 mTabLayout.removeTabAt(2);
                 position2Group.remove(3);
                 position2Group.remove(2);
             }
 
-            if (!Lessons.hasLoop(lessonNumber, characterNumber)) {
+            if (!Lessons.hasLoop(lessonFragmentVariables.getLessonNumber(), lessonFragmentVariables.getCharacterNumber())) {
                 mTabLayout.removeTabAt(1);
                 position2Group.remove(1);
             }
@@ -181,7 +158,7 @@ public abstract class BaseLessonEditorFragment extends EditorFragment {
 
     @OnClick({R.id.character_left, R.id.character_right})
     void checkProgramClicked() {
-        String answerCode = Lessons.getCoccoCode(lessonNumber, characterNumber);
+        String answerCode = Lessons.getCoccoCode(lessonFragmentVariables.getLessonNumber(), lessonFragmentVariables.getCharacterNumber());
         UnrolledProgram leftProgram = CodeParser.parse(answerCode).unroll(EventType.White);
         UnrolledProgram rightProgram = CodeParser.parse(answerCode).unroll(EventType.Yellow);
         checkProgram(leftProgram, rightProgram, leftCharacterSprite, rightCharacterSprite);
