@@ -28,8 +28,8 @@ import butterknife.OnClick;
 import jp.fkmsoft.android.framework.util.FragmentUtils;
 
 public class DuoJudgeFragment extends BaseJudgeFragment {
-    private static final String ARGS_LEFT_USER_CODE = "leftUserProgramList";
-    private static final String ARGS_RIGHT_USER_CODE = "rightUserProgramList";
+    private static final String ARGS_LEFT_USER_CODE = "leftUserCode";
+    private static final String ARGS_RIGHT_USER_CODE = "rightUserCode";
 
     @Bind(R.id.left_user_character)
     View leftUserCharacter;
