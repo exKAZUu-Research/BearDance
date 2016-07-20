@@ -13,11 +13,11 @@ android {
     buildToolsVersion "22.0.1"
 
     defaultConfig {
-        applicationId "net.exkazuu.oshirasebear"
+        applicationId "com.willingring.oshirasebear"
         minSdkVersion 19
         targetSdkVersion 21
-        versionCode 4
-        versionName "1.0.5"
+        versionCode 5
+        versionName "2.0.0"
     }
     buildTypes {
         debug {

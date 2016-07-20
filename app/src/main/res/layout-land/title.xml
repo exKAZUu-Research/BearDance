@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  android:id="@+id/titleRoot"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  android:background="@drawable/bear_title">
+                android:id="@+id/titleRoot"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bear_title">
 
   <android.support.v4.widget.Space
     android:id="@+id/center"
     android:layout_width="0dp"
     android:layout_height="0dp"
-    android:layout_centerHorizontal="true" />
+    android:layout_centerHorizontal="true"/>
 
 
   <Button
@@ -21,7 +21,7 @@
     android:layout_toStartOf="@+id/notification_button"
     android:text="@string/Title_start_button"
     android:textSize="24sp"
-    android:visibility="visible" />
+    android:visibility="visible"/>
 
   <Button
     android:id="@+id/notification_button"
@@ -32,7 +32,7 @@
     android:layout_marginBottom="40dp"
     android:text="@string/notification"
     android:textSize="24sp"
-    android:visibility="visible" />
+    android:visibility="visible"/>
 
   <Button
     android:id="@+id/help_button"
@@ -45,7 +45,7 @@
     android:onClick="startHelpActivity"
     android:text="@string/Title_free_play"
     android:textSize="24sp"
-    android:visibility="gone" />
+    android:visibility="gone"/>
 
 
   <Button
@@ -58,7 +58,7 @@
     android:onClick="freePlay"
     android:text="@string/Title_free_play"
     android:textSize="24sp"
-    android:visibility="gone" />
+    android:visibility="gone"/>
 
   <Button
     android:id="@+id/duo_button"
@@ -69,7 +69,7 @@
     android:layout_toEndOf="@+id/notification_button"
     android:text="@string/Title_duo_button"
     android:textSize="24sp"
-    android:visibility="visible" />
+    android:visibility="visible"/>
 
   <Button
     android:id="@+id/setting_button"
@@ -78,7 +78,16 @@
     android:layout_alignParentRight="true"
     android:layout_alignParentTop="true"
     android:background="@android:color/transparent"
-    android:text="@string/settings" />
+    android:text="@string/settings"/>
+
+  <TextView
+    android:id="@+id/textVersion"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentRight="true"
+    android:layout_margin="2dp"
+    android:textAppearance="?android:attr/textAppearanceSmall"/>
 
 
 </RelativeLayout>

@@ -1,5 +1,8 @@
 package net.exkazuu.mimicdance.pages.title;
 
+import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -7,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import net.exkazuu.mimicdance.BuildConfig;
 import net.exkazuu.mimicdance.R;
@@ -31,6 +35,9 @@ public class TitleFragment extends Fragment {
 
     @Bind(R.id.duo_button)
     Button duoButton;
+
+    @Bind(R.id.textVersion)
+    TextView textVersion;
 
     public static TitleFragment newInstance() {
         TitleFragment fragment = new TitleFragment();
@@ -65,6 +72,8 @@ public class TitleFragment extends Fragment {
         APIClient.ClientType type = APIClient.getClientType(getContext());
         boolean enableDuoMode = type == APIClient.ClientType.A || type == APIClient.ClientType.B;
         duoButton.setEnabled(BuildConfig.OFFLINE_MODE || enableDuoMode);
+
+        textVersion.setText(getVersionText());
     }
 
     @Override
@@ -119,4 +128,24 @@ public class TitleFragment extends Fragment {
     }
 
     // endregion
+
+    private String getVersionText() {
+        Context context = getContext();
+        PackageManager pm = context.getPackageManager();
+        try {
+            PackageInfo packageInfo = pm.getPackageInfo(context.getPackageName(), 0);
+            String versionName = packageInfo.versionName;
+            int versionCode = packageInfo.versionCode;
+            String buildType = BuildConfig.DEBUG ? "DEBUG" : "";
+            String flavor = BuildConfig.OFFLINE_MODE ? "/OFFLINE" : "";
+            String buildVariants = buildType + flavor;
+            if (buildVariants.length() > 0) {
+                buildVariants = "(" + buildVariants + ")";
+            }
+
+            return String.format("ver.%s/%d %s", versionName, versionCode, buildVariants);
+        } catch (PackageManager.NameNotFoundException e) {
+        }
+        return "";
+    }
 }
