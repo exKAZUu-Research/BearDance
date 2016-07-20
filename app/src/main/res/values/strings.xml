@@ -27,6 +27,7 @@
   <string name="Title_how_to_play">あそびかた</string>
   <string name="Title_start_button">プログラミング\nレッスン</string>
   <string name="notification">おしらせの\nダンスをつくる</string>
+  <string name="Title_duo_button">ふたりで\nダンス</string>
   <string name="Title_free_play">ロボットを\nダンスさせる</string>
   <string name="look_answer_button">①おてほんを見る</string>
   <string name="text_look">まずは、お手本をチェック！</string>
@@ -45,6 +46,7 @@
   <string name="save">保存</string>
   <string name="random_gen">IDをランダム生成(A)</string>
   <string name="saved">保存しました</string>
+  <string name="clear">クリア</string>
 
 
   <string-array name="move">
@@ -97,9 +99,7 @@
   <string name="test_calendar">Calendarでうごかしてみる</string>
   <string name="tap_and_move">タッチして動きをかくにんしよう</string>
   <string name="select_command_first">アイコンか、プログラムが入っているところをえらんでね</string>
-  <string name="Title_duo_button">ふたりでおどる</string>
   <string name="next_lesson">つぎのもんだいへ</string>
   <string name="goto_top">さいしょにもどる</string>
-  <string name="clear">クリア</string>
 
 </resources>

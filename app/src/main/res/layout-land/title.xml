@@ -14,7 +14,7 @@
 
   <Button
     android:id="@+id/start_button"
-    android:layout_width="wrap_content"
+    android:layout_width="200dp"
     android:layout_height="100sp"
     android:layout_alignTop="@+id/notification_button"
     android:layout_marginRight="20dp"
@@ -25,7 +25,7 @@
 
   <Button
     android:id="@+id/notification_button"
-    android:layout_width="wrap_content"
+    android:layout_width="200dp"
     android:layout_height="100sp"
     android:layout_alignParentBottom="true"
     android:layout_centerHorizontal="true"
@@ -62,7 +62,7 @@
 
   <Button
     android:id="@+id/duo_button"
-    android:layout_width="wrap_content"
+    android:layout_width="200dp"
     android:layout_height="100sp"
     android:layout_alignTop="@+id/notification_button"
     android:layout_marginLeft="20dp"
