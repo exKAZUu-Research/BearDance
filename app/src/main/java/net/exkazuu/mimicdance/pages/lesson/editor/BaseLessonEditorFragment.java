@@ -26,7 +26,7 @@ import net.exkazuu.mimicdance.interpreter.RobotExecutor;
 import net.exkazuu.mimicdance.models.program.Program;
 import net.exkazuu.mimicdance.models.program.ProgramDAO;
 import net.exkazuu.mimicdance.pages.editor.EditorFragment;
-import net.exkazuu.mimicdance.pages.lesson.LessonFragmentVariables;
+import net.exkazuu.mimicdance.Lesson;
 import net.exkazuu.mimicdance.program.CodeParser;
 import net.exkazuu.mimicdance.program.UnrolledProgram;
 
@@ -62,7 +62,7 @@ public abstract class BaseLessonEditorFragment extends EditorFragment {
     @Bind(R.id.button_judge)
     Button judgeButton;
 
-    protected LessonFragmentVariables lessonFragmentVariables;
+    protected Lesson lesson;
     private Handler handler;
     private RobotExecutor robotExecutor;
     private CharacterSprite leftCharacterSprite;
@@ -80,7 +80,7 @@ public abstract class BaseLessonEditorFragment extends EditorFragment {
             @Override
             public List<Program> load() {
                 List<Program> list = new ArrayList<>();
-                for (int i = 0; i < Lessons.getMaxStep(lessonFragmentVariables.getLessonNumber()); ++i) {
+                for (int i = 0; i < Lessons.getMaxStep(lesson.getLessonNumber()); ++i) {
                     list.add(new Program());
                 }
                 return list;
@@ -91,7 +91,7 @@ public abstract class BaseLessonEditorFragment extends EditorFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        lessonFragmentVariables = new LessonFragmentVariables(getArguments());
+        lesson = Lesson.loadFromArguments(getArguments());
     }
 
     @Nullable
@@ -119,14 +119,14 @@ public abstract class BaseLessonEditorFragment extends EditorFragment {
             position2Group = Lists.newArrayList(0, 1, 2, 3, 4);
             mTabLayout.removeTabAt(4);
             position2Group.remove(4);
-            if (!Lessons.hasIf(lessonFragmentVariables.getLessonNumber(), lessonFragmentVariables.getCharacterNumber())) {
+            if (!lesson.hasIf()) {
                 mTabLayout.removeTabAt(3);
                 mTabLayout.removeTabAt(2);
                 position2Group.remove(3);
                 position2Group.remove(2);
             }
 
-            if (!Lessons.hasLoop(lessonFragmentVariables.getLessonNumber(), lessonFragmentVariables.getCharacterNumber())) {
+            if (!lesson.hasLoop()) {
                 mTabLayout.removeTabAt(1);
                 position2Group.remove(1);
             }
@@ -158,7 +158,7 @@ public abstract class BaseLessonEditorFragment extends EditorFragment {
 
     @OnClick({R.id.character_left, R.id.character_right})
     void checkProgramClicked() {
-        String answerCode = Lessons.getCoccoCode(lessonFragmentVariables.getLessonNumber(), lessonFragmentVariables.getCharacterNumber());
+        String answerCode = lesson.getCoccoCode();
         UnrolledProgram leftProgram = CodeParser.parse(answerCode).unroll(EventType.White);
         UnrolledProgram rightProgram = CodeParser.parse(answerCode).unroll(EventType.Yellow);
         checkProgram(leftProgram, rightProgram, leftCharacterSprite, rightCharacterSprite);

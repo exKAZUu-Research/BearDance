@@ -5,29 +5,24 @@ import android.os.Handler;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 
-import net.exkazuu.mimicdance.CharacterSprite;
-import net.exkazuu.mimicdance.Lessons;
-import net.exkazuu.mimicdance.R;
 import net.exkazuu.mimicdance.interpreter.RobotExecutor;
 import net.exkazuu.mimicdance.models.program.Program;
-import net.exkazuu.mimicdance.pages.lesson.LessonFragmentVariables;
+import net.exkazuu.mimicdance.Lesson;
 
 import java.util.ArrayList;
 
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public abstract class BaseJudgeFragment extends Fragment {
     protected Handler handler;
     protected RobotExecutor robotExecutor;
-    protected LessonFragmentVariables lessonFragmentVariables;
+    protected Lesson lesson;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        lessonFragmentVariables = new LessonFragmentVariables(getArguments());
+        lesson = Lesson.loadFromArguments(getArguments());
         this.handler = new Handler();
     }
 
