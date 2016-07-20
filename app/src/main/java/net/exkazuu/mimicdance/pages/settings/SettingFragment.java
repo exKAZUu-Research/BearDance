@@ -12,8 +12,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.common.collect.Lists;
+
 import net.exkazuu.mimicdance.R;
 import net.exkazuu.mimicdance.models.APIClient;
+
+import java.util.Arrays;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -88,9 +93,41 @@ public class SettingFragment extends Fragment {
 
     @OnClick(R.id.random_gen_button)
     void clickRandomGen() {
-        String newId = String.format("%04dA", (int)(Math.random() * 10000));
+        String newId = String.format("%04dA", (int) (Math.random() * 10000));
         editText.setText(newId);
         saveId(newId);
+    }
+
+    @OnClick({R.id.id_button_1, R.id.id_button_2, R.id.id_button_3, R.id.id_button_4, R.id.id_button_5,
+        R.id.id_button_6, R.id.id_button_7, R.id.id_button_8, R.id.id_button_9, R.id.id_button_0, R.id.id_button_a, R.id.id_button_b})
+    void onClickIdButton(Button button) {
+        String s;
+        int id = button.getId();
+        List<Integer> numButtons = Lists.newArrayList(
+            R.id.id_button_0,
+            R.id.id_button_1,
+            R.id.id_button_2,
+            R.id.id_button_3,
+            R.id.id_button_4,
+            R.id.id_button_5,
+            R.id.id_button_6,
+            R.id.id_button_7,
+            R.id.id_button_8,
+            R.id.id_button_9
+        );
+        if (numButtons.contains(id)) {
+            s = String.valueOf(numButtons.indexOf(id));
+        } else if (id == R.id.id_button_a) {
+            s = "A";
+        } else {
+            s = "B";
+        }
+        editText.setText(editText.getText() + s);
+    }
+
+    @OnClick(R.id.clear_button)
+    void onClickClearButton() {
+        editText.setText("");
     }
 
     private void saveId(String id) {
