@@ -165,7 +165,8 @@ public class DuoLessonEditorFragment extends BaseLessonEditorFragment {
                     protected void onPostExecute(APIClient.PartnerState partnerState) {
                         if (handler == null) return;
 
-                        handler.postDelayed(ConnectionTask.this, 7 * SECONDS);
+                        long delay = partnerState.isNone() ? 1 * SECONDS : 7 * SECONDS;
+                        handler.postDelayed(ConnectionTask.this, delay);
                         changeJudgeButtonState(partnerState);
                     }
                 }.execute();
