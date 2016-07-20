@@ -73,7 +73,7 @@ public class Interpreter implements Runnable {
                 characterSprite.renderIntermediateState(actions);
                 if (isPiyo) {
                     handleDanbo();
-                    handleBear(actions);
+//                    handleBear(actions);
                     handleMiniBear();
                 }
             } else {

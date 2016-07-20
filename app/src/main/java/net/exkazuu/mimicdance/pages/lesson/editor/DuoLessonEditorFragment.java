@@ -131,16 +131,20 @@ public class DuoLessonEditorFragment extends BaseLessonEditorFragment {
 
                         Log.v("Mimic", String.format("partnerState:%s, now:%s", partnerState, new Date()));
                         if (partnerState.isReady()) {
-                            long rest = Math.max(0, partnerState.playAt.getTime() - System.currentTimeMillis());
-                            handler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (handler == null) return;
-                                    Log.v("Mimic", "startJudge");
-                                    startJudge(partnerState.program);
-                                }
-                            }, rest);
+                            long rest = partnerState.playAt.getTime() - System.currentTimeMillis();
                             Log.v("Mimic", "restTime: " + rest);
+                            if (rest > 0) {
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (handler == null) return;
+                                        Log.v("Mimic", "startJudge");
+                                        startJudge(partnerState.program);
+                                    }
+                                }, rest);
+                            } else {
+                                startJudge(partnerState.program);
+                            }
                         } else {
                             handler.postDelayed(ConnectionTask.this, 1 * SECONDS);
                             changeJudgeButtonState(partnerState);
