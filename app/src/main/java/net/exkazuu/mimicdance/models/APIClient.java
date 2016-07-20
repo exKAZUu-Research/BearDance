@@ -28,7 +28,7 @@ public class APIClient {
     private static final String CLIENT_PREFERENCE = "CLIENT_PREFERENCE";
     private static final String CLIENT_ID = "CLIENT_ID";
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-    private static final SimpleDateFormat ISO8601 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+    private static final SimpleDateFormat ISO8601 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
     private static final String SERVER_URL = "https://mimic-dance.herokuapp.com";
 
@@ -206,12 +206,12 @@ public class APIClient {
     private static String post(String id, String state, String lesson, String program) throws IOException, JSONException {
         JSONObject obj = new JSONObject();
         obj.put("id", id);
-        obj.put("state", "ready");
+        obj.put("state", state);
         obj.put("lesson", lesson);
         obj.put("program", program);
         String json = obj.toString();
 
-        Log.v(TAG, "JSON: " + json);
+        Log.v(TAG, "request: " + json);
 
         OkHttpClient client = new OkHttpClient();
         RequestBody body = RequestBody.create(JSON, json);
