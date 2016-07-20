@@ -14,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.common.collect.Lists;
 
@@ -61,6 +62,8 @@ public abstract class BaseLessonEditorFragment extends EditorFragment {
     View userRightCharacterView;
     @Bind(R.id.button_judge)
     Button judgeButton;
+    @Bind(R.id.waiting_partner_msg)
+    protected TextView waitingMsg;
 
     protected Lesson lesson;
     private Handler handler;

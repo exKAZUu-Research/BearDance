@@ -92,6 +92,8 @@
   <string name="back_to_model">おてほんにもどる</string>
   <string name="check_answer">こたえあわせ</string>
   <string name="partner_is_offline">あいてがみつかりません</string>
+  <string name="waiting_partner">あいてをまっています</string>
+  <string name="waiting_partner_msg">あいてが「こたえあわせ」をおすとはじまるよ</string>
   <string name="check_program">かくにん</string>
   <string name="test_gmail">Gmailでうごかしてみる</string>
   <string name="test_facebook">Facebookでうごかしてみる</string>

@@ -56,6 +56,7 @@ public class DuoLessonEditorFragment extends BaseLessonEditorFragment {
         super.onResume();
         handler = new Handler();
         handler.post(new ConnectionTask());
+        changeJudgeButtonState(APIClient.PartnerState.NONE); // デフォで不可にする
     }
 
     @Override
@@ -98,11 +99,19 @@ public class DuoLessonEditorFragment extends BaseLessonEditorFragment {
 
     private void changeJudgeButtonState(APIClient.PartnerState partnerState) {
         if (BuildConfig.OFFLINE_MODE || !partnerState.isNone()) {
-            judgeButton.setText(R.string.check_answer);
-            judgeButton.setEnabled(!isReady);
+            if (isReady) {
+                judgeButton.setText(R.string.waiting_partner);
+                judgeButton.setEnabled(false);
+                waitingMsg.setVisibility(View.VISIBLE);
+            } else {
+                judgeButton.setText(R.string.check_answer);
+                judgeButton.setEnabled(true);
+                waitingMsg.setVisibility(View.GONE);
+            }
         } else {
             judgeButton.setText(R.string.partner_is_offline);
             judgeButton.setEnabled(false);
+            waitingMsg.setVisibility(View.GONE);
         }
     }
 
