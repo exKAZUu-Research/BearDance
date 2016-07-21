@@ -15,10 +15,9 @@ import com.google.common.collect.Lists;
 import net.exkazuu.mimicdance.CharacterSprite;
 import net.exkazuu.mimicdance.Lessons;
 import net.exkazuu.mimicdance.R;
-import net.exkazuu.mimicdance.interpreter.EventType;
 import net.exkazuu.mimicdance.interpreter.Interpreter;
 import net.exkazuu.mimicdance.interpreter.RobotExecutor;
-import net.exkazuu.mimicdance.pages.lesson.editor.LessonEditorFragment;
+import net.exkazuu.mimicdance.Lesson;
 import net.exkazuu.mimicdance.program.Block;
 import net.exkazuu.mimicdance.program.CodeParser;
 import net.exkazuu.mimicdance.program.UnrolledProgram;
@@ -26,45 +25,28 @@ import net.exkazuu.mimicdance.program.UnrolledProgram;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import jp.fkmsoft.android.framework.util.FragmentUtils;
 
 /**
- * Fragment for Lesson top page
+ * Base class of a fragment for Lesson top page
  */
-public class LessonTopFragment extends Fragment {
-    private static final String ARGS_LESSON_NUMBER = "lessonNumber";
-    private int lessonNumber;
-
+public abstract class BaseLessonTopFragment extends Fragment {
     @Bind(R.id.character_left)
     View leftCharacterView;
     @Bind(R.id.character_right)
     View rightCharacterView;
     @Bind(R.id.image_lesson_logo)
     ImageView lessonLogoImageView;
-
-    private CharacterSprite leftCharacterSprite;
-    private CharacterSprite rightCharacterSprite;
-
+    protected CharacterSprite leftCharacterSprite;
+    protected CharacterSprite rightCharacterSprite;
+    protected Lesson lesson;
     private Handler handler;
     private RobotExecutor robotExecutor;
-
-    public static LessonTopFragment newInstance(int lessonNumber) {
-        LessonTopFragment fragment = new LessonTopFragment();
-
-        Bundle args = new Bundle();
-        args.putInt(ARGS_LESSON_NUMBER, lessonNumber);
-        fragment.setArguments(args);
-
-        return fragment;
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle args = getArguments();
-        this.lessonNumber = args.getInt(ARGS_LESSON_NUMBER);
-
-        this.handler = new Handler();
+        handler = new Handler();
+        lesson = Lesson.loadFromArguments(getArguments());
     }
 
     @Nullable
@@ -73,12 +55,8 @@ public class LessonTopFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_lesson_top, container, false);
 
         ButterKnife.bind(this, root);
-
-        rightCharacterView.setVisibility(Lessons.hasIf(lessonNumber) ? View.VISIBLE : View.INVISIBLE);
-        leftCharacterSprite = CharacterSprite.createCoccoLeft(leftCharacterView);
-        rightCharacterSprite = CharacterSprite.createCoccoRight(rightCharacterView);
-
-        int drawableId = getResources().getIdentifier("lesson_message" + lessonNumber, "drawable", this.getContext().getPackageName());
+        createCharacters();
+        int drawableId = getResources().getIdentifier("lesson_message" + lesson.getLessonNumber(), "drawable", getContext().getPackageName());
         lessonLogoImageView.setImageResource(drawableId);
 
         return root;
@@ -96,8 +74,6 @@ public class LessonTopFragment extends Fragment {
         ButterKnife.unbind(this);
     }
 
-    // region UI event
-
     @OnClick(R.id.button_back)
     void backClicked() {
         FragmentManager manager = getFragmentManager();
@@ -108,26 +84,29 @@ public class LessonTopFragment extends Fragment {
     }
 
     @OnClick(R.id.button_write)
-    void writeClicked() {
-        FragmentUtils.toNextFragment(getFragmentManager(), R.id.container,
-            LessonEditorFragment.newInstance(lessonNumber), true);
-    }
+    abstract void writeClicked();
 
     @OnClick(R.id.button_move)
     void moveClicked() {
-        String coccoCode = Lessons.getCoccoCode(this.lessonNumber);
-        Block program = CodeParser.parse(coccoCode);
-        UnrolledProgram leftUnrolledProgram = program.unroll(EventType.White);
-        UnrolledProgram rightUnrolledProgram = program.unroll(EventType.Yellow);
+        String leftCoccoCode = Lessons.getCoccoCode(lesson.getLessonNumber(), 0);
+        String rightCoccoCode = Lessons.getCoccoCode(lesson.getLessonNumber(), 1);
+        Block leftProgram = CodeParser.parse(leftCoccoCode);
+        Block rightProgram = CodeParser.parse(rightCoccoCode);
+        UnrolledProgram leftUnrolledProgram = getLeftUnrolledProgram(leftProgram);
+        UnrolledProgram rightUnrolledProgram = getRightUnrolledProgram(rightProgram);
 
         if (robotExecutor != null) {
             robotExecutor.terminate();
         }
-        robotExecutor = new RobotExecutor(Lists.newArrayList(Interpreter.createForCocco(leftUnrolledProgram, leftCharacterSprite),
-            Interpreter.createForCocco(rightUnrolledProgram, rightCharacterSprite)), handler, 400);
+        robotExecutor = new RobotExecutor(Lists.newArrayList(Interpreter.createForCocco(leftUnrolledProgram, leftCharacterSprite, 0),
+            Interpreter.createForCocco(rightUnrolledProgram, rightCharacterSprite, 1)), handler, 400);
 
         robotExecutor.start();
     }
 
-    // endregion
+    protected abstract void createCharacters();
+
+    protected abstract UnrolledProgram getLeftUnrolledProgram(Block program);
+
+    protected abstract UnrolledProgram getRightUnrolledProgram(Block program);
 }

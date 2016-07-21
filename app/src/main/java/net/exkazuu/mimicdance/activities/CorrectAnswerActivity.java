@@ -48,7 +48,7 @@ public class CorrectAnswerActivity extends BaseActivity {
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startCoccoActivity(Math.min(lessonNumber + 1, Lessons.getLessonCount()), "", true);
+                startCoccoActivity(Math.min(lessonNumber + 1, Lessons.getLessonCount(true)), "", true);
             }
         });
 

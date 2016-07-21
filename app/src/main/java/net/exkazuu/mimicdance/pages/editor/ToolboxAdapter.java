@@ -61,6 +61,13 @@ public class ToolboxAdapter extends RecyclerView.Adapter<ToolboxAdapter.ViewHold
         holder.mIcon.setImageResource(Command.getImage(command));
 //        holder.bind(command,position,mSelectedPosition);
 
+        Context context = holder.mIcon.getContext();
+        if (mSelectedPosition == position) {
+            holder.mIcon.setBackgroundColor(ContextCompat.getColor(context, R.color.program_selected));
+        } else {
+            holder.mIcon.setBackgroundColor(ContextCompat.getColor(context, R.color.transparency));
+        }
+
     }
 
     @Override
@@ -92,12 +99,6 @@ public class ToolboxAdapter extends RecyclerView.Adapter<ToolboxAdapter.ViewHold
             if (mListener == null) {
                 return;
             }
-            Context context = mIcon.getContext();
-            if (mSelectedPosition == getAdapterPosition()) {
-                mIcon.setBackgroundColor(ContextCompat.getColor(context, R.color.transparency));
-            } else {
-                mIcon.setBackgroundColor(ContextCompat.getColor(context, R.color.program_selected));
-            }
 
             mSelectedPosition = getAdapterPosition();
 
@@ -111,5 +112,10 @@ public class ToolboxAdapter extends RecyclerView.Adapter<ToolboxAdapter.ViewHold
 
         }
 
+    }
+
+    public void clearSelection() {
+        mSelectedPosition = -1;
+        notifyDataSetChanged();
     }
 }

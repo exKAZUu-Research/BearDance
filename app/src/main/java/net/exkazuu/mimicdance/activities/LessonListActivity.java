@@ -15,7 +15,7 @@ import java.util.List;
 public class LessonListActivity extends ListActivity {
     private void makeList() {
         List<String> lessonList = new ArrayList<>();
-        int lessonCount = Lessons.getLessonCount();
+        int lessonCount = Lessons.getLessonCount(true);
         for (int i = 1; i <= lessonCount; i++) {
             lessonList.add("レッスン" + i);
         }

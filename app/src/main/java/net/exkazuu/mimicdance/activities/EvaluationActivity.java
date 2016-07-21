@@ -60,7 +60,7 @@ public class EvaluationActivity extends BaseActivity {
         Intent intent = getIntent();
         lessonNumber = intent.getIntExtra("lessonNumber", 1);
         piyoCode = intent.getStringExtra("piyoCode");
-        String coccoCode = Lessons.getCoccoCode(lessonNumber);
+        String coccoCode = Lessons.getCoccoCode(lessonNumber, 0);
 
         Block piyoBlock = CodeParser.parse(piyoCode);
         Block coccoBlock = CodeParser.parse(coccoCode);
@@ -134,7 +134,7 @@ public class EvaluationActivity extends BaseActivity {
             Interpreter altCoccoExecutor = Interpreter.createForCocco(altCoccoProgram, altCoccoViewSet);
 
             // 解析&実行(白)
-            if (Lessons.hasIf(lessonNumber)) {
+            if (Lessons.hasIf(lessonNumber, 0)) {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -146,7 +146,7 @@ public class EvaluationActivity extends BaseActivity {
             }
             dance(piyoExecutor, coccoExecutor);
 
-            if (Lessons.hasIf(lessonNumber)) {
+            if (Lessons.hasIf(lessonNumber, 0)) {
                 //表示するキャラクターを変更
                 handler.post(new Runnable() {
                     @Override
@@ -178,7 +178,7 @@ public class EvaluationActivity extends BaseActivity {
 
             int diffCount = piyoProgram.countDifferences(coccoProgram);
             int size = coccoProgram.size();
-            if (Lessons.hasIf(lessonNumber)) {
+            if (Lessons.hasIf(lessonNumber, 0)) {
                 diffCount += altPiyoProgram.countDifferences(altCoccoProgram);
                 size += altCoccoProgram.size();
             }

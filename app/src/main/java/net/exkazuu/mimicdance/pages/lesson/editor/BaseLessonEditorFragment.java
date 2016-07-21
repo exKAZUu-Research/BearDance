@@ -13,6 +13,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.common.collect.Lists;
 
@@ -25,7 +27,7 @@ import net.exkazuu.mimicdance.interpreter.RobotExecutor;
 import net.exkazuu.mimicdance.models.program.Program;
 import net.exkazuu.mimicdance.models.program.ProgramDAO;
 import net.exkazuu.mimicdance.pages.editor.EditorFragment;
-import net.exkazuu.mimicdance.pages.lesson.judge.JudgeFragment;
+import net.exkazuu.mimicdance.Lesson;
 import net.exkazuu.mimicdance.program.CodeParser;
 import net.exkazuu.mimicdance.program.UnrolledProgram;
 
@@ -35,13 +37,11 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import jp.fkmsoft.android.framework.util.FragmentUtils;
 
 /**
  * Editor for Lesson
  */
-public class LessonEditorFragment extends EditorFragment {
-    private static final String ARGS_LESSON_NUMBER = "lessonNumber";
+public abstract class BaseLessonEditorFragment extends EditorFragment {
     public static final String STACK_TAG = "lessonEdit";
 
     @Bind(R.id.root)
@@ -60,23 +60,18 @@ public class LessonEditorFragment extends EditorFragment {
     View userLeftCharacterView;
     @Bind(R.id.user_character_right)
     View userRightCharacterView;
+    @Bind(R.id.button_judge)
+    Button judgeButton;
+    @Bind(R.id.waiting_partner_msg)
+    protected TextView waitingMsg;
+
+    protected Lesson lesson;
     private Handler handler;
     private RobotExecutor robotExecutor;
-    private int lessonNumber;
     private CharacterSprite leftCharacterSprite;
     private CharacterSprite rightCharacterSprite;
     private CharacterSprite userLeftCharacterSprite;
     private CharacterSprite userRightCharacterSprite;
-
-    public static LessonEditorFragment newInstance(int lessonNumber) {
-        LessonEditorFragment fragment = new LessonEditorFragment();
-
-        Bundle args = new Bundle();
-        args.putInt(ARGS_LESSON_NUMBER, lessonNumber);
-        fragment.setArguments(args);
-
-        return fragment;
-    }
 
     @Override
     protected ProgramDAO createProgramDAO() {
@@ -88,7 +83,7 @@ public class LessonEditorFragment extends EditorFragment {
             @Override
             public List<Program> load() {
                 List<Program> list = new ArrayList<>();
-                for (int i = 0; i < Lessons.getMaxStep(lessonNumber); ++i) {
+                for (int i = 0; i < Lessons.getMaxStep(lesson.getLessonNumber()); ++i) {
                     list.add(new Program());
                 }
                 return list;
@@ -99,8 +94,7 @@ public class LessonEditorFragment extends EditorFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle args = getArguments();
-        this.lessonNumber = args.getInt(ARGS_LESSON_NUMBER);
+        lesson = Lesson.loadFromArguments(getArguments());
     }
 
     @Nullable
@@ -117,8 +111,7 @@ public class LessonEditorFragment extends EditorFragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(inflater.getContext(), LinearLayoutManager.HORIZONTAL, false));
         initTab();
 
-        rightCharacterView.setVisibility(Lessons.hasIf(lessonNumber) ? View.VISIBLE : View.INVISIBLE);
-        userRightCharacterView.setVisibility(Lessons.hasIf(lessonNumber) ? View.VISIBLE : View.INVISIBLE);
+        setCharacterVisibilities();
         leftCharacterSprite = CharacterSprite.createCoccoLeft(leftCharacterView);
         rightCharacterSprite = CharacterSprite.createCoccoRight(rightCharacterView);
         userLeftCharacterSprite = CharacterSprite.createPiyoLeft(userLeftCharacterView);
@@ -129,14 +122,14 @@ public class LessonEditorFragment extends EditorFragment {
             position2Group = Lists.newArrayList(0, 1, 2, 3, 4);
             mTabLayout.removeTabAt(4);
             position2Group.remove(4);
-            if (!Lessons.hasIf(lessonNumber)) {
+            if (!lesson.hasIf()) {
                 mTabLayout.removeTabAt(3);
                 mTabLayout.removeTabAt(2);
                 position2Group.remove(3);
                 position2Group.remove(2);
             }
 
-            if (!Lessons.hasLoop(lessonNumber)) {
+            if (!lesson.hasLoop()) {
                 mTabLayout.removeTabAt(1);
                 position2Group.remove(1);
             }
@@ -144,6 +137,8 @@ public class LessonEditorFragment extends EditorFragment {
 
         return root;
     }
+
+    abstract void setCharacterVisibilities();
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -162,37 +157,32 @@ public class LessonEditorFragment extends EditorFragment {
     }
 
     @OnClick(R.id.button_judge)
-    void judgeClicked() {
-        FragmentUtils.toNextFragment(getFragmentManager(), R.id.container,
-            JudgeFragment.newInstance(lessonNumber, mAdapter.getAsArray()), true, STACK_TAG);
-    }
+    abstract void judgeClicked();
 
     @OnClick({R.id.character_left, R.id.character_right})
     void checkProgramClicked() {
-        String answerCode = Lessons.getCoccoCode(lessonNumber);
+        String answerCode = lesson.getCoccoCode();
         UnrolledProgram leftProgram = CodeParser.parse(answerCode).unroll(EventType.White);
         UnrolledProgram rightProgram = CodeParser.parse(answerCode).unroll(EventType.Yellow);
-        if (robotExecutor != null) {
-            robotExecutor.terminate();
-        }
-        robotExecutor = new RobotExecutor(Lists.newArrayList(
-            Interpreter.createForCocco(leftProgram, leftCharacterSprite),
-            Interpreter.createForCocco(rightProgram, rightCharacterSprite)), handler, 300);
-        robotExecutor.start();
+        checkProgram(leftProgram, rightProgram, leftCharacterSprite, rightCharacterSprite);
     }
 
     @OnClick({R.id.user_character_left, R.id.user_character_right})
     void checkUserProgramClicked() {
-        // Get current program
-        List<Program> programList = mAdapter.getAsList();
-        UnrolledProgram leftProgram = CodeParser.parse(programList).unroll(EventType.White);
-        UnrolledProgram rightProgram = CodeParser.parse(programList).unroll(EventType.Yellow);
+        List<Program> userProgramList = mAdapter.getAsList();
+        UnrolledProgram leftProgram = CodeParser.parse(userProgramList).unroll(EventType.White);
+        UnrolledProgram rightProgram = CodeParser.parse(userProgramList).unroll(EventType.Yellow);
+        checkProgram(leftProgram, rightProgram, userLeftCharacterSprite, userRightCharacterSprite);
+    }
+
+    void checkProgram(UnrolledProgram leftProgram, UnrolledProgram rightProgram, CharacterSprite leftCharacterSprite, CharacterSprite rightCharacterSprite) {
         if (robotExecutor != null) {
             robotExecutor.terminate();
         }
-        robotExecutor = new RobotExecutor(Lists.newArrayList(
-            Interpreter.createForCocco(leftProgram, userLeftCharacterSprite),
-            Interpreter.createForCocco(rightProgram, userRightCharacterSprite)), handler, 300);
+        List<Interpreter> interpreters = getInterpreters(leftProgram, rightProgram, leftCharacterSprite, rightCharacterSprite);
+        robotExecutor = new RobotExecutor(interpreters, handler, 300);
         robotExecutor.start();
     }
+
+    abstract List<Interpreter> getInterpreters(UnrolledProgram leftProgram, UnrolledProgram rightProgram, CharacterSprite leftCharacterSprite, CharacterSprite rightCharacterSprite);
 }

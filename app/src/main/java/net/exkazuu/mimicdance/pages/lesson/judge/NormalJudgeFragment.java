@@ -1,45 +1,32 @@
 package net.exkazuu.mimicdance.pages.lesson.judge;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 
 import net.exkazuu.mimicdance.CharacterSprite;
-import net.exkazuu.mimicdance.Lessons;
 import net.exkazuu.mimicdance.R;
 import net.exkazuu.mimicdance.interpreter.EventType;
 import net.exkazuu.mimicdance.interpreter.Interpreter;
 import net.exkazuu.mimicdance.interpreter.RobotExecutor;
-import net.exkazuu.mimicdance.models.program.Program;
+import net.exkazuu.mimicdance.Lesson;
 import net.exkazuu.mimicdance.program.Block;
 import net.exkazuu.mimicdance.program.CodeParser;
 import net.exkazuu.mimicdance.program.UnrolledProgram;
-
-import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import jp.fkmsoft.android.framework.util.FragmentUtils;
 
-/**
- * Fragment for Lesson top page
- */
-public class JudgeFragment extends Fragment {
-    private static final String ARGS_LESSON_NUMBER = "lessonNumber";
+public class NormalJudgeFragment extends BaseJudgeFragment {
     private static final String ARGS_USER_PROGRAM_LIST = "userProgramList";
-
-    private int lessonNumber;
 
     @Bind(R.id.user_character)
     View userCharacter;
@@ -50,20 +37,17 @@ public class JudgeFragment extends Fragment {
     @Bind(R.id.white_or_orange)
     TextView whiteOrYellow;
 
+    protected String programList;
     private CharacterSprite userCharacterSprite, altUserCharacterSprite;
     private CharacterSprite answerCharacterSprite, altAnswerCharacterSprite;
 
-    private Handler handler;
-    private RobotExecutor robotExecutor, robotExecutor2;
-    private ArrayList<Program> programList;
-
-    public static JudgeFragment newInstance(int lessonNumber, Program[] programList) {
-        JudgeFragment fragment = new JudgeFragment();
+    public static NormalJudgeFragment newInstance(Lesson lesson, String programList) {
+        NormalJudgeFragment fragment = new NormalJudgeFragment();
 
         Bundle args = new Bundle();
-        args.putInt(ARGS_LESSON_NUMBER, lessonNumber);
-        args.putParcelableArray(ARGS_USER_PROGRAM_LIST, programList);
+        args.putString(ARGS_USER_PROGRAM_LIST, programList);
         fragment.setArguments(args);
+        lesson.saveToArguments(fragment);
 
         return fragment;
     }
@@ -72,29 +56,21 @@ public class JudgeFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
-        this.lessonNumber = args.getInt(ARGS_LESSON_NUMBER);
-        this.programList = new ArrayList<>();
-        Parcelable[] list = args.getParcelableArray(ARGS_USER_PROGRAM_LIST);
-        if (list != null) {
-            for (Parcelable p : list) {
-                this.programList.add((Program) p);
-            }
-        }
-        this.handler = new Handler();
+        lesson = Lesson.loadFromArguments(args);
+        programList = args.getString(ARGS_USER_PROGRAM_LIST);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_judge, container, false);
-
         ButterKnife.bind(this, root);
 
         altUserCharacterSprite = CharacterSprite.createPiyoRight(userCharacter);
         altAnswerCharacterSprite = CharacterSprite.createCoccoRight(answerCharacter);
         userCharacterSprite = CharacterSprite.createPiyoLeft(userCharacter);
         answerCharacterSprite = CharacterSprite.createCoccoLeft(answerCharacter);
-        userCodeView.setText(Joiner.on("\n").skipNulls().join(Program.getCodeLines(programList)));
+        userCodeView.setText(programList);
 
         return root;
     }
@@ -103,7 +79,7 @@ public class JudgeFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        String answerCode = Lessons.getCoccoCode(lessonNumber);
+        String answerCode = lesson.getCoccoCode();
         Block userProgram = CodeParser.parse(programList);
         Block answerProgram = CodeParser.parse(answerCode);
         final UnrolledProgram userUnrolledProgram = userProgram.unroll(EventType.White);
@@ -120,13 +96,13 @@ public class JudgeFragment extends Fragment {
             public void run() {
                 int diffCount = userUnrolledProgram.countDifferences(answerUnrolledProgram);
                 int size = answerUnrolledProgram.size();
-                if (Lessons.hasIf(lessonNumber)) {
+                if (lesson.hasIf()) {
                     diffCount += altUserUnrolledProgram.countDifferences(altAnswerUnrolledProgram);
                     size += altAnswerUnrolledProgram.size();
                 }
                 if (diffCount == 0) {
                     FragmentUtils.toNextFragment(getFragmentManager(), R.id.container,
-                        CorrectAnswerFragment.newInstance(lessonNumber), true);
+                        CorrectAnswerFragment.newInstance(lesson), true);
                 } else {
                     boolean almostCorrect = diffCount <= size / 3;
                     FragmentUtils.toNextFragment(getFragmentManager(), R.id.container,
@@ -135,7 +111,7 @@ public class JudgeFragment extends Fragment {
             }
         };
 
-        if (Lessons.hasIf(lessonNumber)) {
+        if (lesson.hasIf()) {
             whiteOrYellow.setText("しろいひよこのばあい");
             whiteOrYellow.setTextColor(0xFF807700);
         }
@@ -144,7 +120,7 @@ public class JudgeFragment extends Fragment {
             Interpreter.createForCocco(answerUnrolledProgram, answerCharacterSprite)), handler) {
             @Override
             public void afterRun() {
-                if (Lessons.hasIf(lessonNumber)) {
+                if (lesson.hasIf()) {
                     whiteOrYellow.setText("きいろいひよこのばあい");
                     whiteOrYellow.setTextColor(0xFFFF3300);
                     robotExecutor = new RobotExecutor(Lists.newArrayList(Interpreter.createForPiyo(altUserUnrolledProgram, altUserCharacterSprite, userCodeView),
@@ -164,16 +140,6 @@ public class JudgeFragment extends Fragment {
         robotExecutor.start();
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-
-        ButterKnife.unbind(this);
-        robotExecutor.terminate();
-    }
-
-    // region UI event
-
     @OnClick(R.id.button_lesson_editor)
     void lessonEditorClicked() {
         FragmentManager manager = getFragmentManager();
@@ -182,6 +148,4 @@ public class JudgeFragment extends Fragment {
         }
         manager.popBackStack();
     }
-
-    // endregion
 }

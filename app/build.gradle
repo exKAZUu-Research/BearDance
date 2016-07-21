@@ -16,13 +16,24 @@ android {
         applicationId "net.exkazuu.oshirasebear"
         minSdkVersion 19
         targetSdkVersion 21
-        versionCode 4
-        versionName "1.0.5"
+        versionCode 5
+        versionName "2.0.0"
     }
     buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    productFlavors {
+        offline {
+            buildConfigField "boolean", "OFFLINE_MODE", "true"
+        }
+        production {
+            buildConfigField "boolean", "OFFLINE_MODE", "false"
         }
     }
     packagingOptions {
@@ -68,6 +79,7 @@ dependencies {
     compile 'com.michaelpardo:activeandroid:3.1.0-SNAPSHOT'
     compile 'com.github.tavendo:AutobahnAndroid:v0.5.2'
     compile 'com.jakewharton:butterknife:7.0.1'
+    compile 'com.squareup.okhttp3:okhttp:3.4.1'
     testCompile 'junit:junit:4.+'
     testCompile 'org.robolectric:robolectric:3.0'
 }

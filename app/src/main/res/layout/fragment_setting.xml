@@ -1,0 +1,146 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  tools:context="net.exkazuu.mimicdance.pages.settings.SettingFragment">
+
+  <android.support.design.widget.AppBarLayout
+    android:id="@+id/appbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.v7.widget.Toolbar
+      android:id="@+id/toolbar"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content" />
+  </android.support.design.widget.AppBarLayout>
+
+  <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerInParent="true"
+    android:layout_marginRight="8dp"
+    android:layout_toLeftOf="@+id/editText"
+    android:text="@string/deviceId"
+    android:textAppearance="?android:attr/textAppearanceLarge"
+    android:id="@+id/textView"/>
+
+  <EditText
+    android:id="@+id/editText"
+    android:layout_width="200dp"
+    android:layout_height="wrap_content"
+    android:inputType="text"
+    android:layout_alignBaseline="@+id/save_button"
+    android:layout_alignBottom="@+id/save_button"
+    android:layout_centerHorizontal="true"/>
+
+  <Button
+    android:id="@+id/save_button"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerInParent="true"
+    android:layout_marginLeft="8dp"
+    android:layout_toRightOf="@+id/editText"
+    android:text="@string/save" />
+
+  <LinearLayout
+    android:orientation="horizontal"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/save_button"
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="30dp"
+    android:id="@+id/linearLayout">
+
+    <Button
+      android:layout_width="50dp"
+      android:layout_height="wrap_content"
+      android:text="1"
+      android:id="@+id/id_button_1"/>
+
+    <Button
+      android:layout_width="50dp"
+      android:layout_height="wrap_content"
+      android:text="2"
+      android:id="@+id/id_button_2"/>
+
+    <Button
+      android:layout_width="50dp"
+      android:layout_height="wrap_content"
+      android:text="3"
+      android:id="@+id/id_button_3"/>
+
+    <Button
+      android:layout_width="50dp"
+      android:layout_height="wrap_content"
+      android:text="4"
+      android:id="@+id/id_button_4"/>
+
+    <Button
+      android:layout_width="50dp"
+      android:layout_height="wrap_content"
+      android:text="5"
+      android:id="@+id/id_button_5"/>
+
+    <Button
+      android:layout_width="50dp"
+      android:layout_height="wrap_content"
+      android:text="6"
+      android:id="@+id/id_button_6"/>
+
+    <Button
+      android:layout_width="50dp"
+      android:layout_height="wrap_content"
+      android:text="7"
+      android:id="@+id/id_button_7"/>
+
+    <Button
+      android:layout_width="50dp"
+      android:layout_height="wrap_content"
+      android:text="8"
+      android:id="@+id/id_button_8"/>
+
+    <Button
+      android:layout_width="50dp"
+      android:layout_height="wrap_content"
+      android:text="9"
+      android:id="@+id/id_button_9"/>
+
+    <Button
+      android:layout_width="50dp"
+      android:layout_height="wrap_content"
+      android:text="0"
+      android:id="@+id/id_button_0"/>
+
+    <Button
+      android:layout_width="50dp"
+      android:layout_height="wrap_content"
+      android:text="A"
+      android:id="@+id/id_button_a"/>
+
+    <Button
+      android:layout_width="50dp"
+      android:layout_height="wrap_content"
+      android:text="B"
+      android:id="@+id/id_button_b"/>
+
+  </LinearLayout>
+
+  <Button
+    android:id="@+id/random_gen_button"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="@string/random_gen"
+    android:layout_below="@+id/linearLayout"
+    android:layout_alignStart="@+id/textView"
+    android:layout_marginTop="20dp"/>
+
+  <Button
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/clear_button"
+    android:layout_alignTop="@+id/random_gen_button"
+    android:layout_alignEnd="@+id/save_button"
+    android:text="@string/clear"/>
+
+</RelativeLayout>

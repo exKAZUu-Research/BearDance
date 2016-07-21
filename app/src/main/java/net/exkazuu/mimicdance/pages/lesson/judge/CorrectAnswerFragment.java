@@ -11,11 +11,15 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import net.exkazuu.mimicdance.Lessons;
 import net.exkazuu.mimicdance.R;
-import net.exkazuu.mimicdance.pages.lesson.top.LessonTopFragment;
+import net.exkazuu.mimicdance.Lesson;
+import net.exkazuu.mimicdance.pages.lesson.top.BaseLessonTopFragment;
+import net.exkazuu.mimicdance.pages.lesson.top.DuoLessonTopFragment;
+import net.exkazuu.mimicdance.pages.lesson.top.NormalLessonTopFragment;
 import net.exkazuu.mimicdance.pages.title.TitleFragment;
 
 import butterknife.Bind;
@@ -27,32 +31,25 @@ import jp.fkmsoft.android.framework.util.FragmentUtils;
  * Fragment for Lesson top page
  */
 public class CorrectAnswerFragment extends Fragment {
-    private static final String ARGS_LESSON_NUMBER = "lessonNumber";
-
     @Bind(R.id.cocco)
     ImageView coccoView;
     @Bind(R.id.piyo)
     ImageView piyoView;
+    @Bind(R.id.next_lesson)
+    Button nextLessonButton;
 
-    private AnimationDrawable coccoAnimation;
-    private AnimationDrawable piyoAnimation;
-    private int lessonNumber;
+    private Lesson lesson;
 
-    public static CorrectAnswerFragment newInstance(int lessonNumber) {
+    public static CorrectAnswerFragment newInstance(Lesson lesson) {
         CorrectAnswerFragment fragment = new CorrectAnswerFragment();
-
-        Bundle args = new Bundle();
-        args.putInt(ARGS_LESSON_NUMBER, lessonNumber);
-        fragment.setArguments(args);
-
+        lesson.saveToArguments(fragment);
         return fragment;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle args = getArguments();
-        lessonNumber = args.getInt(ARGS_LESSON_NUMBER);
+        lesson = Lesson.loadFromArguments(getArguments());
     }
 
     @Nullable
@@ -64,6 +61,12 @@ public class CorrectAnswerFragment extends Fragment {
 
         startCoccoAnimation(this.getContext(), coccoView);
         startPiyoAnimation(this.getContext(), piyoView);
+
+        if (lesson.hasNextLesson()) {
+            nextLessonButton.setText(R.string.next_lesson);
+        } else {
+            nextLessonButton.setText(R.string.goto_top);
+        }
 
         return root;
     }
@@ -99,7 +102,7 @@ public class CorrectAnswerFragment extends Fragment {
         if (manager == null) {
             return;
         }
-        if (lessonNumber + 1 > Lessons.getLessonCount()) {
+        if (!lesson.hasNextLesson()) {
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace(R.id.container, TitleFragment.newInstance());
             transaction.commit();
@@ -108,15 +111,20 @@ public class CorrectAnswerFragment extends Fragment {
             manager.popBackStack();
             manager.popBackStack();
             manager.popBackStack();
-            FragmentUtils.toNextFragment(getFragmentManager(), R.id.container,
-                LessonTopFragment.newInstance(Math.min(lessonNumber + 1, Lessons.getLessonCount())), true);
+
+            int nextLessonNumber = lesson.getLessonNumber() + 1;
+            Lesson nextLesson = new Lesson(nextLessonNumber, lesson.getCharacterNumber());
+            BaseLessonTopFragment lessonTopFragment = Lessons.isNormalLesson(nextLessonNumber) ?
+                NormalLessonTopFragment.newInstance(nextLesson) :
+                DuoLessonTopFragment.newInstance(nextLesson);
+            FragmentUtils.toNextFragment(getFragmentManager(), R.id.container, lessonTopFragment, true);
         }
     }
 
     // endregion
 
     void startCoccoAnimation(Context con, View v) {
-        coccoAnimation = new AnimationDrawable();
+        AnimationDrawable coccoAnimation = new AnimationDrawable();
 
         // 画像の読み込み //
         Drawable frame1 = con.getResources().getDrawable(R.drawable.cocco_jump1);
@@ -137,7 +145,7 @@ public class CorrectAnswerFragment extends Fragment {
     }
 
     void startPiyoAnimation(Context con, View v) {
-        piyoAnimation = new AnimationDrawable();
+        AnimationDrawable piyoAnimation = new AnimationDrawable();
 
         // 画像の読み込み
         Drawable frame1 = con.getResources().getDrawable(R.drawable.piyo_jump1);
@@ -156,4 +164,5 @@ public class CorrectAnswerFragment extends Fragment {
         // アニメーション開始
         piyoAnimation.start();
     }
+
 }

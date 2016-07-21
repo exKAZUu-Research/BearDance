@@ -18,6 +18,7 @@ public class Command {
     public static final String RIGHT_HAND_DOWN = "right_hand_down";
     public static final String LEFT_HAND_UP = "left_hand_up";
     public static final String LEFT_HAND_DOWN = "left_hand_down";
+    public static final String TOUCH = "touch";
 
     public static final String IF = "if";
     public static final String ELSE = "else";
@@ -52,6 +53,7 @@ public class Command {
     public static final int GROUP_CONDITION = 2;
     public static final int GROUP_COLOR = 3;
     public static final int GROUP_EVENT = 4;
+    public static final int GROUP_DUO_ACTION = 5;
 
 
     private static final Map<String, Integer> sCommandImageMap;
@@ -79,6 +81,9 @@ public class Command {
         sCommandGroupMap.put(GROUP_EVENT, new String[]{
             GMAIL, FACEBOOK, TWITTER, CALENDER
         });
+        sCommandGroupMap.put(GROUP_DUO_ACTION, new String[]{
+            TOUCH
+        });
 
         // コマンドとアイコンの対応表
         sCommandImageMap = new HashMap<>();
@@ -86,6 +91,7 @@ public class Command {
         sCommandImageMap.put(RIGHT_HAND_DOWN, R.drawable.icon_right_hand_down);
         sCommandImageMap.put(LEFT_HAND_UP, R.drawable.icon_left_hand_up);
         sCommandImageMap.put(LEFT_HAND_DOWN, R.drawable.icon_left_hand_down);
+        sCommandImageMap.put(TOUCH, R.drawable.icon_touch);
         sCommandImageMap.put(NUMBER_0, R.drawable.icon_num0);
         sCommandImageMap.put(NUMBER_1, R.drawable.icon_num1);
         sCommandImageMap.put(NUMBER_2, R.drawable.icon_num2);
@@ -114,6 +120,7 @@ public class Command {
         sCommandCode.put(RIGHT_HAND_DOWN, IconType.RightHandDown.code);
         sCommandCode.put(LEFT_HAND_UP, IconType.LeftHandUp.code);
         sCommandCode.put(LEFT_HAND_DOWN, IconType.LeftHandDown.code);
+        sCommandCode.put(TOUCH, IconType.Touch.code);
         sCommandCode.put(NUMBER_0, IconType.Number0.code);
         sCommandCode.put(NUMBER_1, IconType.Number1.code);
         sCommandCode.put(NUMBER_2, IconType.Number2.code);

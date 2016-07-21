@@ -6,8 +6,6 @@ import android.os.Parcelable;
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
@@ -44,6 +42,11 @@ public class Program implements Parcelable {
         return Joiner.on(" ").skipNulls().join(codes);
     }
 
+    @Override
+    public String toString() {
+        return String.format("\"%s\", \"%s\"", commands[0], commands[1]);
+    }
+
     public static ArrayList<String> getCodeLines(List<Program> programs) {
         ArrayList<String> lines = Lists.newArrayList(Lists.transform(programs, new Function<Program, String>() {
             @Override
@@ -55,6 +58,10 @@ public class Program implements Parcelable {
             lines.remove(i);
         }
         return lines;
+    }
+
+    public static String getMultilineCode(Program[] programs) {
+        return Joiner.on("\n").skipNulls().join(getCodeLines(Arrays.asList(programs)));
     }
 
     // region Parcelable

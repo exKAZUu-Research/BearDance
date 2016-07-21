@@ -1,5 +1,6 @@
 package net.exkazuu.mimicdance.program;
 
+import net.exkazuu.mimicdance.interpreter.IconType;
 import net.exkazuu.mimicdance.interpreter.EventType;
 import net.exkazuu.mimicdance.models.program.Program;
 
@@ -10,7 +11,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CodeParser {
-
     private int lineIndex;
 
     private CodeParser() {
@@ -40,9 +40,9 @@ public class CodeParser {
 
     private Statement parseStatement(List<String> lines) {
         String line = lines.get(lineIndex);
-        if (line.contains("くりかえし")) {
+        if (line.contains(IconType.Loop.code)) {
             return parseLoop(lines);
-        } else if (line.contains("もしも")) {
+        } else if (line.contains(IconType.If.code)) {
             return parseIf(lines);
         }
         return new Action(line, lineIndex);
@@ -50,11 +50,11 @@ public class CodeParser {
 
     private IfStatement parseIf(List<String> lines) {
         String firstLine = lines.get(lineIndex++);
-        assert firstLine.contains("もしも");
-        Block trueBlock = parseBlock(lines, new String[]{"もしくは", "もしおわり"});
+        assert firstLine.contains(IconType.If.code);
+        Block trueBlock = parseBlock(lines, new String[]{IconType.Else.code, IconType.EndIf.code});
         Block falseBlock;
-        if (lineIndex < lines.size() && lines.get(lineIndex++).contains("もしくは")) {
-            falseBlock = parseBlock(lines, new String[]{"もしおわり"});
+        if (lineIndex < lines.size() && lines.get(lineIndex++).contains(IconType.Else.code)) {
+            falseBlock = parseBlock(lines, new String[]{IconType.EndIf.code});
         } else {
             falseBlock = new Block();
         }
@@ -64,8 +64,8 @@ public class CodeParser {
 
     private LoopStatement parseLoop(List<String> lines) {
         String firstLine = lines.get(lineIndex++);
-        assert firstLine.contains("くりかえし");
-        Block block = parseBlock(lines, new String[]{"ここまで"});
+        assert firstLine.contains(IconType.Loop.code);
+        Block block = parseBlock(lines, new String[]{IconType.EndLoop.code});
         return new LoopStatement(block, readCount(firstLine));
     }
 

@@ -56,7 +56,7 @@
       android:layout_height="wrap_content"
       android:layout_gravity="center_vertical"
       android:layout_weight="1"
-      android:text="お手本をみる"/>
+      android:text="@string/look_answer"/>
 
     <Button
       android:id="@+id/next_lesson"
@@ -64,7 +64,7 @@
       android:layout_height="wrap_content"
       android:layout_gravity="center_vertical"
       android:layout_weight="1"
-      android:text="つぎのもんだいへ"/>
+      android:text="@string/next_lesson"/>
   </LinearLayout>
 </LinearLayout>
 
