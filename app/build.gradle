@@ -13,7 +13,7 @@ android {
     buildToolsVersion "22.0.1"
 
     defaultConfig {
-        applicationId "com.willingring.oshirasebear"
+        applicationId "net.exkazuu.oshirasebear"
         minSdkVersion 19
         targetSdkVersion 21
         versionCode 5
