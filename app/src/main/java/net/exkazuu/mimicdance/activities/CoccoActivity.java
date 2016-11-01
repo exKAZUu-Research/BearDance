@@ -34,7 +34,7 @@ public class CoccoActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Timer.start();
+//        Timer.start();
 
         loadData();
         initializeScreen();

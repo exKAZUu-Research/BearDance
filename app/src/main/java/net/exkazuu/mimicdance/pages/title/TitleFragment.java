@@ -46,6 +46,7 @@ public class TitleFragment extends Fragment {
 
     @Bind(R.id.player_number)
     EditText playerNumET;
+    private int playerNum=0;
 
     public static TitleFragment newInstance() {
         TitleFragment fragment = new TitleFragment();
@@ -79,8 +80,7 @@ public class TitleFragment extends Fragment {
 
         //TODO ここで通知終わり
         Timer.stop();
-        int playerNum = Integer.getInteger(playerNumET.toString(),0);
-        Toast.makeText(getContext(), playerNum + "," + Timer.getTime(), Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), "" + Timer.getTime(), Toast.LENGTH_LONG).show();
 
 //        getActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
 
@@ -122,18 +122,26 @@ public class TitleFragment extends Fragment {
     void notificationClicked() {
         FragmentUtils.toNextFragment(getFragmentManager(), R.id.container,
             NotificationEditorFragment.newInstance(), true);
+
         //TODO ここで通知タイマースタート
-        Timer.start();
-        Toast.makeText(getContext(),"timer start", Toast.LENGTH_SHORT).show();
+        Log.v("timer", "player number:"+playerNumET.getText().toString());
+        String s = playerNumET.getText().toString();
+        if(s.equals("")) playerNum = Integer.parseInt(s);
+        Timer.start(playerNum, 0);
+//        Toast.makeText(getContext(), "timer start:" + playerNum, Toast.LENGTH_SHORT).show();
     }
 
     @OnClick(R.id.start_button)
     void startClicked() {
         FragmentUtils.toNextFragment(getFragmentManager(), R.id.container,
             LessonListFragment.newInstance(true), true);
-  //TODO ここでレッスンタイマースタート
-        Timer.start();
-        Toast.makeText(getContext(),"timer start", Toast.LENGTH_SHORT).show();
+
+        //TODO ここでレッスンタイマースタート
+        Log.v("timer", "player number:"+playerNumET.getText().toString());
+        String s = playerNumET.getText().toString();
+        if(s.equals("")) playerNum = Integer.parseInt(s);
+        Timer.start(playerNum, 0);
+//        Toast.makeText(getContext(), "timer start:" + playerNum, Toast.LENGTH_SHORT).show();
     }
 
     @OnClick(R.id.duo_button)
