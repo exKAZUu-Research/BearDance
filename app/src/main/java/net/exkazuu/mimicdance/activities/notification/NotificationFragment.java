@@ -21,8 +21,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import net.exkazuu.mimicdance.R;
+import net.exkazuu.mimicdance.Timer;
 import net.exkazuu.mimicdance.models.program.Command;
 import net.exkazuu.mimicdance.models.program.Program;
 import net.exkazuu.mimicdance.models.program.ProgramDAO;
@@ -198,6 +200,11 @@ public class NotificationFragment extends Fragment {
             case R.id.action_quit:
                 getFragmentManager().beginTransaction().remove(this).commit();
                 getActivity().finish();
+
+                //TODO ここで通知終わり
+//                Timer.stop();
+//                Toast.makeText(getContext(), "" + Timer.getTime(), Toast.LENGTH_LONG).show();
+
                 return true;
         }
         return super.onOptionsItemSelected(item);

@@ -12,10 +12,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import net.exkazuu.mimicdance.Lesson;
 import net.exkazuu.mimicdance.Lessons;
 import net.exkazuu.mimicdance.R;
+import net.exkazuu.mimicdance.Timer;
 import net.exkazuu.mimicdance.models.APIClient;
 import net.exkazuu.mimicdance.pages.lesson.top.BaseLessonTopFragment;
 import net.exkazuu.mimicdance.pages.lesson.top.DuoLessonTopFragment;
@@ -95,6 +97,10 @@ public class LessonListFragment extends Fragment {
                 return;
             }
             manager.popBackStack();
+            //TODO レッスンタイマー終了はここで
+//            Timer.stop();
+//            Toast.makeText(getContext(),""+Timer.getTime(),Toast.LENGTH_LONG).show();
+
         }
     };
 

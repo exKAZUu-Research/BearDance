@@ -103,5 +103,6 @@
   <string name="select_command_first">アイコンか、プログラムが入っているところをえらんでね</string>
   <string name="next_lesson">つぎのもんだいへ</string>
   <string name="goto_top">さいしょにもどる</string>
+  <string name="input_your_number">番号を入れてね</string>
 
 </resources>

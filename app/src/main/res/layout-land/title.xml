@@ -69,6 +69,19 @@
     android:layout_toEndOf="@+id/notification_button"
     android:text="@string/Title_duo_button"
     android:textSize="24sp"
+    android:visibility="gone"/>
+  <!--一時的に二入でダンスボタンは隠した-->
+
+  <EditText
+    android:id="@+id/player_number"
+    android:layout_width="150dp"
+    android:layout_height="100sp"
+    android:layout_alignTop="@+id/notification_button"
+    android:layout_marginLeft="20dp"
+    android:layout_toEndOf="@+id/notification_button"
+    android:hint="@string/input_your_number"
+    android:inputType="number"
+    android:textSize="16sp"
     android:visibility="visible"/>
 
   <Button

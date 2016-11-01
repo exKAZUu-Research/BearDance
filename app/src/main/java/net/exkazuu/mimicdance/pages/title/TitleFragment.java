@@ -1,19 +1,24 @@
 package net.exkazuu.mimicdance.pages.title;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import net.exkazuu.mimicdance.BuildConfig;
 import net.exkazuu.mimicdance.R;
+import net.exkazuu.mimicdance.Timer;
 import net.exkazuu.mimicdance.activities.TitleActivity;
 import net.exkazuu.mimicdance.models.APIClient;
 import net.exkazuu.mimicdance.models.lesson.LessonDAO;
@@ -38,6 +43,9 @@ public class TitleFragment extends Fragment {
 
     @Bind(R.id.textVersion)
     TextView textVersion;
+
+    @Bind(R.id.player_number)
+    EditText playerNumET;
 
     public static TitleFragment newInstance() {
         TitleFragment fragment = new TitleFragment();
@@ -69,11 +77,18 @@ public class TitleFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        APIClient.ClientType type = APIClient.getClientType(getContext());
-        boolean enableDuoMode = type == APIClient.ClientType.A || type == APIClient.ClientType.B;
-        duoButton.setEnabled(BuildConfig.OFFLINE_MODE || enableDuoMode);
+        //TODO ここで通知終わり
+        Timer.stop();
+        int playerNum = Integer.getInteger(playerNumET.toString(),0);
+        Toast.makeText(getContext(), playerNum + "," + Timer.getTime(), Toast.LENGTH_LONG).show();
 
-        textVersion.setText(getVersionText());
+//        getActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+
+//        APIClient.ClientType type = APIClient.getClientType(getContext());
+//        boolean enableDuoMode = type == APIClient.ClientType.A || type == APIClient.ClientType.B;
+//        duoButton.setEnabled(BuildConfig.OFFLINE_MODE || enableDuoMode);
+//
+//        textVersion.setText(getVersionText());
     }
 
     @Override
@@ -107,12 +122,18 @@ public class TitleFragment extends Fragment {
     void notificationClicked() {
         FragmentUtils.toNextFragment(getFragmentManager(), R.id.container,
             NotificationEditorFragment.newInstance(), true);
+        //TODO ここで通知タイマースタート
+        Timer.start();
+        Toast.makeText(getContext(),"timer start", Toast.LENGTH_SHORT).show();
     }
 
     @OnClick(R.id.start_button)
     void startClicked() {
         FragmentUtils.toNextFragment(getFragmentManager(), R.id.container,
             LessonListFragment.newInstance(true), true);
+  //TODO ここでレッスンタイマースタート
+        Timer.start();
+        Toast.makeText(getContext(),"timer start", Toast.LENGTH_SHORT).show();
     }
 
     @OnClick(R.id.duo_button)

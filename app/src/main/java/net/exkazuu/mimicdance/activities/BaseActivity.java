@@ -3,6 +3,8 @@ package net.exkazuu.mimicdance.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.view.WindowManager;
 
 import net.exkazuu.mimicdance.activities.notification.*;
 

@@ -20,10 +20,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.google.common.collect.Lists;
 
 import net.exkazuu.mimicdance.R;
+import net.exkazuu.mimicdance.Timer;
 import net.exkazuu.mimicdance.models.program.Command;
 import net.exkazuu.mimicdance.models.program.Program;
 import net.exkazuu.mimicdance.models.program.ProgramDAO;
@@ -186,11 +190,12 @@ public abstract class EditorFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         switch (item.getItemId()) {
             case R.id.action_trash:
                 // ゴミ箱は、選択した枠を空にする処理
-                mAdapter.setCommand(mSelectedPosition,mSelectedIndex,"");
-                mAdapter.setSelected(-1,-1);
+                mAdapter.setCommand(mSelectedPosition, mSelectedIndex, "");
+                mAdapter.setSelected(-1, -1);
                 mAdapter.notifyDataSetChanged();
 //                onCommandClicked("");
                 return true;
@@ -208,8 +213,10 @@ public abstract class EditorFragment extends Fragment {
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.container, TitleFragment.newInstance());
                 transaction.commit();
+
                 return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -218,7 +225,6 @@ public abstract class EditorFragment extends Fragment {
      *
      * @param command 選択されたコマンド
      */
-    //// TODO: 2016/07/07 コマンドが選ばれたときに背景色を変える、ToolboxAdapterを持ってくる必要性？
     public void onCommandClicked(String command) {
         if (mState == STATE_SELECT_PROGRAM) {
             mSelectedCommand = command;
@@ -226,7 +232,7 @@ public abstract class EditorFragment extends Fragment {
 //            // 先にプログラムの枠を選んでもらうので、何もしない
 //            Snackbar.make(mRootView, R.string.select_program_first, Snackbar.LENGTH_SHORT).show();
         } else if (mState == STATE_SELECT_COMMAND) {
-            mAdapter.setSelected(-1,-1);
+            mAdapter.setSelected(-1, -1);
             mSelectedCommand = command;
             mState = STATE_SELECT_PROGRAM;
             mAdapter.notifyDataSetChanged();
@@ -245,7 +251,7 @@ public abstract class EditorFragment extends Fragment {
         @Override
         public void onItemClick(int position, int index) {
             if (mState == STATE_SELECT_PROGRAM) {
-                mAdapter.setCommand(position,index,mSelectedCommand);
+                mAdapter.setCommand(position, index, mSelectedCommand);
                 mState = STATE_SELECT_COMMAND;
                 clearCommandSelection();
 
@@ -255,7 +261,7 @@ public abstract class EditorFragment extends Fragment {
                 mAdapter.notifyDataSetChanged();
 //                mState = STATE_SELECT_COMMAND;
             } else if (mState == STATE_SELECT_COMMAND) {
-                if(!mAdapter.checkNull(position,index)) {
+                if (!mAdapter.checkNull(position, index)) {
                     mSelectedPosition = position;
                     mSelectedIndex = index;
                     mAdapter.setSelected(mSelectedPosition, mSelectedIndex);
@@ -317,7 +323,7 @@ public abstract class EditorFragment extends Fragment {
         FragmentManager manager = getChildFragmentManager();
         Fragment f = manager.findFragmentById(R.id.layout_toolbox);
         if (f != null && f instanceof ToolboxFragment) {
-            ((ToolboxFragment)f).clearSelection();
+            ((ToolboxFragment) f).clearSelection();
         }
     }
 
