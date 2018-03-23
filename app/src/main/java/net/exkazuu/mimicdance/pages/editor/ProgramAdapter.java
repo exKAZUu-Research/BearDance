@@ -52,6 +52,9 @@ public class ProgramAdapter extends RecyclerView.Adapter<ProgramAdapter.ViewHold
     }
 
     public void setCommand(int position, int index, String command) {
+        if (position == -1) {
+            return;
+        }
         Program program = mProgramList.get(position);
         program.setCommands(index, command);
     }
@@ -103,9 +106,12 @@ public class ProgramAdapter extends RecyclerView.Adapter<ProgramAdapter.ViewHold
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        @Bind(R.id.text_line_number) TextView lineNumberText;
-        @Bind(R.id.icon_0) ImageView mIcon0;
-        @Bind(R.id.icon_1) ImageView mIcon1;
+        @Bind(R.id.text_line_number)
+        TextView lineNumberText;
+        @Bind(R.id.icon_0)
+        ImageView mIcon0;
+        @Bind(R.id.icon_1)
+        ImageView mIcon1;
 
         private final OnItemClickListener mListener;
 
@@ -117,13 +123,17 @@ public class ProgramAdapter extends RecyclerView.Adapter<ProgramAdapter.ViewHold
 
         @OnClick(R.id.icon_0)
         void icon0Clicked() {
-            if (mListener == null) { return; }
+            if (mListener == null) {
+                return;
+            }
             mListener.onItemClick(getAdapterPosition(), 0);
         }
 
         @OnClick(R.id.icon_1)
         void icon1Clicked() {
-            if (mListener == null) { return; }
+            if (mListener == null) {
+                return;
+            }
             mListener.onItemClick(getAdapterPosition(), 1);
         }
 
